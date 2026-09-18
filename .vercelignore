@@ -1,0 +1,6 @@
+release
+android
+node_modules
+.git
+.angular
+dist-electron
