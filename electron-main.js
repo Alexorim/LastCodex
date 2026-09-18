@@ -12,14 +12,27 @@ function createWindow() {
     backgroundColor: '#0d1117',
     title: 'Orna Guild Forecast',
     autoHideMenuBar: true,
+    icon: path.join(__dirname, 'www', 'assets', 'icon', 'favicon.png'),
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      webSecurity: false
+      webSecurity: false,
+      allowRunningInsecureContent: true
     }
   });
 
   Menu.setApplicationMenu(null);
+
+  // Press F12 to toggle DevTools
+  mainWindow.webContents.on('before-input-event', (event, input) => {
+    if (input.key === 'F12') {
+      mainWindow.webContents.toggleDevTools();
+    }
+  });
+
+  mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL) => {
+    console.error('Failed to load:', errorCode, errorDescription, validatedURL);
+  });
 
   // Load the built Angular application
   const indexPath = path.join(__dirname, 'www', 'index.html');
