@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Buscar Material</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar
+      [(ngModel)]="searchQuery"
+      (ionInput)="onSearchChange()"
+      (ionClear)="clearSearch()"
+      placeholder="Escribe un material (ej. Adamantine, Wood)..."
+      debounce="200"
+      animated="true"
+    ></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Autocomplete suggestions -->
+  <ion-list *ngIf="showSuggestions && filteredMaterials.length > 0">
+    <ion-item *ngFor="let mat of filteredMaterials" (click)="selectMaterial(mat)" button detail="false">
+      <ion-icon name="search-outline" slot="start" color="primary"></ion-icon>
+      <ion-label>{{ mat }}</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <!-- Search result -->
+  <div *ngIf="selectedResult" class="ion-padding">
+    <ion-card class="result-card">
+      <ion-card-header>
+        <ion-card-title>{{ selectedResult.materialName }}</ion-card-title>
+        <ion-card-subtitle>Próximas fechas de salida en cada gremio:</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content class="p-0">
+        <div class="guild-appearance-list">
+          <div *ngFor="let app of selectedResult.guildAppearances" class="appearance-row">
+            <!-- Lado izquierdo: Gremio -->
+            <div class="app-left">
+              <span class="guild-color-dot" [style.background]="getGuildColor(app.guildName)"></span>
+              <span class="app-guild-name">{{ app.guildName }}</span>
+            </div>
+
+            <!-- Lado derecho: Fecha y Badge -->
+            <div class="app-right">
+              <span class="app-date">{{ app.nextDate }}</span>
+              <ion-badge [color]="app.daysUntil === 0 ? 'success' : (app.daysUntil === 1 ? 'warning' : 'medium')" class="app-badge">
+                <span *ngIf="app.daysUntil === 0">¡HOY!</span>
+                <span *ngIf="app.daysUntil === 1">Mañana</span>
+                <span *ngIf="app.daysUntil !== null && app.daysUntil > 1">En {{ app.daysUntil }} días</span>
+              </ion-badge>
+            </div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Catálogo de todos los 62 materiales cuando no hay búsqueda activa -->
+  <div *ngIf="!selectedResult && !showSuggestions" class="ion-padding catalog-container">
+    <div class="all-materials-header">
+      <h3>Todos los materiales ({{ allMaterials.length }})</h3>
+      <p>Selecciona cualquiera para ver cuándo saldrá en cada uno de los gremios:</p>
+    </div>
+    <div class="material-grid">
+      <ion-chip *ngFor="let mat of allMaterials" (click)="selectMaterial(mat)" class="chip-catalog">
+        <ion-label>{{ mat }}</ion-label>
+      </ion-chip>
+    </div>
+  </div>
+</ion-content>

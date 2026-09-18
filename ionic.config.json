@@ -1,0 +1,7 @@
+{
+  "name": "OrnaForecast",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

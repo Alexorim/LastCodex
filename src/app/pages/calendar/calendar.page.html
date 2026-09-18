@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Calendario de Salidas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="ion-padding-horizontal ion-padding-top">
+    <div class="calendar-banner">
+      <ion-icon name="shield-outline" color="primary"></ion-icon>
+      <div>
+        <h4 class="m-0 font-semibold">Próximas salidas en todos los gremios</h4>
+        <p class="m-0 text-muted">Toca cualquier material para desplegar sus fechas por gremio</p>
+      </div>
+    </div>
+  </div>
+
+  <ion-list lines="none" class="materials-accordion-list">
+    <div *ngFor="let item of catalog" class="material-accordion-item">
+      <ion-item (click)="toggleMaterial(item.materialName)" button detail="false" class="mat-item-header">
+        <ion-icon [name]="isExpanded(item.materialName) ? 'chevron-down' : 'chevron-forward'" slot="start" color="primary"></ion-icon>
+        <ion-label>
+          <h2 class="mat-title">{{ item.materialName }}</h2>
+          <p class="mat-sub">Disponible en {{ item.guildAppearances.length }} gremios</p>
+        </ion-label>
+        <ion-badge *ngIf="item.guildAppearances[0]?.daysUntil === 0" color="success" slot="end">
+          ¡HOY!
+        </ion-badge>
+        <ion-badge *ngIf="item.guildAppearances[0]?.daysUntil === 1" color="warning" slot="end">
+          Mañana
+        </ion-badge>
+      </ion-item>
+
+      <!-- Sublista expandible con cada gremio y su fecha -->
+      <div *ngIf="isExpanded(item.materialName)" class="guild-expand-panel">
+        <div *ngFor="let g of item.guildAppearances" class="expand-row">
+          <div class="expand-left">
+            <span class="guild-color-dot" [style.background]="getGuildColor(g.guildName)"></span>
+            <span class="expand-guild-name">{{ g.guildName }}</span>
+          </div>
+          <div class="expand-right">
+            <span class="expand-date">{{ g.nextDate }}</span>
+            <ion-badge [color]="g.daysUntil === 0 ? 'success' : (g.daysUntil === 1 ? 'warning' : 'medium')" class="badge-mini">
+              <span *ngIf="g.daysUntil === 0">Hoy</span>
+              <span *ngIf="g.daysUntil === 1">Mañana</span>
+              <span *ngIf="g.daysUntil !== null && g.daysUntil > 1">{{ g.daysUntil }}d</span>
+            </ion-badge>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ion-list>
+</ion-content>

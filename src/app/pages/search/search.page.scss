@@ -1,0 +1,117 @@
+.result-card {
+  margin: 8px 0 16px;
+  border-radius: 16px;
+  background: rgba(22, 27, 34, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+
+  ion-card-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ion-color-primary, #f0a500);
+  }
+
+  ion-card-subtitle {
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--ion-color-medium);
+  }
+}
+
+.guild-appearance-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.appearance-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+  &:nth-child(even) {
+    background: rgba(0, 0, 0, 0.15);
+  }
+}
+
+.app-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.guild-color-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.app-guild-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #eceff1;
+}
+
+.app-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-date {
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.app-badge {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.catalog-container {
+  padding-bottom: 32px;
+}
+
+.all-materials-header {
+  margin-bottom: 14px;
+
+  h3 {
+    margin: 0 0 4px;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ion-color-light);
+  }
+
+  p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--ion-color-medium);
+  }
+}
+
+.material-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip-catalog {
+  --background: rgba(255, 255, 255, 0.05);
+  --color: #e0e0e0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover, &:active {
+    --background: rgba(240, 165, 0, 0.2);
+    --color: var(--ion-color-primary, #f0a500);
+    border-color: var(--ion-color-primary, #f0a500);
+  }
+}
