@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Orna Forecast</string>
-    <string name="title_activity_main">Orna Forecast</string>
-    <string name="package_name">com.orna.forecast</string>
-    <string name="custom_url_scheme">com.orna.forecast</string>
+    <string name="app_name">LastCodex</string>
+    <string name="title_activity_main">LastCodex</string>
+    <string name="package_name">com.last.codex</string>
+    <string name="custom_url_scheme">com.last.codex</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.orna.forecast;
+package com.last.codex;
 
 import com.getcapacitor.BridgeActivity;
 

@@ -9,6 +9,9 @@ export function getMaterialIcon(rawName: string): string {
   // Remove prefixes / suffixes like '(Ort.)', ': Ort.', 'x5', etc.
   name = name.replace(/\(.*?\)/g, '').replace(/:.*$/g, '').trim();
 
+  // Strip apostrophes/quotes (e.g. Wolf's Blood -> wolfs blood)
+  name = name.replace(/['’"]/g, '');
+
   // Normalize spaces, hyphens and special characters
   let key = name.replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
 
@@ -25,8 +28,14 @@ export function getMaterialIcon(rawName: string): string {
     'pure_drac': 'pure_draconite',
     'drac': 'draconite',
     'red_drac': 'red_draconite',
+    'wolf_s_blood': 'wolf_blood',
     'wolfs_blood': 'wolf_blood',
     'wolfsblood': 'wolf_blood',
+    'wolf_blood': 'wolf_blood',
+    'eyestone': 'eye',
+    'demonic_ore': 'demonstone',
+    'deepshard': 'deepshards',
+    'deepshards': 'deepshards',
     'broken_statues': 'broken_statue',
     'undead_bones': 'undead_bone',
     'bones': 'bone',
