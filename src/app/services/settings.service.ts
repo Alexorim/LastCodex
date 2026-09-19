@@ -21,6 +21,12 @@ export class SettingsService {
   );
   public theme$ = this.themeSubject.asObservable();
 
+  constructor() {
+    // Apply saved theme on app start
+    const savedTheme = (localStorage.getItem(this.THEME_KEY) as ThemeMode) || 'codex-dark';
+    this.applyTheme(savedTheme);
+  }
+
   get currentLang(): Language {
     return this.langSubject.value;
   }
@@ -37,7 +43,15 @@ export class SettingsService {
   setTheme(theme: ThemeMode): void {
     this.themeSubject.next(theme);
     localStorage.setItem(this.THEME_KEY, theme);
-    document.body.classList.remove('theme-codex-dark', 'theme-amoled');
-    document.body.classList.add(`theme-${theme}`);
+    this.applyTheme(theme);
+  }
+
+  private applyTheme(theme: ThemeMode): void {
+    if (typeof document !== 'undefined') {
+      document.body.classList.remove('theme-codex-dark', 'theme-amoled');
+      document.body.classList.add(`theme-${theme}`);
+      document.documentElement.classList.remove('theme-codex-dark', 'theme-amoled');
+      document.documentElement.classList.add(`theme-${theme}`);
+    }
   }
 }

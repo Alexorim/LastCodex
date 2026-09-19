@@ -55,6 +55,10 @@ export class SettingsPage implements OnInit {
       this.deviceTimezone = 'UTC-5';
     }
 
+    this.settingsService.theme$.subscribe(theme => {
+      this.currentTheme = theme;
+    });
+
     this.timerService.localResetTime$.subscribe(time => {
       this.localResetTime = time;
     });

@@ -12,15 +12,15 @@
 
 /* LastCodex Global Styling */
 body {
-  background-color: #1F1F1F !important;
-  /* Dark fantasy subtle background vignette and texture */
+  background-color: var(--ion-background-color, #1F1F1F) !important;
   background-image:
     radial-gradient(circle at 50% 0%, rgba(189, 165, 69, 0.08) 0%, transparent 45%),
     radial-gradient(circle at 100% 100%, rgba(30, 25, 20, 0.6) 0%, transparent 60%),
-    linear-gradient(180deg, #1F1F1F 0%, #171717 100%) !important;
+    linear-gradient(180deg, #1F1F1F 0%, #171717 100%);
   background-attachment: fixed !important;
   color: var(--codex-text-light);
   font-family: var(--codex-font-body);
+  transition: background-color 0.25s ease;
 }
 
 ion-content {
@@ -37,17 +37,17 @@ ion-toolbar ion-title {
   letter-spacing: 0.04em;
 }
 
-/* Codex Box Card Styling (#2A2826) */
-ion-card, .codex-card {
-  background-color: #2A2826 !important;
+/* Codex Box Card Styling */
+ion-card, .codex-card, .codex-box, .settings-card {
+  background-color: var(--codex-box-bg, #2A2826) !important;
   border: 1px solid var(--codex-line) !important;
   border-radius: 8px !important;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
   color: var(--codex-text-light) !important;
-  transition: border-color 0.25s ease, transform 0.2s ease;
+  transition: border-color 0.25s ease, transform 0.2s ease, background-color 0.25s ease;
 }
 
-ion-card:hover, .codex-card:hover {
+ion-card:hover, .codex-card:hover, .codex-box:hover {
   border-color: rgba(189, 165, 69, 0.45) !important;
 }
 
@@ -56,7 +56,7 @@ ion-card:hover, .codex-card:hover {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #1c1b1a;
+  background: var(--codex-pill-bg, #1c1b1a);
   border: 1px solid rgba(189, 165, 69, 0.2);
   border-radius: 6px;
   padding: 4px 9px 4px 6px;
@@ -84,29 +84,6 @@ ion-card:hover, .codex-card:hover {
   }
 }
 
-/* Codex Brand Header */
-.codex-brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-
-  .brand-logo {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: 1px solid var(--codex-gold);
-    box-shadow: 0 0 10px rgba(189, 165, 69, 0.35);
-  }
-
-  .brand-text {
-    font-family: var(--codex-font-heading);
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--codex-gold);
-    letter-spacing: 0.08em;
-  }
-}
-
 /* Fan Disclaimer Footer */
 .codex-footer {
   margin-top: 2rem;
@@ -127,6 +104,87 @@ ion-card:hover, .codex-card:hover {
     font-size: 0.8rem;
     color: var(--codex-gold);
     margin-bottom: 0.35rem;
+  }
+}
+
+/* ==========================================================================
+   AMOLED Pure Black Theme Mode (#000000)
+   ========================================================================== */
+body.theme-amoled,
+html.theme-amoled {
+  --ion-background-color: #000000 !important;
+  --codex-box-bg: #0a0a0a !important;
+  --codex-pill-bg: #050505 !important;
+  --codex-line: rgba(189, 165, 69, 0.26) !important;
+  --ion-toolbar-background: #000000 !important;
+  --ion-tab-bar-background: #000000 !important;
+
+  background-color: #000000 !important;
+  background-image: none !important;
+
+  ion-header, .codex-header {
+    border-bottom-color: rgba(189, 165, 69, 0.25) !important;
+  }
+
+  ion-toolbar, .codex-toolbar, .search-toolbar, .countdown-toolbar {
+    --background: #000000 !important;
+    background: #000000 !important;
+  }
+
+  .header-countdown-block {
+    background: #080808 !important;
+    border-color: rgba(189, 165, 69, 0.25) !important;
+  }
+
+  .codex-box, ion-card, .settings-card, .result-card {
+    background-color: #0a0a0a !important;
+    border-color: rgba(189, 165, 69, 0.24) !important;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.9) !important;
+  }
+
+  .codex-searchbar {
+    --background: #080808 !important;
+  }
+
+  .material-pill {
+    background: #050505 !important;
+    border-color: rgba(189, 165, 69, 0.2) !important;
+
+    &:hover {
+      background: #141414 !important;
+    }
+  }
+
+  .mat-icon-frame {
+    background: #000000 !important;
+  }
+
+  .suggestions-list {
+    background: #080808 !important;
+    border-color: rgba(189, 165, 69, 0.25) !important;
+  }
+
+  .toggle-btn {
+    background: #050505 !important;
+  }
+
+  .codex-semicircular-bar {
+    --background: rgba(0, 0, 0, 0.98) !important;
+    background: #000000 !important;
+    border-top: 1px solid rgba(189, 165, 69, 0.35) !important;
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.95) !important;
+  }
+
+  .calendar-banner {
+    background: #080808 !important;
+  }
+
+  .guild-expand-panel {
+    background: #030303 !important;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #000000;
   }
 }
 

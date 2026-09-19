@@ -64,7 +64,7 @@
 }
 
 .settings-card {
-  background: #2A2826;
+  background: var(--codex-box-bg, #2A2826);
   border: 1px solid var(--codex-line);
   border-radius: 8px;
   padding: 16px;
