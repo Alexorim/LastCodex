@@ -12,6 +12,15 @@
   <meta name="format-detection" content="telephone=no" />
   <meta name="msapplication-tap-highlight" content="no" />
   <meta name="theme-color" content="#1F1F1F" />
+  <script>
+    (function () {
+      var _w = console.warn;
+      console.warn = function () {
+        if (arguments[0] && typeof arguments[0] === 'string' && arguments[0].indexOf('IonicModule has been deprecated') !== -1) return;
+        _w.apply(console, arguments);
+      };
+    })();
+  </script>
 
   <!-- LastCodex Official Logo and Favicon -->
   <link rel="icon" type="image/png" href="assets/icon/last_codex.png" />
