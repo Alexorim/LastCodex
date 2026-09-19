@@ -1,53 +1,78 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Calendario de Salidas</ion-title>
+<ion-header class="ion-no-border">
+  <ion-toolbar class="codex-toolbar">
+    <div class="header-inner">
+      <div class="brand-left">
+        <img src="assets/icon/last_codex.png" alt="LastCodex Logo" class="brand-emblem" />
+        <div>
+          <span class="brand-name">LastCodex</span>
+          <span class="brand-subtitle">{{ currentLang === 'es' ? 'Calendario de Rotación' : 'Rotation Calendar' }}</span>
+        </div>
+      </div>
+    </div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <div class="ion-padding-horizontal ion-padding-top">
-    <div class="calendar-banner">
-      <ion-icon name="shield-outline" color="primary"></ion-icon>
+<ion-content class="ion-padding codex-content">
+  <div class="calendar-container">
+    <div class="calendar-banner codex-box">
+      <ion-icon name="shield-outline" class="banner-icon"></ion-icon>
       <div>
-        <h4 class="m-0 font-semibold">Próximas salidas en todos los gremios</h4>
-        <p class="m-0 text-muted">Toca cualquier material para desplegar sus fechas por gremio</p>
+        <h4>{{ currentLang === 'es' ? 'Próximas salidas en los 12 gremios' : 'Upcoming rotations across all 12 guilds' }}</h4>
+        <p>{{ currentLang === 'es' ? 'Toca cualquier material para desplegar su calendario:' : 'Tap any material to view its schedule:' }}</p>
       </div>
     </div>
-  </div>
 
-  <ion-list lines="none" class="materials-accordion-list">
-    <div *ngFor="let item of catalog" class="material-accordion-item">
-      <ion-item (click)="toggleMaterial(item.materialName)" button detail="false" class="mat-item-header">
-        <ion-icon [name]="isExpanded(item.materialName) ? 'chevron-down' : 'chevron-forward'" slot="start" color="primary"></ion-icon>
-        <ion-label>
-          <h2 class="mat-title">{{ item.materialName }}</h2>
-          <p class="mat-sub">Disponible en {{ item.guildAppearances.length }} gremios</p>
-        </ion-label>
-        <ion-badge *ngIf="item.guildAppearances[0]?.daysUntil === 0" color="success" slot="end">
-          ¡HOY!
-        </ion-badge>
-        <ion-badge *ngIf="item.guildAppearances[0]?.daysUntil === 1" color="warning" slot="end">
-          Mañana
-        </ion-badge>
-      </ion-item>
-
-      <!-- Sublista expandible con cada gremio y su fecha -->
-      <div *ngIf="isExpanded(item.materialName)" class="guild-expand-panel">
-        <div *ngFor="let g of item.guildAppearances" class="expand-row">
-          <div class="expand-left">
-            <span class="guild-color-dot" [style.background]="getGuildColor(g.guildName)"></span>
-            <span class="expand-guild-name">{{ g.guildName }}</span>
+    <div class="materials-accordion">
+      <div *ngFor="let item of catalog" class="accordion-item codex-box" [class.expanded]="isExpanded(item.materialName)">
+        <div class="accordion-header" (click)="toggleMaterial(item.materialName)">
+          <div class="item-info">
+            <img [src]="getMatIcon(item.materialName)" (error)="onImageError($event)" class="mat-icon-cal" alt="" />
+            <div>
+              <span class="mat-name">{{ item.materialName }}</span>
+              <span class="mat-count">
+                {{ currentLang === 'es' ? ('En ' + item.guildAppearances.length + ' gremios') : ('In ' + item.guildAppearances.length + ' guilds') }}
+              </span>
+            </div>
           </div>
-          <div class="expand-right">
-            <span class="expand-date">{{ g.nextDate }}</span>
-            <ion-badge [color]="g.daysUntil === 0 ? 'success' : (g.daysUntil === 1 ? 'warning' : 'medium')" class="badge-mini">
-              <span *ngIf="g.daysUntil === 0">Hoy</span>
-              <span *ngIf="g.daysUntil === 1">Mañana</span>
-              <span *ngIf="g.daysUntil !== null && g.daysUntil > 1">{{ g.daysUntil }}d</span>
-            </ion-badge>
+
+          <div class="item-badge-wrap">
+            <span *ngIf="item.guildAppearances[0]?.daysUntil === 0" class="mini-badge badge-today">
+              {{ currentLang === 'es' ? '¡HOY!' : 'TODAY!' }}
+            </span>
+            <span *ngIf="item.guildAppearances[0]?.daysUntil === 1" class="mini-badge badge-tomorrow">
+              {{ currentLang === 'es' ? 'Mañana' : 'Tomorrow' }}
+            </span>
+            <ion-icon [name]="isExpanded(item.materialName) ? 'chevron-down' : 'chevron-forward'" class="expand-icon"></ion-icon>
+          </div>
+        </div>
+
+        <!-- Sublista expandible -->
+        <div *ngIf="isExpanded(item.materialName)" class="guild-expand-panel">
+          <div *ngFor="let g of item.guildAppearances" class="expand-row">
+            <div class="expand-left">
+              <span class="guild-color-dot" [style.background]="getGuildColor(g.guildName)"></span>
+              <span class="expand-guild-name">{{ g.guildName }}</span>
+            </div>
+            <div class="expand-right">
+              <span class="expand-date">{{ g.nextDate }}</span>
+              <span class="mini-badge" [class.badge-today]="g.daysUntil === 0" [class.badge-tomorrow]="g.daysUntil === 1" [class.badge-later]="g.daysUntil !== null && g.daysUntil > 1">
+                <span *ngIf="g.daysUntil === 0">{{ currentLang === 'es' ? 'Hoy' : 'Today' }}</span>
+                <span *ngIf="g.daysUntil === 1">{{ currentLang === 'es' ? 'Mañana' : 'Tomorrow' }}</span>
+                <span *ngIf="g.daysUntil !== null && g.daysUntil > 1">{{ g.daysUntil }}d</span>
+                <span *ngIf="g.daysUntil === null">-</span>
+              </span>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </ion-list>
+
+    <!-- Global Footer Disclaimer -->
+    <div class="codex-footer">
+      <div class="brand-credit">LastCodex</div>
+      <p class="disclaimer-text">
+        Fan-made project. Not affiliated with Northern Forge Studios or the official Orna developers.
+      </p>
+    </div>
+  </div>
 </ion-content>

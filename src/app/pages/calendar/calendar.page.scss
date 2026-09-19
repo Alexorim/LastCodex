@@ -1,109 +1,217 @@
+.codex-toolbar {
+  --background: #1F1F1F;
+  border-bottom: 1px solid var(--codex-line);
+  padding: 6px 12px;
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .brand-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .brand-emblem {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--codex-gold);
+      box-shadow: 0 0 10px rgba(189, 165, 69, 0.4);
+    }
+
+    .brand-name {
+      display: block;
+      font-family: var(--codex-font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--codex-gold);
+      letter-spacing: 0.06em;
+      line-height: 1.1;
+    }
+
+    .brand-subtitle {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--codex-text-muted);
+    }
+  }
+}
+
+.codex-content {
+  --padding-bottom: 80px;
+}
+
+.calendar-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
 .calendar-banner {
   display: flex;
   align-items: center;
-  gap: 12px;
-  background: rgba(240, 165, 0, 0.08);
-  border: 1px solid rgba(240, 165, 0, 0.25);
-  border-radius: 12px;
-  padding: 12px 14px;
-  margin-bottom: 12px;
+  gap: 14px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
 
-  ion-icon {
-    font-size: 26px;
+  .banner-icon {
+    font-size: 28px;
+    color: var(--codex-gold);
     flex-shrink: 0;
   }
 
   h4 {
-    font-size: 14px;
-    color: #ffca28;
+    margin: 0 0 4px;
+    font-family: var(--codex-font-heading);
+    font-size: 1rem;
+    color: var(--codex-gold);
   }
 
   p {
-    font-size: 12px;
-    color: var(--ion-color-medium);
-    margin-top: 2px;
+    margin: 0;
+    font-size: 0.76rem;
+    color: var(--codex-text-muted);
   }
 }
 
-.materials-accordion-list {
-  background: transparent;
-  padding-bottom: 24px;
+.materials-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.material-accordion-item {
-  margin: 4px 8px 8px;
-  background: rgba(22, 27, 34, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 12px;
+.accordion-item {
+  border-radius: 6px;
   overflow: hidden;
   transition: all 0.2s ease;
-}
 
-.mat-item-header {
-  --background: transparent;
-
-  .mat-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: #ffffff;
+  &.expanded {
+    border-color: var(--codex-gold);
   }
 
-  .mat-sub {
-    font-size: 12px;
-    color: var(--ion-color-medium);
+  .accordion-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 14px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: rgba(189, 165, 69, 0.08);
+    }
+  }
+
+  .item-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .mat-icon-cal {
+      width: 24px;
+      height: 24px;
+      image-rendering: pixelated;
+      flex-shrink: 0;
+    }
+
+    .mat-name {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--codex-text-light);
+    }
+
+    .mat-count {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--codex-text-muted);
+    }
+  }
+
+  .item-badge-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .expand-icon {
+      color: var(--codex-gold);
+      font-size: 1.1rem;
+      transition: transform 0.2s ease;
+    }
+  }
+}
+
+.mini-badge {
+  font-size: 0.68rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+
+  &.badge-today {
+    background: rgba(0, 230, 118, 0.2);
+    border: 1px solid #00e676;
+    color: #00e676;
+  }
+
+  &.badge-tomorrow {
+    background: rgba(240, 165, 0, 0.2);
+    border: 1px solid #f0a500;
+    color: #f0a500;
+  }
+
+  &.badge-later {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--codex-text-muted);
   }
 }
 
 .guild-expand-panel {
-  padding: 4px 12px 12px 42px;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.25);
   border-top: 1px solid rgba(255, 255, 255, 0.04);
-}
+  padding: 8px 14px 10px 48px;
 
-.expand-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  .expand-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 
-  &:last-child {
-    border-bottom: none;
+    &:last-of-type {
+      border-bottom: none;
+    }
   }
-}
 
-.expand-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+  .expand-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 
-.guild-color-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
+    .guild-color-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
 
-.expand-guild-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: #cfd8dc;
-}
+    .expand-guild-name {
+      font-size: 0.82rem;
+      color: var(--codex-text-light);
+      font-weight: 500;
+    }
+  }
 
-.expand-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+  .expand-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 
-.expand-date {
-  font-size: 13px;
-  color: #ffffff;
-}
-
-.badge-mini {
-  font-size: 10px;
-  padding: 2px 6px;
-  border-radius: 6px;
+    .expand-date {
+      font-size: 0.78rem;
+      color: var(--codex-text-light);
+    }
+  }
 }

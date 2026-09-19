@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular/lazy';
 import { addIcons } from 'ionicons';
-import { home, homeOutline, calendarOutline, refreshOutline, shieldOutline, timeOutline } from 'ionicons/icons';
+import { home, homeOutline, calendarOutline, refreshOutline, shieldOutline, timeOutline, alertCircleOutline } from 'ionicons/icons';
 import { MaterialsService } from '../../services/materials.service';
 import { TimerService } from '../../services/timer.service';
+import { SettingsService, Language } from '../../services/settings.service';
 import { DayForecast } from '../../models/material.model';
+import { getMaterialIcon } from '../../utils/material-icon.util';
 import { Observable, Subscription } from 'rxjs';
 
 @Component({
@@ -19,16 +21,21 @@ import { Observable, Subscription } from 'rxjs';
 export class HomePage implements OnInit, OnDestroy {
   private materialsService = inject(MaterialsService);
   private timerService = inject(TimerService);
+  private settingsService = inject(SettingsService);
+
   private todaySub: Subscription | null = null;
   private tomorrowSub: Subscription | null = null;
+  private langSub: Subscription | null = null;
 
   todayForecast: DayForecast | null = null;
   tomorrowForecast: DayForecast | null = null;
   countdownStr$: Observable<string> = this.timerService.countdownStr$;
+  localResetTime$: Observable<string> = this.timerService.localResetTime$;
+  currentLang: Language = 'es';
   isLoading = true;
 
   constructor() {
-    addIcons({ home, homeOutline, calendarOutline, refreshOutline, shieldOutline, timeOutline });
+    addIcons({ home, homeOutline, calendarOutline, refreshOutline, shieldOutline, timeOutline, alertCircleOutline });
   }
 
   get isStale(): boolean {
@@ -40,6 +47,10 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.langSub = this.settingsService.lang$.subscribe(lang => {
+      this.currentLang = lang;
+    });
+
     this.todaySub = this.materialsService.today$.subscribe(today => {
       if (today && today.guilds.length > 0) {
         this.todayForecast = today;
@@ -58,6 +69,15 @@ export class HomePage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.todaySub?.unsubscribe();
     this.tomorrowSub?.unsubscribe();
+    this.langSub?.unsubscribe();
+  }
+
+  getMatIcon(name: string): string {
+    return getMaterialIcon(name);
+  }
+
+  onImageError(event: any): void {
+    event.target.style.display = 'none';
   }
 
   getGuildColor(name: string): string {

@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { addIcons } from 'ionicons';
+import { home, homeOutline, search, searchOutline, calendar, calendarOutline, settings, settingsOutline } from 'ionicons/icons';
+import { SettingsService, Language } from '../services/settings.service';
 
 @Component({
   selector: 'app-tabs',
@@ -6,8 +9,26 @@ import { Component } from '@angular/core';
   styleUrls: ['tabs.page.scss'],
   standalone: false,
 })
-export class TabsPage {
+export class TabsPage implements OnInit {
+  private settingsService = inject(SettingsService);
+  currentLang: Language = 'es';
 
-  constructor() {}
+  constructor() {
+    addIcons({
+      home,
+      homeOutline,
+      search,
+      searchOutline,
+      calendar,
+      calendarOutline,
+      settings,
+      settingsOutline
+    });
+  }
 
+  ngOnInit() {
+    this.settingsService.lang$.subscribe(lang => {
+      this.currentLang = lang;
+    });
+  }
 }

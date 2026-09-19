@@ -1,23 +1,8 @@
-/*
- * App Global CSS
- * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
- */
-
 /* Core CSS required for Ionic components to work properly */
 @import '@ionic/angular/css/core.css';
-
-/* Basic CSS for apps built with Ionic */
 @import '@ionic/angular/css/normalize.css';
 @import '@ionic/angular/css/structure.css';
 @import '@ionic/angular/css/typography.css';
-
-/* Optional CSS utils that can be commented out */
 @import '@ionic/angular/css/padding.css';
 @import '@ionic/angular/css/float-elements.css';
 @import '@ionic/angular/css/text-alignment.css';
@@ -25,132 +10,141 @@
 @import '@ionic/angular/css/flex-utils.css';
 @import '@ionic/angular/css/display.css';
 
-/* Import Font */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
+/* LastCodex Global Styling */
 body {
-  /* Gradient background for the app */
-  background: linear-gradient(135deg, #0d1117 0%, #1a1f2e 100%) !important;
+  background-color: #1F1F1F !important;
+  /* Dark fantasy subtle background vignette and texture */
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(189, 165, 69, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 100% 100%, rgba(30, 25, 20, 0.6) 0%, transparent 60%),
+    linear-gradient(180deg, #1F1F1F 0%, #171717 100%) !important;
   background-attachment: fixed !important;
-  color: var(--ion-text-color);
+  color: var(--codex-text-light);
+  font-family: var(--codex-font-body);
 }
 
 ion-content {
   --background: transparent;
+  font-family: var(--codex-font-body);
 }
 
-/* Smooth card animations */
-ion-card {
-  background-color: rgba(26, 31, 46, 0.8) !important;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  animation: fadeIn 0.5s ease-out forwards;
-  opacity: 0;
+/* Headings font: Cinzel (Official Codex font) */
+h1, h2, h3, h4, h5, h6,
+.codex-title,
+.brand-title,
+ion-toolbar ion-title {
+  font-family: var(--codex-font-heading) !important;
+  letter-spacing: 0.04em;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Codex Box Card Styling (#2A2826) */
+ion-card, .codex-card {
+  background-color: #2A2826 !important;
+  border: 1px solid var(--codex-line) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+  color: var(--codex-text-light) !important;
+  transition: border-color 0.25s ease, transform 0.2s ease;
 }
 
-/* Material chip styles */
-ion-chip {
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  font-weight: 500;
-  
-  &.chip-today {
-    --background: rgba(240, 165, 0, 0.1);
-    --color: #f0a500;
-    border-color: rgba(240, 165, 0, 0.3);
-  }
-  
-  &.chip-tomorrow {
-    --background: rgba(79, 195, 247, 0.1);
-    --color: #4fc3f7;
-    border-color: rgba(79, 195, 247, 0.3);
-  }
+ion-card:hover, .codex-card:hover {
+  border-color: rgba(189, 165, 69, 0.45) !important;
 }
 
-/* Custom ion-segment styling */
-ion-segment {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  padding: 4px;
-}
-
-ion-segment-button {
-  --indicator-color: var(--ion-color-primary);
-  --color: #92949c;
-  --color-checked: #ffffff;
+/* Material Chips & Badges with Pixel Art Icon */
+.material-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #1c1b1a;
+  border: 1px solid rgba(189, 165, 69, 0.2);
   border-radius: 6px;
-  margin: 0 2px;
-  
-  &::part(indicator-background) {
-    border-radius: 6px;
+  padding: 4px 9px 4px 6px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #f9e8db;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  margin: 3px;
+
+  .mat-icon {
+    width: 22px;
+    height: 22px;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    border-color: var(--codex-gold);
+    background: #252320;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(189, 165, 69, 0.15);
   }
 }
 
-/* Glowing effect for countdown timer text */
-.glow-text {
-  color: var(--ion-color-primary);
-  text-shadow: 0 0 10px rgba(240, 165, 0, 0.5), 0 0 20px rgba(240, 165, 0, 0.3);
-  font-weight: 700;
-  letter-spacing: 1px;
-}
+/* Codex Brand Header */
+.codex-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 
-/* Stale data indicator pulse animation */
-.stale-indicator {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: var(--ion-color-warning);
-  animation: pulse 2s infinite;
-}
+  .brand-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--codex-gold);
+    box-shadow: 0 0 10px rgba(189, 165, 69, 0.35);
+  }
 
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(255, 215, 64, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 6px rgba(255, 215, 64, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(255, 215, 64, 0);
+  .brand-text {
+    font-family: var(--codex-font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--codex-gold);
+    letter-spacing: 0.08em;
   }
 }
 
-/* Pull-to-refresh custom styling */
-ion-refresher {
-  z-index: 10;
+/* Fan Disclaimer Footer */
+.codex-footer {
+  margin-top: 2rem;
+  padding: 1.5rem 1rem 5rem 1rem;
+  text-align: center;
+  border-top: 1px solid var(--codex-line);
+
+  .disclaimer-text {
+    font-size: 0.75rem;
+    color: var(--codex-text-muted);
+    line-height: 1.5;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .brand-credit {
+    font-family: var(--codex-font-heading);
+    font-size: 0.8rem;
+    color: var(--codex-gold);
+    margin-bottom: 0.35rem;
+  }
 }
 
-ion-refresher-content {
-  --color: var(--ion-color-primary);
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-/* Utility classes */
-.text-center { text-align: center; }
-.text-right { text-align: right; }
-.text-left { text-align: left; }
+::-webkit-scrollbar-track {
+  background: #1F1F1F;
+}
 
-.font-bold { font-weight: 700; }
-.font-semibold { font-weight: 600; }
-.font-medium { font-weight: 500; }
+::-webkit-scrollbar-thumb {
+  background: rgba(189, 165, 69, 0.3);
+  border-radius: 3px;
+}
 
-.m-0 { margin: 0; }
-.mt-1 { margin-top: 0.25rem; }
-.mt-2 { margin-top: 0.5rem; }
-.mb-1 { margin-bottom: 0.25rem; }
-.mb-2 { margin-bottom: 0.5rem; }
-
-.p-0 { padding: 0; }
-.p-1 { padding: 0.25rem; }
-.p-2 { padding: 0.5rem; }
+::-webkit-scrollbar-thumb:hover {
+  background: var(--codex-gold);
+}

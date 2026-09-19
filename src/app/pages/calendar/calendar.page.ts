@@ -5,7 +5,9 @@ import { IonicModule } from '@ionic/angular/lazy';
 import { addIcons } from 'ionicons';
 import { chevronDown, chevronForward, calendarOutline, shieldOutline } from 'ionicons/icons';
 import { MaterialsService } from '../../services/materials.service';
+import { SettingsService, Language } from '../../services/settings.service';
 import { MaterialSearchResult } from '../../models/material.model';
+import { getMaterialIcon } from '../../utils/material-icon.util';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -17,17 +19,23 @@ import { Subscription } from 'rxjs';
 })
 export class CalendarPage implements OnInit, OnDestroy {
   private materialsService = inject(MaterialsService);
+  private settingsService = inject(SettingsService);
   private dataSub: Subscription | null = null;
+  private langSub: Subscription | null = null;
 
   catalog: MaterialSearchResult[] = [];
-  selectedFilter: string = 'all';
   expandedMaterial: string | null = null;
+  currentLang: Language = 'es';
 
   constructor() {
     addIcons({ chevronDown, chevronForward, calendarOutline, shieldOutline });
   }
 
   ngOnInit() {
+    this.langSub = this.settingsService.lang$.subscribe(lang => {
+      this.currentLang = lang;
+    });
+
     this.dataSub = this.materialsService.catalog$.subscribe(cat => {
       this.catalog = cat;
     });
@@ -35,6 +43,15 @@ export class CalendarPage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.dataSub?.unsubscribe();
+    this.langSub?.unsubscribe();
+  }
+
+  getMatIcon(name: string): string {
+    return getMaterialIcon(name);
+  }
+
+  onImageError(event: any): void {
+    event.target.style.display = 'none';
   }
 
   toggleMaterial(matName: string) {

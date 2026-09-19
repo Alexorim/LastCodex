@@ -1,0 +1,216 @@
+.codex-toolbar {
+  --background: #1F1F1F;
+  border-bottom: 1px solid var(--codex-line);
+  padding: 8px 12px;
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .brand-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .brand-emblem {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--codex-gold);
+      box-shadow: 0 0 10px rgba(189, 165, 69, 0.4);
+    }
+
+    .brand-name {
+      display: block;
+      font-family: var(--codex-font-heading);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--codex-gold);
+      letter-spacing: 0.05em;
+    }
+
+    .page-subtitle {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--codex-text-muted);
+    }
+  }
+}
+
+.settings-container {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 30px;
+}
+
+.settings-card {
+  background: #2A2826;
+  border: 1px solid var(--codex-line);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+
+    .card-icon {
+      font-size: 1.25rem;
+      color: var(--codex-gold);
+    }
+
+    h3 {
+      margin: 0;
+      font-family: var(--codex-font-heading);
+      font-size: 1.05rem;
+      color: var(--codex-gold);
+    }
+  }
+
+  .card-desc {
+    font-size: 0.82rem;
+    color: var(--codex-text-muted);
+    margin: 0 0 12px 0;
+    line-height: 1.4;
+
+    &.mt-2 {
+      margin-top: 10px;
+    }
+  }
+}
+
+.button-toggle-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  .toggle-btn {
+    flex: 1;
+    min-width: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: #1c1b1a;
+    border: 1px solid var(--codex-line);
+    color: var(--codex-text-muted);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-family: var(--codex-font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    .btn-flag {
+      font-size: 1.1rem;
+    }
+
+    .theme-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+
+      &.dot-codex {
+        background: #1F1F1F;
+      }
+      &.dot-amoled {
+        background: #000000;
+      }
+    }
+
+    &.active {
+      background: rgba(189, 165, 69, 0.15);
+      border-color: var(--codex-gold);
+      color: var(--codex-gold-bright);
+      box-shadow: 0 0 10px rgba(189, 165, 69, 0.2);
+    }
+  }
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.85rem;
+
+  &:last-of-type {
+    border-bottom: none;
+  }
+
+  .info-label {
+    color: var(--codex-text-muted);
+  }
+
+  .info-val {
+    color: var(--codex-text-light);
+    font-weight: 500;
+
+    &.highlight {
+      color: var(--codex-gold-bright);
+      font-weight: 600;
+    }
+  }
+}
+
+.about-card {
+  .about-content {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+
+    .about-logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 2px solid var(--codex-gold);
+      box-shadow: 0 0 12px rgba(189, 165, 69, 0.35);
+    }
+
+    h4 {
+      margin: 0 0 4px 0;
+      font-family: var(--codex-font-heading);
+      color: var(--codex-gold);
+      font-size: 1rem;
+    }
+
+    .about-desc {
+      margin: 0;
+      font-size: 0.8rem;
+      color: var(--codex-text-muted);
+    }
+  }
+
+  .external-links {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+
+    .codex-link {
+      font-size: 0.8rem;
+      color: var(--codex-gold);
+      text-decoration: none;
+      border: 1px solid var(--codex-line);
+      padding: 6px 12px;
+      border-radius: 4px;
+      background: #1c1b1a;
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: var(--codex-gold);
+        background: #252320;
+      }
+    }
+  }
+}

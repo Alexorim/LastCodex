@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular/lazy';
 import { addIcons } from 'ionicons';
-import { searchOutline, calendarOutline, shieldOutline } from 'ionicons/icons';
-
+import { searchOutline, calendarOutline, shieldOutline, closeCircleOutline } from 'ionicons/icons';
 import { MaterialsService } from '../../services/materials.service';
+import { SettingsService, Language } from '../../services/settings.service';
 import { MaterialSearchResult } from '../../models/material.model';
+import { getMaterialIcon } from '../../utils/material-icon.util';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -18,19 +19,26 @@ import { Subscription } from 'rxjs';
 })
 export class SearchPage implements OnInit, OnDestroy {
   private materialsService = inject(MaterialsService);
+  private settingsService = inject(SettingsService);
   private dataSub: Subscription | null = null;
+  private langSub: Subscription | null = null;
 
   searchQuery: string = '';
   allMaterials: string[] = [];
   filteredMaterials: string[] = [];
   selectedResult: MaterialSearchResult | null = null;
   showSuggestions: boolean = false;
+  currentLang: Language = 'es';
 
   constructor() {
-    addIcons({ searchOutline, calendarOutline, shieldOutline });
+    addIcons({ searchOutline, calendarOutline, shieldOutline, closeCircleOutline });
   }
 
   ngOnInit() {
+    this.langSub = this.settingsService.lang$.subscribe(lang => {
+      this.currentLang = lang;
+    });
+
     this.dataSub = this.materialsService.catalog$.subscribe(catalog => {
       this.allMaterials = catalog.map(c => c.materialName);
     });
@@ -38,6 +46,15 @@ export class SearchPage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.dataSub?.unsubscribe();
+    this.langSub?.unsubscribe();
+  }
+
+  getMatIcon(name: string): string {
+    return getMaterialIcon(name);
+  }
+
+  onImageError(event: any): void {
+    event.target.style.display = 'none';
   }
 
   onSearchChange() {

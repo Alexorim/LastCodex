@@ -9,10 +9,10 @@ function createWindow() {
     height: 860,
     minWidth: 400,
     minHeight: 600,
-    backgroundColor: '#0d1117',
-    title: 'Orna Guild Forecast',
+    backgroundColor: '#1F1F1F',
+    title: 'LastCodex — Orna Guild Forecast',
     autoHideMenuBar: true,
-    icon: path.join(__dirname, 'www', 'assets', 'icon', 'favicon.png'),
+    icon: path.join(__dirname, 'www', 'assets', 'icon', 'last_codex.png'),
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,

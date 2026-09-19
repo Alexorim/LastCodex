@@ -16,8 +16,8 @@
     "dist:win:exe": "ng build --configuration production && electron-builder --win portable"
   },
   "build": {
-    "appId": "com.orna.forecast",
-    "productName": "Orna Guild Forecast",
+    "appId": "com.lastcodex.app",
+    "productName": "LastCodex",
     "files": [
       "electron-main.js",
       "www/**/*"

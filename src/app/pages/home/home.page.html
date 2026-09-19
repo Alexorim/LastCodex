@@ -1,95 +1,128 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Orna Guild Forecast</ion-title>
+<ion-header class="ion-no-border">
+  <!-- Brand Toolbar -->
+  <ion-toolbar class="codex-toolbar">
+    <div class="header-inner">
+      <div class="brand-left">
+        <img src="assets/icon/last_codex.png" alt="LastCodex Logo" class="brand-emblem" />
+        <div>
+          <span class="brand-name">LastCodex</span>
+          <span class="brand-subtitle">{{ currentLang === 'es' ? 'Pronóstico de Gremios de Orna' : 'Orna Guild Material Forecast' }}</span>
+        </div>
+      </div>
+      <button type="button" class="refresh-btn" (click)="doRefresh($event)" title="Actualizar datos">
+        <ion-icon name="refresh-outline"></ion-icon>
+      </button>
+    </div>
   </ion-toolbar>
-  <!-- Countdown bar -->
+
+  <!-- Countdown Banner -->
   <ion-toolbar class="countdown-toolbar">
     <div class="countdown-container">
-      <div class="countdown-label">Próximo cambio de materiales</div>
-      <div class="countdown-timer glow-text">{{ countdownStr$ | async }}</div>
+      <div class="countdown-top">
+        <span class="countdown-label">
+          {{ currentLang === 'es' ? 'Próximo reinicio de tiendas' : 'Next Guild Rotation' }}
+        </span>
+        <span class="reset-time-badge" *ngIf="localResetTime$ | async as resetTime">
+          {{ currentLang === 'es' ? 'Reinicio: ' : 'Reset: ' }}{{ resetTime }}
+        </span>
+      </div>
+      <div class="countdown-timer">{{ countdownStr$ | async }}</div>
       <div *ngIf="isStale" class="stale-warning">
-        <span class="stale-indicator"></span>
-        <span>Datos actualizándose en el Excel (~10 min)...</span>
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <span>{{ currentLang === 'es' ? 'Sincronizando con el Excel (~10 min)...' : 'Syncing with live Sheet (~10 min)...' }}</span>
       </div>
     </div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding codex-content">
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
   <!-- Loading skeleton -->
-  <div *ngIf="isLoading" class="ion-padding">
-    <ion-skeleton-text animated style="width: 60%; height: 24px" class="ion-margin-bottom"></ion-skeleton-text>
-    <ion-skeleton-text *ngFor="let i of [1,2,3,4,5,6]" animated style="width: 100%; height: 50px" class="ion-margin-bottom"></ion-skeleton-text>
+  <div *ngIf="isLoading" class="skeleton-wrap">
+    <ion-skeleton-text animated style="width: 50%; height: 28px; margin-bottom: 12px;"></ion-skeleton-text>
+    <ion-skeleton-text *ngFor="let i of [1,2,3,4,5,6]" animated style="width: 100%; height: 56px; margin-bottom: 10px; border-radius: 6px;"></ion-skeleton-text>
   </div>
 
   <div *ngIf="!isLoading" class="forecast-container">
-    <!-- SECCIÓN DE HOY -->
-    <ion-card *ngIf="todayForecast" class="forecast-card card-today">
-      <ion-card-header>
-        <div class="section-title-badge">
-          <ion-icon name="time-outline"></ion-icon>
-          <span>HOY</span>
-        </div>
-        <ion-card-title class="date-title">{{ todayForecast.dateTitle }}</ion-card-title>
-        <p class="section-subtitle">Stock de materiales por gremio</p>
-      </ion-card-header>
 
-      <ion-card-content class="p-0">
-        <div class="guilds-table">
-          <div *ngFor="let g of todayForecast.guilds" class="guild-row">
-            <!-- Lado izquierdo: Gremio -->
-            <div class="guild-left">
-              <span class="guild-color-dot" [style.background]="getGuildColor(g.guildName)"></span>
-              <span class="guild-name">{{ g.guildName }}</span>
-            </div>
-            <!-- Lado derecho: Materiales -->
-            <div class="guild-right">
-              <span *ngFor="let mat of g.materials" class="mat-pill">
-                {{ mat }}
-              </span>
-            </div>
+    <!-- SECCIÓN DE HOY -->
+    <div *ngIf="todayForecast" class="codex-box card-today">
+      <div class="box-header">
+        <div class="badge-row">
+          <span class="section-tag tag-today">
+            <ion-icon name="time-outline"></ion-icon>
+            {{ currentLang === 'es' ? 'HOY' : 'TODAY' }}
+          </span>
+          <span class="date-text">{{ todayForecast.dateTitle }}</span>
+        </div>
+        <p class="box-subtitle">{{ currentLang === 'es' ? 'Stock activo por gremio' : 'Active material stock per guild' }}</p>
+      </div>
+
+      <div class="guilds-table">
+        <div *ngFor="let g of todayForecast.guilds" class="guild-row">
+          <!-- Gremio a la izquierda -->
+          <div class="guild-left">
+            <span class="guild-color-dot" [style.background]="getGuildColor(g.guildName)"></span>
+            <span class="guild-name">{{ g.guildName }}</span>
+          </div>
+          <!-- Materiales a la derecha con imagen pixel-art a la izquierda -->
+          <div class="guild-right">
+            <span *ngFor="let mat of g.materials" class="material-pill">
+              <img [src]="getMatIcon(mat)" (error)="onImageError($event)" class="mat-icon" alt="" />
+              <span class="mat-name">{{ mat }}</span>
+            </span>
           </div>
         </div>
-      </ion-card-content>
-    </ion-card>
+      </div>
+    </div>
 
     <!-- SECCIÓN DE MAÑANA -->
-    <ion-card *ngIf="tomorrowForecast" class="forecast-card card-tomorrow">
-      <ion-card-header>
-        <div class="section-title-badge tomorrow-badge">
-          <ion-icon name="calendar-outline"></ion-icon>
-          <span>MAÑANA</span>
+    <div *ngIf="tomorrowForecast" class="codex-box card-tomorrow">
+      <div class="box-header">
+        <div class="badge-row">
+          <span class="section-tag tag-tomorrow">
+            <ion-icon name="calendar-outline"></ion-icon>
+            {{ currentLang === 'es' ? 'MAÑANA' : 'TOMORROW' }}
+          </span>
+          <span class="date-text">{{ tomorrowForecast.dateTitle }}</span>
         </div>
-        <ion-card-title class="date-title">{{ tomorrowForecast.dateTitle }}</ion-card-title>
-        <p class="section-subtitle">Próximo stock de materiales por gremio</p>
-      </ion-card-header>
+        <p class="box-subtitle">{{ currentLang === 'es' ? 'Próximo stock por gremio' : 'Upcoming stock per guild' }}</p>
+      </div>
 
-      <ion-card-content class="p-0">
-        <div class="guilds-table">
-          <div *ngFor="let g of tomorrowForecast.guilds" class="guild-row">
-            <!-- Lado izquierdo: Gremio -->
-            <div class="guild-left">
-              <span class="guild-color-dot" [style.background]="getGuildColor(g.guildName)"></span>
-              <span class="guild-name">{{ g.guildName }}</span>
-            </div>
-            <!-- Lado derecho: Materiales -->
-            <div class="guild-right">
-              <span *ngFor="let mat of g.materials" class="mat-pill mat-pill-tomorrow">
-                {{ mat }}
-              </span>
-            </div>
+      <div class="guilds-table">
+        <div *ngFor="let g of tomorrowForecast.guilds" class="guild-row">
+          <!-- Gremio a la izquierda -->
+          <div class="guild-left">
+            <span class="guild-color-dot" [style.background]="getGuildColor(g.guildName)"></span>
+            <span class="guild-name">{{ g.guildName }}</span>
+          </div>
+          <!-- Materiales a la derecha con imagen pixel-art a la izquierda -->
+          <div class="guild-right">
+            <span *ngFor="let mat of g.materials" class="material-pill pill-tomorrow">
+              <img [src]="getMatIcon(mat)" (error)="onImageError($event)" class="mat-icon" alt="" />
+              <span class="mat-name">{{ mat }}</span>
+            </span>
           </div>
         </div>
-      </ion-card-content>
-    </ion-card>
-
-    <!-- Info de actualización -->
-    <div class="last-updated" *ngIf="lastUpdated">
-      Última sincronización con el Excel: {{ lastUpdated | date:'HH:mm:ss' }}
+      </div>
     </div>
+
+    <!-- Sincronización info -->
+    <div class="sync-info" *ngIf="lastUpdated">
+      <span>{{ currentLang === 'es' ? 'Última sincronización con Google Sheets: ' : 'Last synced with Google Sheets: ' }}</span>
+      <span class="sync-time">{{ lastUpdated | date:'HH:mm:ss' }}</span>
+    </div>
+
+    <!-- Global Footer Disclaimer -->
+    <div class="codex-footer">
+      <div class="brand-credit">LastCodex</div>
+      <p class="disclaimer-text">
+        Fan-made project. Not affiliated with Northern Forge Studios or the official Orna developers.
+      </p>
+    </div>
+
   </div>
 </ion-content>

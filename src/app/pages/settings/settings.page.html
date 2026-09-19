@@ -1,0 +1,137 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="codex-toolbar">
+    <div class="header-inner">
+      <div class="brand-left">
+        <img src="assets/icon/last_codex.png" alt="LastCodex Logo" class="brand-emblem" />
+        <div>
+          <span class="brand-name">LastCodex</span>
+          <span class="page-subtitle">{{ currentLang === 'es' ? 'Ajustes y Configuración' : 'Settings & Preferences' }}</span>
+        </div>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding codex-content">
+  <div class="settings-container">
+
+    <!-- Section 1: Language -->
+    <div class="settings-card">
+      <div class="card-header">
+        <ion-icon name="globe-outline" class="card-icon"></ion-icon>
+        <h3>{{ currentLang === 'es' ? 'Idioma' : 'Language' }}</h3>
+      </div>
+      <p class="card-desc">
+        {{ currentLang === 'es' ? 'Selecciona el idioma de la aplicación' : 'Select your preferred language' }}
+      </p>
+      <div class="button-toggle-group">
+        <button
+          type="button"
+          class="toggle-btn"
+          [class.active]="currentLang === 'es'"
+          (click)="onLanguageChange('es')">
+          <span class="btn-flag">🇪🇸</span>
+          <span>Español</span>
+        </button>
+        <button
+          type="button"
+          class="toggle-btn"
+          [class.active]="currentLang === 'en'"
+          (click)="onLanguageChange('en')">
+          <span class="btn-flag">🇺🇸</span>
+          <span>English</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Section 2: Appearance & Theme -->
+    <div class="settings-card">
+      <div class="card-header">
+        <ion-icon name="color-palette-outline" class="card-icon"></ion-icon>
+        <h3>{{ currentLang === 'es' ? 'Apariencia' : 'Theme' }}</h3>
+      </div>
+      <p class="card-desc">
+        {{ currentLang === 'es' ? 'Elige el esquema de color del Codex' : 'Choose your Codex color scheme' }}
+      </p>
+      <div class="button-toggle-group">
+        <button
+          type="button"
+          class="toggle-btn"
+          [class.active]="currentTheme === 'codex-dark'"
+          (click)="onThemeChange('codex-dark')">
+          <span class="theme-dot dot-codex"></span>
+          <span>Codex Dark (#1F1F1F)</span>
+        </button>
+        <button
+          type="button"
+          class="toggle-btn"
+          [class.active]="currentTheme === 'amoled'"
+          (click)="onThemeChange('amoled')">
+          <span class="theme-dot dot-amoled"></span>
+          <span>AMOLED Pure</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Section 3: Timezone & Rotation Info -->
+    <div class="settings-card">
+      <div class="card-header">
+        <ion-icon name="time-outline" class="card-icon"></ion-icon>
+        <h3>{{ currentLang === 'es' ? 'Sincronización de Horario' : 'Timezone & Reset' }}</h3>
+      </div>
+      <div class="info-row">
+        <span class="info-label">{{ currentLang === 'es' ? 'Zona Horaria del Dispositivo:' : 'Device Timezone:' }}</span>
+        <span class="info-val">{{ deviceTimezone }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">{{ currentLang === 'es' ? 'Reinicio de Gremios:' : 'Guild Reset Time:' }}</span>
+        <span class="info-val highlight">{{ localResetTime || '11:00 PM' }} (hora local)</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">{{ currentLang === 'es' ? 'Hora Global Orna:' : 'Global Orna Reset:' }}</span>
+        <span class="info-val">04:00:00 UTC</span>
+      </div>
+      <p class="card-desc mt-2">
+        {{ currentLang === 'es'
+          ? 'El contador calcula automáticamente el tiempo restante hasta las 11:00 PM (en UTC-5) ajustado a tu reloj local.'
+          : 'The timer automatically tracks the exact reset countdown to 11:00 PM (UTC-5) adjusted to your device.' }}
+      </p>
+    </div>
+
+    <!-- Section 4: About & Credits -->
+    <div class="settings-card about-card">
+      <div class="card-header">
+        <ion-icon name="shield-checkmark-outline" class="card-icon"></ion-icon>
+        <h3>LastCodex</h3>
+      </div>
+      <div class="about-content">
+        <img src="assets/icon/last_codex.png" alt="LastCodex Logo" class="about-logo" />
+        <div>
+          <h4>LastCodex v1.1.0</h4>
+          <p class="about-desc">
+            {{ currentLang === 'es'
+              ? 'Pronóstico de rotación de materiales de tiendas de gremio de Orna RPG.'
+              : 'Guild shop material forecast tool for Orna RPG.' }}
+          </p>
+        </div>
+      </div>
+      <div class="external-links">
+        <a href="https://playorna.com/codex/" target="_blank" rel="noopener noreferrer" class="codex-link">
+          Official Orna Codex ↗
+        </a>
+        <a href="https://www.aussiescodex.com" target="_blank" rel="noopener noreferrer" class="codex-link">
+          Aussie's Codex ↗
+        </a>
+      </div>
+    </div>
+
+    <!-- Global Footer Disclaimer -->
+    <div class="codex-footer">
+      <div class="brand-credit">LastCodex</div>
+      <p class="disclaimer-text">
+        Fan-made project. Not affiliated with Northern Forge Studios or the official Orna developers.
+      </p>
+    </div>
+
+  </div>
+</ion-content>
