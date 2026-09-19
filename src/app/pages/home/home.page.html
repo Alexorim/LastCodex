@@ -1,36 +1,37 @@
-<ion-header class="ion-no-border">
-  <!-- Brand Toolbar -->
+<ion-header class="ion-no-border codex-header">
+  <!-- Unified Header with Brand and Countdown -->
   <ion-toolbar class="codex-toolbar">
-    <div class="header-inner">
-      <div class="brand-left">
+    <div class="header-main-grid">
+      <!-- Brand on Left (Clickable to /home) -->
+      <div class="brand-left clickable" (click)="goToHome()" title="Ir a Inicio">
         <img src="assets/icon/last_codex.png" alt="LastCodex Logo" class="brand-emblem" />
-        <div>
+        <div class="brand-info">
           <span class="brand-name">LastCodex</span>
-          <span class="brand-subtitle">{{ currentLang === 'es' ? 'Pronóstico de Gremios de Orna' : 'Orna Guild Material Forecast' }}</span>
+          <span class="brand-subtitle">{{ currentLang === 'es' ? 'Pronóstico de Gremios' : 'Guild Forecast' }}</span>
         </div>
       </div>
-      <button type="button" class="refresh-btn" (click)="doRefresh($event)" title="Actualizar datos">
-        <ion-icon name="refresh-outline"></ion-icon>
-      </button>
-    </div>
-  </ion-toolbar>
 
-  <!-- Countdown Banner -->
-  <ion-toolbar class="countdown-toolbar">
-    <div class="countdown-container">
-      <div class="countdown-top">
-        <span class="countdown-label">
-          {{ currentLang === 'es' ? 'Próximo reinicio de tiendas' : 'Next Guild Rotation' }}
-        </span>
-        <span class="reset-time-badge" *ngIf="localResetTime$ | async as resetTime">
-          {{ currentLang === 'es' ? 'Reinicio: ' : 'Reset: ' }}{{ resetTime }}
-        </span>
+      <!-- Integrated Header Countdown -->
+      <div class="header-countdown-block">
+        <div class="countdown-info-row">
+          <span class="countdown-label">
+            {{ currentLang === 'es' ? 'Reinicio de tiendas' : 'Guild Reset' }}
+          </span>
+          <span class="reset-time-badge" *ngIf="localResetTime$ | async as resetTime">
+            {{ resetTime }}
+          </span>
+          <button type="button" class="refresh-btn" (click)="doRefresh($event)" title="Actualizar datos">
+            <ion-icon name="refresh-outline"></ion-icon>
+          </button>
+        </div>
+        <div class="countdown-digits glow-text">{{ countdownStr$ | async }}</div>
       </div>
-      <div class="countdown-timer">{{ countdownStr$ | async }}</div>
-      <div *ngIf="isStale" class="stale-warning">
-        <ion-icon name="alert-circle-outline"></ion-icon>
-        <span>{{ currentLang === 'es' ? 'Sincronizando con el Excel (~10 min)...' : 'Syncing with live Sheet (~10 min)...' }}</span>
-      </div>
+    </div>
+
+    <!-- Stale Warning if within 10 min of reset -->
+    <div *ngIf="isStale" class="stale-warning">
+      <ion-icon name="alert-circle-outline"></ion-icon>
+      <span>{{ currentLang === 'es' ? 'Sincronizando con el Excel (~10 min)...' : 'Syncing with live Sheet (~10 min)...' }}</span>
     </div>
   </ion-toolbar>
 </ion-header>
@@ -63,11 +64,18 @@
 
       <div class="guilds-table">
         <div *ngFor="let g of todayForecast.guilds" class="guild-row">
-          <!-- Gremio a la izquierda -->
+          <!-- Gremio a la izquierda con su imagen oficial -->
           <div class="guild-left">
-            <span class="guild-color-dot" [style.background]="getGuildColor(g.guildName)"></span>
+            <img
+              *ngIf="getGuildImg(g.guildName)"
+              [src]="getGuildImg(g.guildName)"
+              (error)="onImageError($event)"
+              class="guild-icon-badge"
+              alt="" />
+            <span *ngIf="!getGuildImg(g.guildName)" class="guild-color-dot" [style.background]="getGuildColor(g.guildName)"></span>
             <span class="guild-name">{{ g.guildName }}</span>
           </div>
+
           <!-- Materiales a la derecha con imagen pixel-art a la izquierda -->
           <div class="guild-right">
             <span *ngFor="let mat of g.materials" class="material-pill">
@@ -94,11 +102,18 @@
 
       <div class="guilds-table">
         <div *ngFor="let g of tomorrowForecast.guilds" class="guild-row">
-          <!-- Gremio a la izquierda -->
+          <!-- Gremio a la izquierda con su imagen oficial -->
           <div class="guild-left">
-            <span class="guild-color-dot" [style.background]="getGuildColor(g.guildName)"></span>
+            <img
+              *ngIf="getGuildImg(g.guildName)"
+              [src]="getGuildImg(g.guildName)"
+              (error)="onImageError($event)"
+              class="guild-icon-badge"
+              alt="" />
+            <span *ngIf="!getGuildImg(g.guildName)" class="guild-color-dot" [style.background]="getGuildColor(g.guildName)"></span>
             <span class="guild-name">{{ g.guildName }}</span>
           </div>
+
           <!-- Materiales a la derecha con imagen pixel-art a la izquierda -->
           <div class="guild-right">
             <span *ngFor="let mat of g.materials" class="material-pill pill-tomorrow">

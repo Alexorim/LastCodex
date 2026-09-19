@@ -1,7 +1,7 @@
 <ion-header class="ion-no-border">
   <ion-toolbar class="codex-toolbar">
     <div class="header-inner">
-      <div class="brand-left">
+      <div class="brand-left clickable" (click)="goToHome()" title="Ir a Inicio">
         <img src="assets/icon/last_codex.png" alt="LastCodex Logo" class="brand-emblem" />
         <div>
           <span class="brand-name">LastCodex</span>
@@ -50,7 +50,13 @@
         <div *ngIf="isExpanded(item.materialName)" class="guild-expand-panel">
           <div *ngFor="let g of item.guildAppearances" class="expand-row">
             <div class="expand-left">
-              <span class="guild-color-dot" [style.background]="getGuildColor(g.guildName)"></span>
+              <img
+                *ngIf="getGuildImg(g.guildName)"
+                [src]="getGuildImg(g.guildName)"
+                (error)="onImageError($event)"
+                class="guild-icon-badge"
+                alt="" />
+              <span *ngIf="!getGuildImg(g.guildName)" class="guild-color-dot" [style.background]="getGuildColor(g.guildName)"></span>
               <span class="expand-guild-name">{{ g.guildName }}</span>
             </div>
             <div class="expand-right">

@@ -1,121 +1,133 @@
+.codex-header {
+  border-bottom: 1px solid var(--codex-line);
+}
+
 .codex-toolbar {
   --background: #1F1F1F;
-  border-bottom: 1px solid var(--codex-line);
-  padding: 6px 12px;
+  padding: 8px 14px;
+}
 
-  .header-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
+.header-main-grid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
 
-  .brand-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.brand-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 
-    .brand-emblem {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border: 1px solid var(--codex-gold);
-      box-shadow: 0 0 10px rgba(189, 165, 69, 0.4);
-    }
-
-    .brand-name {
-      display: block;
-      font-family: var(--codex-font-heading);
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--codex-gold);
-      letter-spacing: 0.06em;
-      line-height: 1.1;
-    }
-
-    .brand-subtitle {
-      display: block;
-      font-size: 0.7rem;
-      color: var(--codex-text-muted);
-    }
-  }
-
-  .refresh-btn {
-    background: #2A2826;
-    border: 1px solid var(--codex-line);
-    color: var(--codex-gold);
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  &.clickable {
     cursor: pointer;
-    font-size: 1.1rem;
-    transition: all 0.2s ease;
+    user-select: none;
+    transition: transform 0.18s ease, opacity 0.18s ease;
 
     &:hover {
-      border-color: var(--codex-gold);
-      background: #33302d;
-      transform: rotate(45deg);
+      transform: translateY(-1px);
+      opacity: 0.92;
     }
+
+    &:active {
+      transform: scale(0.97);
+    }
+  }
+
+  .brand-emblem {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--codex-gold);
+    box-shadow: 0 0 10px rgba(189, 165, 69, 0.4);
+    flex-shrink: 0;
+  }
+
+  .brand-name {
+    display: block;
+    font-family: var(--codex-font-heading);
+    font-size: 1.28rem;
+    font-weight: 700;
+    color: var(--codex-gold);
+    letter-spacing: 0.06em;
+    line-height: 1.1;
+  }
+
+  .brand-subtitle {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--codex-text-muted);
   }
 }
 
-.countdown-toolbar {
-  --background: rgba(31, 31, 31, 0.95);
-  border-bottom: 1px solid var(--codex-line);
-  padding: 8px 12px 10px;
+.header-countdown-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  background: rgba(42, 40, 38, 0.6);
+  border: 1px solid rgba(189, 165, 69, 0.2);
+  border-radius: 8px;
+  padding: 5px 10px;
 
-  .countdown-container {
-    text-align: center;
-  }
-
-  .countdown-top {
+  .countdown-info-row {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 2px;
+    gap: 8px;
   }
 
   .countdown-label {
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.08em;
     color: var(--codex-text-muted);
   }
 
   .reset-time-badge {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     background: rgba(189, 165, 69, 0.12);
     border: 1px solid rgba(189, 165, 69, 0.3);
     color: var(--codex-gold-bright);
-    padding: 1px 7px;
-    border-radius: 10px;
+    padding: 1px 6px;
+    border-radius: 6px;
     font-weight: 600;
   }
 
-  .countdown-timer {
-    font-family: var(--codex-font-heading), monospace;
-    font-size: 2.2rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
+  .refresh-btn {
+    background: transparent;
+    border: none;
     color: var(--codex-gold);
-    text-shadow: 0 0 12px rgba(189, 165, 69, 0.4);
-    line-height: 1.1;
-    margin: 2px 0;
-  }
-
-  .stale-warning {
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0 2px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 4px;
-    font-size: 0.75rem;
-    color: var(--ion-color-warning);
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: rotate(45deg);
+    }
   }
+
+  .countdown-digits {
+    font-family: var(--codex-font-heading), monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--codex-gold);
+    text-shadow: 0 0 10px rgba(189, 165, 69, 0.4);
+    line-height: 1.1;
+  }
+}
+
+.stale-warning {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 0.74rem;
+  color: var(--ion-color-warning);
 }
 
 .codex-content {
@@ -216,12 +228,20 @@
   .guild-left {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     width: 38%;
     min-width: 140px;
     max-width: 210px;
     flex-shrink: 0;
     padding-right: 8px;
+
+    .guild-icon-badge {
+      width: 26px;
+      height: 26px;
+      image-rendering: pixelated;
+      flex-shrink: 0;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+    }
 
     .guild-color-dot {
       width: 10px;
@@ -269,6 +289,17 @@
 }
 
 @media (max-width: 600px) {
+  .header-main-grid {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .header-countdown-block {
+    align-items: center;
+    width: 100%;
+  }
+
   .guilds-table {
     .guild-row {
       flex-direction: column;

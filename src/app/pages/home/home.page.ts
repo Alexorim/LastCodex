@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular/lazy';
 import { addIcons } from 'ionicons';
 import { home, homeOutline, calendarOutline, refreshOutline, shieldOutline, timeOutline, alertCircleOutline } from 'ionicons/icons';
@@ -9,6 +10,7 @@ import { TimerService } from '../../services/timer.service';
 import { SettingsService, Language } from '../../services/settings.service';
 import { DayForecast } from '../../models/material.model';
 import { getMaterialIcon } from '../../utils/material-icon.util';
+import { getGuildIcon } from '../../utils/guild-icon.util';
 import { Observable, Subscription } from 'rxjs';
 
 @Component({
@@ -22,6 +24,7 @@ export class HomePage implements OnInit, OnDestroy {
   private materialsService = inject(MaterialsService);
   private timerService = inject(TimerService);
   private settingsService = inject(SettingsService);
+  private router = inject(Router);
 
   private todaySub: Subscription | null = null;
   private tomorrowSub: Subscription | null = null;
@@ -76,6 +79,14 @@ export class HomePage implements OnInit, OnDestroy {
     return getMaterialIcon(name);
   }
 
+  getGuildImg(name: string): string {
+    return getGuildIcon(name);
+  }
+
+  goToHome(): void {
+    this.router.navigate(['/home']);
+  }
+
   onImageError(event: any): void {
     event.target.style.display = 'none';
   }
@@ -88,18 +99,21 @@ export class HomePage implements OnInit, OnDestroy {
     if (lower.includes('melancholy')) return '#5c6bc0';
     if (lower.includes('torment')) return '#26a69a';
     if (lower.includes('coral')) return '#ec407a';
-    if (lower.includes('deepshards')) return '#42a5f5';
-    if (lower.includes('remembrance')) return '#26c6da';
-    if (lower.includes('sparring')) return '#66bb6a';
+    if (lower.includes('deepshards') || lower.includes('shard')) return '#42a5f5';
+    if (lower.includes('remembrance') || lower.includes('memory')) return '#26c6da';
+    if (lower.includes('sparring') || lower.includes('blade')) return '#66bb6a';
     if (lower.includes('trials')) return '#ffa726';
-    if (lower.includes('towers')) return '#8d6e63';
+    if (lower.includes('towers') || lower.includes('titan')) return '#8d6e63';
+    if (lower.includes('monument')) return '#7e57c2';
     return '#78909c';
   }
 
   doRefresh(event: any) {
     this.materialsService.loadData();
     setTimeout(() => {
-      event.target.complete();
+      if (event && event.target && event.target.complete) {
+        event.target.complete();
+      }
     }, 2000);
   }
 }

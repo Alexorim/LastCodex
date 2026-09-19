@@ -1,7 +1,7 @@
 <ion-header class="ion-no-border">
   <ion-toolbar class="codex-toolbar">
     <div class="header-inner">
-      <div class="brand-left">
+      <div class="brand-left clickable" (click)="goToHome()" title="Ir a Inicio">
         <img src="assets/icon/last_codex.png" alt="LastCodex Logo" class="brand-emblem" />
         <div>
           <span class="brand-name">LastCodex</span>
@@ -55,7 +55,13 @@
       <div class="appearance-list">
         <div *ngFor="let app of selectedResult.guildAppearances" class="appearance-row">
           <div class="app-left">
-            <span class="guild-color-dot" [style.background]="getGuildColor(app.guildName)"></span>
+            <img
+              *ngIf="getGuildImg(app.guildName)"
+              [src]="getGuildImg(app.guildName)"
+              (error)="onImageError($event)"
+              class="guild-icon-badge"
+              alt="" />
+            <span *ngIf="!getGuildImg(app.guildName)" class="guild-color-dot" [style.background]="getGuildColor(app.guildName)"></span>
             <span class="app-guild-name">{{ app.guildName }}</span>
           </div>
           <div class="app-right">

@@ -12,6 +12,7 @@ import {
   shieldCheckmarkOutline,
   refreshOutline
 } from 'ionicons/icons';
+import { Router } from '@angular/router';
 import { SettingsService, Language, ThemeMode } from '../../services/settings.service';
 import { TimerService } from '../../services/timer.service';
 
@@ -25,6 +26,7 @@ import { TimerService } from '../../services/timer.service';
 export class SettingsPage implements OnInit {
   private settingsService = inject(SettingsService);
   private timerService = inject(TimerService);
+  private router = inject(Router);
 
   currentLang: Language = 'es';
   currentTheme: ThemeMode = 'codex-dark';
@@ -56,6 +58,10 @@ export class SettingsPage implements OnInit {
     this.timerService.localResetTime$.subscribe(time => {
       this.localResetTime = time;
     });
+  }
+
+  goToHome(): void {
+    this.router.navigate(['/home']);
   }
 
   onLanguageChange(lang: Language) {
