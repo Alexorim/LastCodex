@@ -2,9 +2,9 @@
   <ion-toolbar class="codex-toolbar">
     <div class="header-inner">
       <div class="brand-left clickable" (click)="goToHome()" title="Ir a Inicio">
-        <img src="assets/icon/last_codex.png" alt="LastCodex Logo" class="brand-emblem" />
+        <img src="assets/icon/last_codex.png" alt="LastResources Logo" class="brand-emblem" />
         <div>
-          <span class="brand-name">LastCodex</span>
+          <span class="brand-name">LastResources</span>
           <span class="brand-subtitle">{{ currentLang === 'es' ? 'Buscador de Materiales' : 'Material Codex Search' }}</span>
         </div>
       </div>
@@ -47,9 +47,15 @@
             <span class="mat-subtitle">{{ currentLang === 'es' ? 'Próxima aparición por gremio:' : 'Next appearance per guild:' }}</span>
           </div>
         </div>
-        <button type="button" class="close-btn" (click)="clearSearch()">
-          <ion-icon name="close-circle-outline"></ion-icon>
-        </button>
+        <div class="result-actions">
+          <button type="button" class="codice-btn disabled-btn" disabled title="Codice (Próximamente)">
+            <ion-icon name="book-outline"></ion-icon>
+            <span>Codice</span>
+          </button>
+          <button type="button" class="close-btn" (click)="clearSearch()">
+            <ion-icon name="close-circle-outline"></ion-icon>
+          </button>
+        </div>
       </div>
 
       <div class="appearance-list">
@@ -96,7 +102,7 @@
 
     <!-- Global Footer Disclaimer -->
     <div class="codex-footer">
-      <div class="brand-credit">LastCodex</div>
+      <div class="brand-credit">LastResources</div>
       <p class="disclaimer-text">
         Fan-made project. Not affiliated with Northern Forge Studios or the official Orna developers.
       </p>

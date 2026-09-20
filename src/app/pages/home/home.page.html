@@ -1,30 +1,39 @@
 <ion-header class="ion-no-border codex-header">
-  <!-- Unified Header with Brand and Countdown -->
+  <!-- Unified Header with Brand, Events Button and Countdown -->
   <ion-toolbar class="codex-toolbar">
     <div class="header-main-grid">
       <!-- Brand on Left (Clickable to /home) -->
       <div class="brand-left clickable" (click)="goToHome()" title="Ir a Inicio">
-        <img src="assets/icon/last_codex.png" alt="LastCodex Logo" class="brand-emblem" />
+        <img src="assets/icon/last_codex.png" alt="LastResources Logo" class="brand-emblem" />
         <div class="brand-info">
-          <span class="brand-name">LastCodex</span>
+          <span class="brand-name">LastResources</span>
           <span class="brand-subtitle">{{ currentLang === 'es' ? 'Pronóstico de Gremios' : 'Guild Forecast' }}</span>
         </div>
       </div>
 
-      <!-- Integrated Header Countdown -->
-      <div class="header-countdown-block">
-        <div class="countdown-info-row">
-          <span class="countdown-label">
-            {{ currentLang === 'es' ? 'Reinicio de tiendas' : 'Guild Reset' }}
-          </span>
-          <span class="reset-time-badge" *ngIf="localResetTime$ | async as resetTime">
-            {{ resetTime }}
-          </span>
-          <button type="button" class="refresh-btn" (click)="doRefresh($event)" title="Actualizar datos">
-            <ion-icon name="refresh-outline"></ion-icon>
-          </button>
+      <!-- Header Right Group: Events Button & Countdown -->
+      <div class="header-right-group">
+        <!-- Events Button in Header (Only on Home) -->
+        <button type="button" class="header-event-btn" (click)="openEventsModal()" title="Ver Calendario de Eventos Orna">
+          <ion-icon name="sparkles"></ion-icon>
+          <span>{{ currentLang === 'es' ? 'Eventos' : 'Events' }}</span>
+        </button>
+
+        <!-- Integrated Header Countdown -->
+        <div class="header-countdown-block">
+          <div class="countdown-info-row">
+            <span class="countdown-label">
+              {{ currentLang === 'es' ? 'Reinicio de tiendas' : 'Guild Reset' }}
+            </span>
+            <span class="reset-time-badge" *ngIf="localResetTime$ | async as resetTime">
+              {{ resetTime }}
+            </span>
+            <button type="button" class="refresh-btn" (click)="doRefresh($event)" title="Actualizar datos">
+              <ion-icon name="refresh-outline"></ion-icon>
+            </button>
+          </div>
+          <div class="countdown-digits glow-text">{{ countdownStr$ | async }}</div>
         </div>
-        <div class="countdown-digits glow-text">{{ countdownStr$ | async }}</div>
       </div>
     </div>
 
@@ -59,8 +68,17 @@
           </span>
           <span class="date-text">{{ todayForecast.dateTitle }}</span>
         </div>
-        <p class="box-subtitle">{{ currentLang === 'es' ? 'Stock activo por gremio' : 'Active material stock per guild' }}</p>
+
+        <!-- Export button on the right inside box-header -->
+        <div class="box-header-actions">
+          <button type="button" class="export-box-btn" (click)="openExportModal()" title="Exportar tabla en imagen PNG">
+            <ion-icon name="download-outline"></ion-icon>
+            <span>{{ currentLang === 'es' ? 'Exportar' : 'Export' }}</span>
+          </button>
+        </div>
       </div>
+
+      <p class="box-subtitle">{{ currentLang === 'es' ? 'Stock activo por gremio' : 'Active material stock per guild' }}</p>
 
       <div class="guilds-table">
         <div *ngFor="let g of todayForecast.guilds" class="guild-row">
@@ -97,8 +115,9 @@
           </span>
           <span class="date-text">{{ tomorrowForecast.dateTitle }}</span>
         </div>
-        <p class="box-subtitle">{{ currentLang === 'es' ? 'Próximo stock por gremio' : 'Upcoming stock per guild' }}</p>
       </div>
+
+      <p class="box-subtitle">{{ currentLang === 'es' ? 'Próximo stock por gremio' : 'Upcoming stock per guild' }}</p>
 
       <div class="guilds-table">
         <div *ngFor="let g of tomorrowForecast.guilds" class="guild-row">
@@ -133,7 +152,7 @@
 
     <!-- Global Footer Disclaimer -->
     <div class="codex-footer">
-      <div class="brand-credit">LastCodex</div>
+      <div class="brand-credit">LastResources</div>
       <p class="disclaimer-text">
         Fan-made project. Not affiliated with Northern Forge Studios or the official Orna developers.
       </p>
@@ -141,3 +160,331 @@
 
   </div>
 </ion-content>
+
+<!-- ============================================================ -->
+<!-- MODAL DE EXPORTACIÓN (PNG / WHATSAPP / LOCAL DOWNLOAD)        -->
+<!-- ============================================================ -->
+<div class="export-modal-backdrop" *ngIf="showExportModal" (click)="closeExportModal()">
+  <div class="export-modal-card codex-box" (click)="$event.stopPropagation()">
+    <div class="modal-card-header">
+      <div class="modal-heading-left">
+        <ion-icon name="image-outline" class="modal-icon"></ion-icon>
+        <div>
+          <h3>{{ currentLang === 'es' ? 'Exportar Tabla de Stock' : 'Export Stock Table' }}</h3>
+          <span class="modal-sub">{{ currentLang === 'es' ? 'Genera una imagen PNG en alta resolución' : 'Generate high-res PNG image' }}</span>
+        </div>
+      </div>
+      <button type="button" class="modal-close" (click)="closeExportModal()">
+        <ion-icon name="close-circle-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-card-body">
+      <label class="section-instruction">
+        {{ currentLang === 'es' ? '¿Qué tabla deseas exportar en la imagen?' : 'Which table would you like to export?' }}
+      </label>
+
+      <!-- Selector de opciones -->
+      <div class="export-options-grid">
+        <div
+          class="export-option-tile"
+          [class.selected]="exportMode === 'single'"
+          (click)="exportMode = 'single'">
+          <div class="tile-radio">
+            <span class="radio-circle" [class.checked]="exportMode === 'single'"></span>
+          </div>
+          <div class="tile-content">
+            <div class="tile-title-row">
+              <span class="tile-title">{{ currentLang === 'es' ? 'Solo la tabla de Hoy' : 'Today\'s Table Only' }}</span>
+              <span class="tile-badge badge-today">HOY</span>
+            </div>
+            <p class="tile-desc">
+              {{ currentLang === 'es' ? 'Exporta únicamente el stock activo del día presente.' : 'Exports only today\'s active guild material stock.' }}
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="export-option-tile"
+          [class.selected]="exportMode === 'both'"
+          (click)="exportMode = 'both'">
+          <div class="tile-radio">
+            <span class="radio-circle" [class.checked]="exportMode === 'both'"></span>
+          </div>
+          <div class="tile-content">
+            <div class="tile-title-row">
+              <span class="tile-title">{{ currentLang === 'es' ? 'Ambas Tablas (Hoy y Mañana)' : 'Both Tables (Today & Tomorrow)' }}</span>
+              <span class="tile-badge badge-both">RECOMENDADO</span>
+            </div>
+            <p class="tile-desc">
+              {{ currentLang === 'es'
+                ? 'Exporta ambas tablas: el presente día al lado izquierdo y el día siguiente al lado derecho.'
+                : 'Exports both tables: current day on the left and next day on the right.' }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feedback status message -->
+      <div *ngIf="exportFeedback" class="export-feedback-box" [class.loading]="isExporting">
+        <ion-icon [name]="isExporting ? 'refresh-outline' : 'checkmark-circle-outline'"></ion-icon>
+        <span>{{ exportFeedback }}</span>
+      </div>
+
+      <!-- Actions: Download PNG & WhatsApp Share -->
+      <div class="modal-actions-row">
+        <button
+          type="button"
+          class="action-btn download-btn"
+          [disabled]="isExporting"
+          (click)="exportImage('download')">
+          <ion-icon name="download-outline"></ion-icon>
+          <span>{{ currentLang === 'es' ? 'Descargar PNG' : 'Download PNG' }}</span>
+        </button>
+
+        <button
+          type="button"
+          class="action-btn whatsapp-btn"
+          [disabled]="isExporting"
+          (click)="exportImage('share')">
+          <ion-icon name="logo-whatsapp"></ion-icon>
+          <span>{{ currentLang === 'es' ? 'WhatsApp / Compartir' : 'WhatsApp / Share' }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- MODAL DE CALENDARIO DE EVENTOS ORNA (INSPIRADO EN PLAYORNA)   -->
+<!-- ============================================================ -->
+<div class="events-modal-backdrop" *ngIf="showEventsModal" (click)="closeEventsModal()">
+  <div class="events-modal-card codex-box" (click)="$event.stopPropagation()">
+    <div class="modal-card-header">
+      <div class="modal-heading-left">
+        <ion-icon name="sparkles" class="events-header-icon"></ion-icon>
+        <div>
+          <h3>{{ currentLang === 'es' ? 'Calendario de Eventos' : 'Event Calendar' }}</h3>
+          <span class="modal-sub">{{ calendarMonthName }} • Orna RPG</span>
+        </div>
+      </div>
+      <div class="modal-header-actions">
+        <a href="https://playorna.com/calendar/" target="_blank" rel="noopener noreferrer" class="external-btn" title="Ver en PlayOrna Oficial">
+          <ion-icon name="open-outline"></ion-icon>
+        </a>
+        <button type="button" class="modal-close" (click)="closeEventsModal()">
+          <ion-icon name="close-circle-outline"></ion-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="events-modal-body">
+      <!-- Calendar Grid Section -->
+      <div class="calendar-scroll-wrap">
+        <table class="event-calendar-table">
+          <thead>
+            <tr>
+              <th>{{ currentLang === 'es' ? 'Dom' : 'Sun' }}</th>
+              <th>{{ currentLang === 'es' ? 'Lun' : 'Mon' }}</th>
+              <th>{{ currentLang === 'es' ? 'Mar' : 'Tue' }}</th>
+              <th>{{ currentLang === 'es' ? 'Mié' : 'Wed' }}</th>
+              <th>{{ currentLang === 'es' ? 'Jue' : 'Thu' }}</th>
+              <th>{{ currentLang === 'es' ? 'Vie' : 'Fri' }}</th>
+              <th>{{ currentLang === 'es' ? 'Sáb' : 'Sat' }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let week of calendarWeeks">
+              <td
+                *ngFor="let cell of week"
+                [class.adjacent]="!cell.isCurrentMonth"
+                [class.current]="cell.isCurrentMonth"
+                [class.today-cell]="cell.isToday">
+                <span class="day-number">{{ cell.dayNumber }}</span>
+
+                <div class="cell-events" *ngIf="cell.isCurrentMonth">
+                  <div
+                    *ngFor="let ev of cell.events"
+                    class="mini-event-pill"
+                    [class.live-pill]="isEventLive(ev)"
+                    [style.border-left-color]="ev.color"
+                    (click)="viewEventDetail(ev)"
+                    [title]="ev.name">
+                    <img [src]="ev.icon" class="mini-ev-icon" alt="" />
+                    <span class="mini-ev-name">{{ ev.name }}</span>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Detail Card if an event is clicked -->
+      <div class="selected-event-card" *ngIf="selectedEventDetail">
+        <div class="selected-header">
+          <div class="sel-left">
+            <img [src]="selectedEventDetail.icon" class="sel-icon" alt="" />
+            <div>
+              <div class="sel-badge-row">
+                <span class="event-tag" [style.background]="selectedEventDetail.color">{{ selectedEventDetail.tag }}</span>
+                <span class="live-badge" *ngIf="isEventLive(selectedEventDetail)">● EN VIVO</span>
+              </div>
+              <h4 class="sel-title">{{ selectedEventDetail.name }}</h4>
+              <span class="sel-dates">Días {{ selectedEventDetail.startDay }} al {{ selectedEventDetail.endDay }} de {{ calendarMonthName }}</span>
+            </div>
+          </div>
+          <button type="button" class="close-sel" (click)="selectedEventDetail = null">
+            <ion-icon name="close-circle-outline"></ion-icon>
+          </button>
+        </div>
+        <p class="sel-desc">
+          {{ currentLang === 'es' ? selectedEventDetail.descriptionEs : selectedEventDetail.descriptionEn }}
+        </p>
+        <div class="sel-rewards">
+          <span class="reward-lbl">{{ currentLang === 'es' ? 'Recompensas / Destacados:' : 'Featured Rewards:' }}</span>
+          <span class="reward-val">{{ currentLang === 'es' ? selectedEventDetail.rewardsEs : selectedEventDetail.rewardsEn }}</span>
+        </div>
+      </div>
+
+      <!-- Events List of the Month -->
+      <div class="events-roster-section">
+        <h4 class="roster-title">{{ currentLang === 'es' ? 'Eventos del Mes' : 'Events This Month' }}</h4>
+        <div class="events-roster-grid">
+          <div
+            *ngFor="let ev of officialEvents"
+            class="roster-item"
+            [class.active-item]="isEventLive(ev)"
+            (click)="viewEventDetail(ev)">
+            <img [src]="ev.icon" class="roster-icon" alt="" />
+            <div class="roster-info">
+              <div class="roster-top">
+                <span class="roster-name">{{ ev.name }}</span>
+                <span class="roster-live" *ngIf="isEventLive(ev)">EN VIVO</span>
+              </div>
+              <span class="roster-dates">Día {{ ev.startDay }} - {{ ev.endDay }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- CONTENEDORES OCULTOS PARA RENDERIZAR LA IMAGEN PNG A EXPORTAR-->
+<!-- ============================================================ -->
+<div class="export-render-offscreen">
+
+  <!-- Target 1: SOLO HOY -->
+  <div #exportTargetSingle class="export-canvas-single" *ngIf="todayForecast">
+    <!-- Brand Header -->
+    <div class="canvas-header">
+      <div class="canvas-brand">
+        <img src="assets/icon/last_codex.png" class="canvas-logo" alt="" />
+        <div>
+          <h2 class="canvas-title">LastResources</h2>
+          <p class="canvas-subtitle">Pronóstico de Tiendas de Gremio — Orna RPG</p>
+        </div>
+      </div>
+      <div class="canvas-badge-today">
+        <span class="canvas-tag">HOY</span>
+        <span class="canvas-date">{{ todayForecast.dateTitle }}</span>
+      </div>
+    </div>
+
+    <!-- Guilds Table -->
+    <div class="canvas-grid">
+      <div *ngFor="let g of todayForecast.guilds" class="canvas-row">
+        <div class="canvas-guild-col">
+          <img *ngIf="getGuildImg(g.guildName)" [src]="getGuildImg(g.guildName)" class="canvas-guild-icon" alt="" />
+          <span class="canvas-guild-name">{{ g.guildName }}</span>
+        </div>
+        <div class="canvas-mats-col">
+          <span *ngFor="let m of g.materials" class="canvas-pill">
+            <img [src]="getMatIcon(m)" class="canvas-mat-icon" alt="" />
+            <span class="canvas-mat-name">{{ m }}</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Canvas Footer -->
+    <div class="canvas-footer">
+      <span>Generado por LastResources • https://lastresources.vercel.app</span>
+      <span>Orna Community Tools</span>
+    </div>
+  </div>
+
+  <!-- Target 2: AMBAS TABLAS (HOY IZQUIERDA / MAÑANA DERECHA) -->
+  <div #exportTargetBoth class="export-canvas-both" *ngIf="todayForecast && tomorrowForecast">
+    <!-- Brand Header -->
+    <div class="canvas-header-both">
+      <div class="canvas-brand">
+        <img src="assets/icon/last_codex.png" class="canvas-logo" alt="" />
+        <div>
+          <h2 class="canvas-title">LastResources</h2>
+          <p class="canvas-subtitle">Pronóstico Completo de Tiendas de Gremio — Orna RPG</p>
+        </div>
+      </div>
+      <div class="canvas-dates-summary">
+        <div class="summary-pill pill-today">HOY: {{ todayForecast.dateTitle }}</div>
+        <div class="summary-pill pill-tomorrow">MAÑANA: {{ tomorrowForecast.dateTitle }}</div>
+      </div>
+    </div>
+
+    <!-- Dual Columns: Left = Today, Right = Tomorrow -->
+    <div class="canvas-dual-columns">
+      <!-- Columna Izquierda: HOY -->
+      <div class="canvas-column col-left">
+        <div class="column-header-box col-today-header">
+          <span class="col-tag">HOY</span>
+          <span class="col-date">{{ todayForecast.dateTitle }}</span>
+        </div>
+        <div class="canvas-column-content">
+          <div *ngFor="let g of todayForecast.guilds" class="canvas-row dual-row">
+            <div class="canvas-guild-col">
+              <img *ngIf="getGuildImg(g.guildName)" [src]="getGuildImg(g.guildName)" class="canvas-guild-icon" alt="" />
+              <span class="canvas-guild-name">{{ g.guildName }}</span>
+            </div>
+            <div class="canvas-mats-col">
+              <span *ngFor="let m of g.materials" class="canvas-pill">
+                <img [src]="getMatIcon(m)" class="canvas-mat-icon" alt="" />
+                <span class="canvas-mat-name">{{ m }}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna Derecha: MAÑANA -->
+      <div class="canvas-column col-right">
+        <div class="column-header-box col-tomorrow-header">
+          <span class="col-tag">MAÑANA</span>
+          <span class="col-date">{{ tomorrowForecast.dateTitle }}</span>
+        </div>
+        <div class="canvas-column-content">
+          <div *ngFor="let g of tomorrowForecast.guilds" class="canvas-row dual-row">
+            <div class="canvas-guild-col">
+              <img *ngIf="getGuildImg(g.guildName)" [src]="getGuildImg(g.guildName)" class="canvas-guild-icon" alt="" />
+              <span class="canvas-guild-name">{{ g.guildName }}</span>
+            </div>
+            <div class="canvas-mats-col">
+              <span *ngFor="let m of g.materials" class="canvas-pill pill-alt">
+                <img [src]="getMatIcon(m)" class="canvas-mat-icon" alt="" />
+                <span class="canvas-mat-name">{{ m }}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Canvas Footer -->
+    <div class="canvas-footer-both">
+      <span>Generado por LastResources • https://lastresources.vercel.app</span>
+      <span>Orna Community Tools • Fan-made application</span>
+    </div>
+  </div>
+
+</div>

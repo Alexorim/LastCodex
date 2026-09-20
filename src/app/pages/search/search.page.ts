@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular/lazy';
 import { addIcons } from 'ionicons';
-import { searchOutline, calendarOutline, shieldOutline, closeCircleOutline } from 'ionicons/icons';
+import { searchOutline, calendarOutline, shieldOutline, closeCircleOutline, bookOutline } from 'ionicons/icons';
 import { MaterialsService } from '../../services/materials.service';
 import { SettingsService, Language } from '../../services/settings.service';
 import { MaterialSearchResult } from '../../models/material.model';
@@ -35,7 +35,7 @@ export class SearchPage implements OnInit, OnDestroy {
   currentLang: Language = 'es';
 
   constructor() {
-    addIcons({ searchOutline, calendarOutline, shieldOutline, closeCircleOutline });
+    addIcons({ searchOutline, calendarOutline, shieldOutline, closeCircleOutline, bookOutline });
   }
 
   ngOnInit() {

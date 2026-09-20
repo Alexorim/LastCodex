@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { addIcons } from 'ionicons';
-import { home, homeOutline, search, searchOutline, calendar, calendarOutline, settings, settingsOutline } from 'ionicons/icons';
+import { home, homeOutline, search, searchOutline, calendar, calendarOutline, book, bookOutline, settings, settingsOutline } from 'ionicons/icons';
 import { SettingsService, Language } from '../services/settings.service';
 
 @Component({
@@ -21,6 +21,8 @@ export class TabsPage implements OnInit {
       searchOutline,
       calendar,
       calendarOutline,
+      book,
+      bookOutline,
       settings,
       settingsOutline
     });

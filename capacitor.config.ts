@@ -1,12 +1,12 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.last.codex',
-  appName: 'LastCodex',
+  appId: 'com.orna.forecast',
+  appName: 'LastResources',
   webDir: 'www',
   server: {
     androidScheme: 'https',
-    url: 'https://orna-guild-forecast.vercel.app/home',
+    url: 'https://lastresources.vercel.app/home',
     cleartext: true
   },
   plugins: {

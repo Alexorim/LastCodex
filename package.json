@@ -1,5 +1,5 @@
 {
-  "name": "LastCodex",
+  "name": "LastResources",
   "version": "1.0.0",
   "author": "Orna Community",
   "homepage": "https://ionicframework.com/",
@@ -16,8 +16,8 @@
     "dist:win:exe": "ng build --configuration production && electron-builder --win portable"
   },
   "build": {
-    "appId": "com.lastcodex.app",
-    "productName": "LastCodex",
+    "appId": "com.lastresources.app",
+    "productName": "LastResources",
     "files": [
       "electron-main.js",
       "www/**/*"
@@ -29,11 +29,15 @@
       "target": [
         {
           "target": "dir",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         },
         {
           "target": "portable",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ]
     }
@@ -54,6 +58,7 @@
     "@capacitor/keyboard": "8.0.5",
     "@capacitor/status-bar": "8.0.3",
     "@ionic/angular": "^9.0.0",
+    "html-to-image": "^1.11.13",
     "ionicons": "^8.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"

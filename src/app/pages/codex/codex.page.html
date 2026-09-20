@@ -1,0 +1,181 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="codex-toolbar">
+    <div class="header-inner">
+      <div class="brand-left clickable" (click)="goToHome()" title="Ir a Inicio">
+        <img src="assets/icon/last_codex.png" alt="LastResources Logo" class="brand-emblem" />
+        <div>
+          <span class="brand-name">LastResources</span>
+          <span class="brand-subtitle">{{ currentLang === 'es' ? 'Códice & Enciclopedia Orna' : 'Orna Codex & Encyclopedia' }}</span>
+        </div>
+      </div>
+      <a href="https://playorna.com/codex/" target="_blank" rel="noopener noreferrer" class="external-codex-btn" title="Códice Oficial PlayOrna">
+        <ion-icon name="open-outline"></ion-icon>
+        <span class="desktop-only">PlayOrna.com</span>
+      </a>
+    </div>
+  </ion-toolbar>
+
+  <ion-toolbar class="search-toolbar">
+    <div class="searchbar-wrap">
+      <ion-searchbar
+        [(ngModel)]="searchQuery"
+        [placeholder]="currentLang === 'es' ? '¿Qué estás buscando en el Códice?' : 'What are you looking for in the Codex?'"
+        debounce="150"
+        class="codex-searchbar"
+      ></ion-searchbar>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding codex-content">
+  <!-- Subtitle Intro banner -->
+  <div class="codex-intro-box codex-box">
+    <div class="intro-left">
+      <ion-icon name="book" class="intro-icon"></ion-icon>
+      <div>
+        <h3>{{ currentLang === 'es' ? 'Enciclopedia del Ornaverso' : 'Encyclopedia of the Ornaverse' }}</h3>
+        <p>
+          {{ currentLang === 'es'
+            ? 'Encuentra objetos, clases legendarias, monstruos, jefes, asaltos, habilidades y mazmorras.'
+            : 'Explore items, classes, monsters, bosses, raids, spells, and dungeons.' }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category Grid Navigation (Inspired by playorna.com/codex/) -->
+  <div class="category-section">
+    <div class="section-title-row">
+      <h4>{{ currentLang === 'es' ? 'Categorías' : 'Categories' }}</h4>
+      <span *ngIf="selectedCategory !== 'all'" class="clear-cat-btn" (click)="selectCategory('all')">
+        {{ currentLang === 'es' ? 'Ver Todo' : 'View All' }}
+      </span>
+    </div>
+
+    <div class="category-grid">
+      <div
+        class="category-card"
+        [class.active]="selectedCategory === 'all'"
+        (click)="selectCategory('all')">
+        <ion-icon name="sparkles-outline" class="cat-icon-fallback"></ion-icon>
+        <span class="cat-name">{{ currentLang === 'es' ? 'Todo' : 'All' }}</span>
+      </div>
+
+      <div
+        *ngFor="let cat of categories"
+        class="category-card"
+        [class.active]="selectedCategory === cat.id"
+        (click)="selectCategory(cat.id)">
+        <img [src]="cat.sprite" (error)="onImageError($event)" class="cat-sprite" alt="" />
+        <span class="cat-name">{{ currentLang === 'es' ? cat.nameEs : cat.nameEn }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tier Filter Pills -->
+  <div class="tier-filter-row">
+    <span class="tier-label">{{ currentLang === 'es' ? 'Filtrar por Tier:' : 'Filter by Tier:' }}</span>
+    <div class="tier-pills">
+      <button
+        *ngFor="let t of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+        type="button"
+        class="tier-pill"
+        [class.active]="selectedTier === t"
+        (click)="filterTier(t)">
+        T{{ t }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Results Count -->
+  <div class="results-header">
+    <span class="count-badge">{{ filteredEntries.length }} {{ currentLang === 'es' ? 'entradas encontradas' : 'entries found' }}</span>
+  </div>
+
+  <!-- Codex Entries Grid -->
+  <div class="codex-grid" *ngIf="filteredEntries.length > 0">
+    <div
+      *ngFor="let entry of filteredEntries"
+      class="codex-card codex-box"
+      (click)="openEntry(entry)">
+      <div class="card-top">
+        <div class="sprite-frame">
+          <img [src]="entry.icon" (error)="onImageError($event)" class="entry-sprite" alt="" />
+        </div>
+        <div class="card-titles">
+          <div class="tier-tag">★ Tier {{ entry.tier }}</div>
+          <h4 class="entry-name">{{ entry.name }}</h4>
+          <span class="entry-type">{{ entry.type }}</span>
+        </div>
+      </div>
+
+      <p class="entry-desc">
+        {{ currentLang === 'es' ? entry.descriptionEs : entry.descriptionEn }}
+      </p>
+
+      <div class="card-bottom" *ngIf="entry.stats">
+        <span class="stat-pill">{{ entry.stats }}</span>
+        <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="filteredEntries.length === 0" class="empty-state codex-box">
+    <ion-icon name="search-outline" class="empty-icon"></ion-icon>
+    <h4>{{ currentLang === 'es' ? 'No se encontraron resultados' : 'No entries found' }}</h4>
+    <p>{{ currentLang === 'es' ? 'Intenta con otro término o limpia los filtros de búsqueda.' : 'Try another query or clear filters.' }}</p>
+    <button type="button" class="reset-filter-btn" (click)="selectedCategory = 'all'; selectedTier = null; searchQuery = ''">
+      {{ currentLang === 'es' ? 'Restablecer filtros' : 'Reset filters' }}
+    </button>
+  </div>
+
+  <!-- Detail Modal/Drawer if an entry is tapped -->
+  <div class="modal-backdrop" *ngIf="selectedEntry" (click)="closeEntry()">
+    <div class="modal-card codex-box" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="sprite-frame modal-frame">
+            <img [src]="selectedEntry.icon" class="entry-sprite" alt="" />
+          </div>
+          <div>
+            <span class="tier-tag">★ Tier {{ selectedEntry.tier }}</span>
+            <h3>{{ selectedEntry.name }}</h3>
+            <span class="entry-type">{{ selectedEntry.type }}</span>
+          </div>
+        </div>
+        <button type="button" class="modal-close-btn" (click)="closeEntry()">
+          <ion-icon name="close-circle-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-desc">
+          {{ currentLang === 'es' ? selectedEntry.descriptionEs : selectedEntry.descriptionEn }}
+        </p>
+
+        <div class="stat-highlight" *ngIf="selectedEntry.stats">
+          <span class="stat-key">{{ currentLang === 'es' ? 'Propiedades / Efecto:' : 'Properties / Effect:' }}</span>
+          <span class="stat-val">{{ selectedEntry.stats }}</span>
+        </div>
+
+        <a
+          [href]="selectedEntry.officialUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="official-link-btn">
+          <ion-icon name="open-outline"></ion-icon>
+          <span>{{ currentLang === 'es' ? 'Ver en Official Orna Codex' : 'View on Official Orna Codex' }}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Footer Disclaimer -->
+  <div class="codex-footer">
+    <div class="brand-credit">LastResources</div>
+    <p class="disclaimer-text">
+      Fan-made project. Not affiliated with Northern Forge Studios or the official Orna developers.
+    </p>
+  </div>
+</ion-content>
