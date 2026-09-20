@@ -92,8 +92,27 @@
     <span class="count-badge">{{ filteredEntries.length }} {{ currentLang === 'es' ? 'entradas encontradas' : 'entries found' }}</span>
   </div>
 
-  <!-- Codex Entries Grid -->
-  <div class="codex-grid" *ngIf="filteredEntries.length > 0">
+  <!-- En construcción / Actualización si no hay entradas cargadas -->
+  <div *ngIf="codexDatabase.length === 0" class="empty-state codex-box under-construction">
+    <ion-icon name="book-outline" class="empty-icon"></ion-icon>
+    <h4>{{ currentLang === 'es' ? 'Códice en Actualización' : 'Codex Under Update' }}</h4>
+    <p>
+      {{ currentLang === 'es'
+        ? 'Estamos preparando y sincronizando los datos completos y oficiales del Códice. Mientras tanto, puedes explorar la enciclopedia oficial:'
+        : 'We are preparing and synchronizing full verified official Codex data. In the meantime, you can explore the official encyclopedia:' }}
+    </p>
+    <a
+      href="https://playorna.com/codex/"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="reset-filter-btn official-codex-direct">
+      <ion-icon name="open-outline"></ion-icon>
+      <span>{{ currentLang === 'es' ? 'Abrir Códice Oficial PlayOrna ↗' : 'Open Official PlayOrna Codex ↗' }}</span>
+    </a>
+  </div>
+
+  <!-- Codex Entries Grid (cuando existan entradas) -->
+  <div class="codex-grid" *ngIf="codexDatabase.length > 0 && filteredEntries.length > 0">
     <div
       *ngFor="let entry of filteredEntries"
       class="codex-card codex-box"
@@ -120,8 +139,8 @@
     </div>
   </div>
 
-  <!-- Empty State -->
-  <div *ngIf="filteredEntries.length === 0" class="empty-state codex-box">
+  <!-- Empty State por filtros (cuando la base tenga datos pero el filtro no coincida) -->
+  <div *ngIf="codexDatabase.length > 0 && filteredEntries.length === 0" class="empty-state codex-box">
     <ion-icon name="search-outline" class="empty-icon"></ion-icon>
     <h4>{{ currentLang === 'es' ? 'No se encontraron resultados' : 'No entries found' }}</h4>
     <p>{{ currentLang === 'es' ? 'Intenta con otro término o limpia los filtros de búsqueda.' : 'Try another query or clear filters.' }}</p>

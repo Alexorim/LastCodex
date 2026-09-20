@@ -433,6 +433,14 @@
       background: var(--codex-gold);
       color: #121212;
     }
+
+    &.official-codex-direct {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      margin-top: 6px;
+    }
   }
 }
 
