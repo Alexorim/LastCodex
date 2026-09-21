@@ -2,324 +2,549 @@
   "metadata": {
     "title": "Orna Guild Material Translation Dictionary",
     "version": "1.0.0",
-    "languages": ["en", "es"],
+    "languages": [
+      "en",
+      "es"
+    ],
     "totalMaterials": 64
   },
   "translations": {
     "Adamantine": {
       "en": "Adamantine",
       "es": "Adamantina",
-      "aliases": ["Adamantina", "Adamantine"]
+      "aliases": [
+        "Adamantina",
+        "Adamantine"
+      ]
     },
     "Ancient Stone": {
       "en": "Ancient Stone",
-      "es": "Piedra Ancestral",
-      "aliases": ["Piedra Ancestral", "Ancient Stone"]
+      "es": "Piedra Antigua",
+      "aliases": [
+        "Piedra Ancestral",
+        "Ancient Stone"
+      ]
     },
     "Avalon Ore": {
       "en": "Avalon Ore",
-      "es": "Mineral de Avalón",
-      "aliases": ["Mineral de Avalón", "Mineral de Avalon", "Avalon Ore"]
+      "es": "Mineral de Avalon",
+      "aliases": [
+        "Mineral de Avalón",
+        "Mineral de Avalon",
+        "Avalon Ore"
+      ]
     },
     "Baldur": {
       "en": "Baldur",
       "es": "Baldur",
-      "aliases": ["Baldur"]
+      "aliases": [
+        "Baldur"
+      ]
     },
     "Balorite": {
       "en": "Balorite",
       "es": "Balorita",
-      "aliases": ["Balorita", "Balorite"]
+      "aliases": [
+        "Balorita",
+        "Balorite"
+      ]
     },
     "Bone": {
       "en": "Bone",
       "es": "Hueso",
-      "aliases": ["Hueso", "Bone", "Huesos", "Bones"]
+      "aliases": [
+        "Hueso",
+        "Bone",
+        "Huesos",
+        "Bones"
+      ]
     },
     "Broken Statue": {
       "en": "Broken Statue",
       "es": "Estatua Rota",
-      "aliases": ["Estatua Rota", "Broken Statue", "Estatuas Rotas", "Broken Statues"]
+      "aliases": [
+        "Estatua Rota",
+        "Broken Statue",
+        "Estatuas Rotas",
+        "Broken Statues"
+      ]
     },
     "Cavestone": {
       "en": "Cavestone",
-      "es": "Piedra de Caverna",
-      "aliases": ["Piedra de Caverna", "Cavestone"]
+      "es": "Cavernita",
+      "aliases": [
+        "Piedra de Caverna",
+        "Cavestone"
+      ]
     },
     "Cursed Ortanite": {
       "en": "Cursed Ortanite",
       "es": "Ortanita Maldita",
-      "aliases": ["Ortanita Maldita", "Cursed Ortanite"]
+      "aliases": [
+        "Ortanita Maldita",
+        "Cursed Ortanite"
+      ]
     },
     "Dark Stone": {
       "en": "Dark Stone",
-      "es": "Piedra Oscura",
-      "aliases": ["Piedra Oscura", "Dark Stone", "Darkstone"]
+      "es": "Oscurita",
+      "aliases": [
+        "Piedra Oscura",
+        "Dark Stone",
+        "Darkstone"
+      ]
     },
     "Dayleaf": {
       "en": "Dayleaf",
       "es": "Hoja Diurna",
-      "aliases": ["Hoja Diurna", "Dayleaf"]
+      "aliases": [
+        "Hoja Diurna",
+        "Dayleaf"
+      ]
     },
     "Deepshard": {
       "en": "Deepshard",
-      "es": "Fragmento Profundo",
-      "aliases": ["Fragmento Profundo", "Deepshard", "Fragmentos Profundos", "Deepshards"]
+      "es": "Fragmento de la Profundidad",
+      "aliases": [
+        "Fragmento Profundo",
+        "Deepshard",
+        "Fragmentos Profundos",
+        "Deepshards"
+      ]
     },
     "Demonstone": {
       "en": "Demonstone",
-      "es": "Piedra Demoniaca",
-      "aliases": ["Piedra Demoniaca", "Piedra Demoníaca", "Demonstone", "Demonic Ore"]
+      "es": "Mineral Demoniaco",
+      "aliases": [
+        "Piedra Demoniaca",
+        "Piedra Demoníaca",
+        "Demonstone",
+        "Demonic Ore"
+      ]
     },
     "Draconite": {
       "en": "Draconite",
       "es": "Draconita",
-      "aliases": ["Draconita", "Draconite", "Drac"]
+      "aliases": [
+        "Draconita",
+        "Draconite",
+        "Drac"
+      ]
     },
     "Dragonite": {
       "en": "Dragonite",
       "es": "Dragonita",
-      "aliases": ["Dragonita", "Dragonite"]
+      "aliases": [
+        "Dragonita",
+        "Dragonite"
+      ]
     },
     "Earth Stone": {
       "en": "Earth Stone",
-      "es": "Piedra de Tierra",
-      "aliases": ["Piedra de Tierra", "Earth Stone", "Earthstone"]
+      "es": "Territa",
+      "aliases": [
+        "Piedra de Tierra",
+        "Earth Stone",
+        "Earthstone"
+      ]
     },
     "Elstone": {
       "en": "Elstone",
-      "es": "Elstone",
-      "aliases": ["Elstone", "Piedra de El"]
+      "es": "Elfita",
+      "aliases": [
+        "Elstone",
+        "Piedra de El"
+      ]
     },
     "Eye": {
       "en": "Eye",
-      "es": "Ojo",
-      "aliases": ["Ojo", "Eye", "Eyestone"]
+      "es": "Oculita",
+      "aliases": [
+        "Ojo",
+        "Eye",
+        "Eyestone"
+      ]
     },
     "Fire Stone": {
       "en": "Fire Stone",
-      "es": "Piedra de Fuego",
-      "aliases": ["Piedra de Fuego", "Fire Stone", "Firestone"]
+      "es": "Ignita",
+      "aliases": [
+        "Piedra de Fuego",
+        "Fire Stone",
+        "Firestone"
+      ]
     },
     "Fogstone": {
-      "en": "Fogstone",
-      "es": "Piedra de Niebla",
-      "aliases": ["Piedra de Niebla", "Fogstone"]
+      "en": "Neblita",
+      "aliases": [
+        "Piedra de Niebla",
+        "Fogstone"
+      ]
     },
     "Greater Soul": {
       "en": "Greater Soul",
-      "es": "Alma Mayor",
-      "aliases": ["Alma Mayor", "Greater Soul"]
+      "es": "Alma Superior",
+      "aliases": [
+        "Alma Mayor",
+        "Greater Soul"
+      ]
     },
     "Hardened Steel": {
       "en": "Hardened Steel",
-      "es": "Acero Endurecido",
-      "aliases": ["Acero Endurecido", "Hardened Steel"]
+      "es": "Acero Templado",
+      "aliases": [
+        "Acero Endurecido",
+        "Hardened Steel"
+      ]
     },
     "Hide": {
       "en": "Hide",
       "es": "Piel",
-      "aliases": ["Piel", "Hide", "Pieles", "Hides"]
+      "aliases": [
+        "Piel",
+        "Hide",
+        "Pieles",
+        "Hides"
+      ]
     },
     "Iron": {
       "en": "Iron",
       "es": "Hierro",
-      "aliases": ["Hierro", "Iron"]
+      "aliases": [
+        "Hierro",
+        "Iron"
+      ]
     },
     "Leather": {
       "en": "Leather",
       "es": "Cuero",
-      "aliases": ["Cuero", "Leather"]
+      "aliases": [
+        "Cuero",
+        "Leather"
+      ]
     },
     "Lesser Balorite": {
       "en": "Lesser Balorite",
       "es": "Balorita Menor",
-      "aliases": ["Balorita Menor", "Lesser Balorite"]
+      "aliases": [
+        "Balorita Menor",
+        "Lesser Balorite"
+      ]
     },
     "Lightning Stone": {
       "en": "Lightning Stone",
-      "es": "Piedra del Rayo",
-      "aliases": ["Piedra del Rayo", "Lightning Stone", "Lightningstone"]
+      "es": "Electrita",
+      "aliases": [
+        "Piedra del Rayo",
+        "Lightning Stone",
+        "Lightningstone"
+      ]
     },
     "Lightstone": {
       "en": "Lightstone",
-      "es": "Piedra de Luz",
-      "aliases": ["Piedra de Luz", "Lightstone"]
+      "es": "Luminita",
+      "aliases": [
+        "Piedra de Luz",
+        "Lightstone"
+      ]
     },
     "Lyonite": {
       "en": "Lyonite",
       "es": "Lyonita",
-      "aliases": ["Lyonita", "Lyonite"]
+      "aliases": [
+        "Lyonita",
+        "Lyonite"
+      ]
     },
     "Mandrake": {
       "en": "Mandrake",
       "es": "Mandrágora",
-      "aliases": ["Mandrágora", "Mandragora", "Mandrake"]
+      "aliases": [
+        "Mandrágora",
+        "Mandragora",
+        "Mandrake"
+      ]
     },
     "Mythril": {
       "en": "Mythril",
       "es": "Mitril",
-      "aliases": ["Mitril", "Mythril"]
+      "aliases": [
+        "Mitril",
+        "Mythril"
+      ]
     },
     "Nightshade": {
       "en": "Nightshade",
-      "es": "Venenosa",
-      "aliases": ["Venenosa", "Nightshade", "Sombría"]
+      "es": "Belladona",
+      "aliases": [
+        "Venenosa",
+        "Nightshade",
+        "Sombría"
+      ]
     },
     "Nightstone": {
       "en": "Nightstone",
-      "es": "Piedra Nocturna",
-      "aliases": ["Piedra Nocturna", "Nightstone"]
+      "es": "Nocturnita",
+      "aliases": [
+        "Piedra Nocturna",
+        "Nightstone"
+      ]
     },
     "Orichalcum": {
       "en": "Orichalcum",
       "es": "Oricalco",
-      "aliases": ["Oricalco", "Orichalcum"]
+      "aliases": [
+        "Oricalco",
+        "Orichalcum"
+      ]
     },
     "Ortanite": {
       "en": "Ortanite",
       "es": "Ortanita",
-      "aliases": ["Ortanita", "Ortanite"]
+      "aliases": [
+        "Ortanita",
+        "Ortanite"
+      ]
     },
     "Perfect Baldur": {
       "en": "Perfect Baldur",
       "es": "Baldur Perfecto",
-      "aliases": ["Baldur Perfecto", "Perfect Baldur"]
+      "aliases": [
+        "Baldur Perfecto",
+        "Perfect Baldur"
+      ]
     },
     "Perfect Runestone": {
       "en": "Perfect Runestone",
-      "es": "Piedra Rúnica Perfecta",
-      "aliases": ["Piedra Rúnica Perfecta", "Perfect Runestone"]
+      "es": "Runita Perfecta",
+      "aliases": [
+        "Piedra Rúnica Perfecta",
+        "Perfect Runestone"
+      ]
     },
     "Platinum": {
       "en": "Platinum",
       "es": "Platino",
-      "aliases": ["Platino", "Platinum"]
+      "aliases": [
+        "Platino",
+        "Platinum"
+      ]
     },
     "Pure Darkstone": {
       "en": "Pure Darkstone",
-      "es": "Piedra Oscura Pura",
-      "aliases": ["Piedra Oscura Pura", "Pure Darkstone", "Pure Dark Stone"]
+      "es": "Oscurita Pura",
+      "aliases": [
+        "Piedra Oscura Pura",
+        "Pure Darkstone",
+        "Pure Dark Stone"
+      ]
     },
     "Pure Draconite": {
       "en": "Pure Draconite",
       "es": "Draconita Pura",
-      "aliases": ["Draconita Pura", "Pure Draconite", "Pure Drac"]
+      "aliases": [
+        "Draconita Pura",
+        "Pure Draconite",
+        "Pure Drac"
+      ]
     },
     "Pure Lightstone": {
       "en": "Pure Lightstone",
-      "es": "Piedra de Luz Pura",
-      "aliases": ["Piedra de Luz Pura", "Pure Lightstone", "Pure Light Stone"]
+      "es": "Luminita Pura",
+      "aliases": [
+        "Piedra de Luz Pura",
+        "Pure Lightstone",
+        "Pure Light Stone"
+      ]
     },
     "Pure Waterstone": {
       "en": "Pure Waterstone",
-      "es": "Piedra de Agua Pura",
-      "aliases": ["Piedra de Agua Pura", "Pure Waterstone", "Pure Water Stone"]
+      "es": "Acualita pura",
+      "aliases": [
+        "Piedra de Agua Pura",
+        "Pure Waterstone",
+        "Pure Water Stone"
+      ]
     },
     "Realm Ore": {
       "en": "Realm Ore",
-      "es": "Mineral del Reino",
-      "aliases": ["Mineral del Reino", "Realm Ore"]
+      "es": "Mineral dimensional",
+      "aliases": [
+        "Mineral del Reino",
+        "Realm Ore"
+      ]
     },
     "Red Draconite": {
       "en": "Red Draconite",
       "es": "Draconita Roja",
-      "aliases": ["Red Draconite", "Draconita Roja", "Red Drac"]
+      "aliases": [
+        "Red Draconite",
+        "Draconita Roja",
+        "Red Drac"
+      ]
     },
     "Runestone": {
       "en": "Runestone",
       "es": "Piedra Rúnica",
-      "aliases": ["Piedra Rúnica", "Runestone"]
+      "aliases": [
+        "Piedra Rúnica",
+        "Runestone"
+      ]
     },
     "Sandstone": {
       "en": "Sandstone",
       "es": "Arenisca",
-      "aliases": ["Arenisca", "Sandstone"]
+      "aliases": [
+        "Arenisca",
+        "Sandstone"
+      ]
     },
     "Scalestone": {
       "en": "Scalestone",
-      "es": "Piedra de Escamas",
-      "aliases": ["Piedra de Escamas", "Scalestone"]
+      "es": "Escamatita",
+      "aliases": [
+        "Piedra de Escamas",
+        "Scalestone"
+      ]
     },
     "Silk": {
       "en": "Silk",
       "es": "Seda",
-      "aliases": ["Seda", "Silk"]
+      "aliases": [
+        "Seda",
+        "Silk"
+      ]
     },
     "Silphium": {
       "en": "Silphium",
       "es": "Silfio",
-      "aliases": ["Silfio", "Silphium"]
+      "aliases": [
+        "Silfio",
+        "Silphium"
+      ]
     },
     "Silver": {
       "en": "Silver",
       "es": "Plata",
-      "aliases": ["Plata", "Silver"]
+      "aliases": [
+        "Plata",
+        "Silver"
+      ]
     },
     "Skystone": {
       "en": "Skystone",
-      "es": "Piedra Celestial",
-      "aliases": ["Piedra Celestial", "Skystone"]
+      "es": "Celestita",
+      "aliases": [
+        "Piedra Celestial",
+        "Skystone"
+      ]
     },
     "Solarite": {
       "en": "Solarite",
       "es": "Solarita",
-      "aliases": ["Solarita", "Solarite"]
+      "aliases": [
+        "Solarita",
+        "Solarite"
+      ]
     },
     "Soul": {
       "en": "Soul",
       "es": "Alma",
-      "aliases": ["Alma", "Soul", "Almas", "Souls"]
+      "aliases": [
+        "Alma",
+        "Soul",
+        "Almas",
+        "Souls"
+      ]
     },
     "Steel": {
       "en": "Steel",
       "es": "Acero",
-      "aliases": ["Acero", "Steel"]
+      "aliases": [
+        "Acero",
+        "Steel"
+      ]
     },
     "Stone": {
       "en": "Stone",
       "es": "Piedra",
-      "aliases": ["Piedra", "Stone", "Piedras", "Stones"]
+      "aliases": [
+        "Piedra",
+        "Stone",
+        "Piedras",
+        "Stones"
+      ]
     },
     "Titanium": {
       "en": "Titanium",
       "es": "Titanio",
-      "aliases": ["Titanio", "Titanium"]
+      "aliases": [
+        "Titanio",
+        "Titanium"
+      ]
     },
     "Twilightstone": {
       "en": "Twilightstone",
-      "es": "Piedra del Crepúsculo",
-      "aliases": ["Piedra del Crepúsculo", "Twilightstone"]
+      "es": "Crepusculita",
+      "aliases": [
+        "Piedra del Crepúsculo",
+        "Twilightstone"
+      ]
     },
     "Undead Bone": {
       "en": "Undead Bone",
       "es": "Hueso de No Muerto",
-      "aliases": ["Hueso de No Muerto", "Undead Bone", "Undead Bones"]
+      "aliases": [
+        "Hueso de No Muerto",
+        "Undead Bone",
+        "Undead Bones"
+      ]
     },
     "Vampiric Ore": {
       "en": "Vampiric Ore",
       "es": "Mineral Vampírico",
-      "aliases": ["Mineral Vampírico", "Mineral Vampirico", "Vampiric Ore"]
+      "aliases": [
+        "Mineral Vampírico",
+        "Mineral Vampirico",
+        "Vampiric Ore"
+      ]
     },
     "Water Stone": {
       "en": "Water Stone",
-      "es": "Piedra de Agua",
-      "aliases": ["Piedra de Agua", "Water Stone", "Waterstone"]
+      "es": "Acualita",
+      "aliases": [
+        "Piedra de Agua",
+        "Water Stone",
+        "Waterstone"
+      ]
     },
     "Witchstone": {
       "en": "Witchstone",
-      "es": "Piedra de Bruja",
-      "aliases": ["Piedra de Bruja", "Witchstone"]
+      "es": "Brujita",
+      "aliases": [
+        "Piedra de Bruja",
+        "Witchstone"
+      ]
     },
     "Wolf's Blood": {
       "en": "Wolf's Blood",
       "es": "Sangre de Lobo",
-      "aliases": ["Sangre de Lobo", "Wolf's Blood", "Wolfs Blood", "Wolf Blood"]
+      "aliases": [
+        "Sangre de Lobo",
+        "Wolf's Blood",
+        "Wolfs Blood",
+        "Wolf Blood"
+      ]
     },
     "Wood": {
       "en": "Wood",
       "es": "Madera",
-      "aliases": ["Madera", "Wood", "Maderas", "Woods"]
+      "aliases": [
+        "Madera",
+        "Wood",
+        "Maderas",
+        "Woods"
+      ]
     }
   }
 }
