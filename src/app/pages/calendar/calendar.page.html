@@ -28,7 +28,7 @@
           <div class="item-info">
             <img [src]="getMatIcon(item.materialName)" (error)="onImageError($event)" class="mat-icon-cal" alt="" />
             <div>
-              <span class="mat-name">{{ item.materialName }}</span>
+              <span class="mat-name">{{ getMatName(item.materialName) }}</span>
               <span class="mat-count">
                 {{ currentLang === 'es' ? ('En ' + item.guildAppearances.length + ' gremios') : ('In ' + item.guildAppearances.length + ' guilds') }}
               </span>

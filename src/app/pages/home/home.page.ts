@@ -30,6 +30,7 @@ import { SettingsService, Language } from '../../services/settings.service';
 import { DayForecast } from '../../models/material.model';
 import { getMaterialIcon } from '../../utils/material-icon.util';
 import { getGuildIcon } from '../../utils/guild-icon.util';
+import { translateMaterialName } from '../../utils/material-translation.util';
 import { Observable, Subscription } from 'rxjs';
 
 export interface OrnaCalendarEvent {
@@ -402,6 +403,10 @@ export class HomePage implements OnInit, OnDestroy {
 
   getMatIcon(name: string): string {
     return getMaterialIcon(name);
+  }
+
+  getMatName(name: string): string {
+    return translateMaterialName(name, this.currentLang);
   }
 
   getGuildImg(name: string): string {

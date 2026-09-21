@@ -98,7 +98,7 @@
           <div class="guild-right">
             <span *ngFor="let mat of g.materials" class="material-pill">
               <img [src]="getMatIcon(mat)" (error)="onImageError($event)" class="mat-icon" alt="" />
-              <span class="mat-name">{{ mat }}</span>
+              <span class="mat-name">{{ getMatName(mat) }}</span>
             </span>
           </div>
         </div>
@@ -137,7 +137,7 @@
           <div class="guild-right">
             <span *ngFor="let mat of g.materials" class="material-pill pill-tomorrow">
               <img [src]="getMatIcon(mat)" (error)="onImageError($event)" class="mat-icon" alt="" />
-              <span class="mat-name">{{ mat }}</span>
+              <span class="mat-name">{{ getMatName(mat) }}</span>
             </span>
           </div>
         </div>
@@ -403,7 +403,7 @@
         <div class="canvas-mats-col">
           <span *ngFor="let m of g.materials" class="canvas-pill">
             <img [src]="getMatIcon(m)" class="canvas-mat-icon" alt="" />
-            <span class="canvas-mat-name">{{ m }}</span>
+            <span class="canvas-mat-name">{{ getMatName(m) }}</span>
           </span>
         </div>
       </div>
@@ -450,7 +450,7 @@
             <div class="canvas-mats-col">
               <span *ngFor="let m of g.materials" class="canvas-pill">
                 <img [src]="getMatIcon(m)" class="canvas-mat-icon" alt="" />
-                <span class="canvas-mat-name">{{ m }}</span>
+                <span class="canvas-mat-name">{{ getMatName(m) }}</span>
               </span>
             </div>
           </div>
@@ -472,7 +472,7 @@
             <div class="canvas-mats-col">
               <span *ngFor="let m of g.materials" class="canvas-pill pill-alt">
                 <img [src]="getMatIcon(m)" class="canvas-mat-icon" alt="" />
-                <span class="canvas-mat-name">{{ m }}</span>
+                <span class="canvas-mat-name">{{ getMatName(m) }}</span>
               </span>
             </div>
           </div>

@@ -29,7 +29,7 @@
   <div *ngIf="showSuggestions && filteredMaterials.length > 0" class="suggestions-list">
     <div *ngFor="let mat of filteredMaterials" (click)="selectMaterial(mat)" class="suggestion-item">
       <img [src]="getMatIcon(mat)" (error)="onImageError($event)" class="mat-icon-suggest" alt="" />
-      <span class="suggestion-name">{{ mat }}</span>
+      <span class="suggestion-name">{{ getMatName(mat) }}</span>
       <ion-icon name="search-outline" class="suggest-search-icon"></ion-icon>
     </div>
   </div>
@@ -43,7 +43,7 @@
             <img [src]="getMatIcon(selectedResult.materialName)" (error)="onImageError($event)" class="mat-icon-large" alt="" />
           </div>
           <div>
-            <h2 class="mat-title">{{ selectedResult.materialName }}</h2>
+            <h2 class="mat-title">{{ getMatName(selectedResult.materialName) }}</h2>
             <span class="mat-subtitle">{{ currentLang === 'es' ? 'Próxima aparición por gremio:' : 'Next appearance per guild:' }}</span>
           </div>
         </div>
@@ -96,7 +96,7 @@
     <div class="catalog-grid">
       <div *ngFor="let mat of allMaterials" (click)="selectMaterial(mat)" class="material-pill catalog-pill">
         <img [src]="getMatIcon(mat)" (error)="onImageError($event)" class="mat-icon" alt="" />
-        <span class="mat-name">{{ mat }}</span>
+        <span class="mat-name">{{ getMatName(mat) }}</span>
       </div>
     </div>
 

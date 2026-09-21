@@ -10,6 +10,7 @@ import { SettingsService, Language } from '../../services/settings.service';
 import { MaterialSearchResult } from '../../models/material.model';
 import { getMaterialIcon } from '../../utils/material-icon.util';
 import { getGuildIcon } from '../../utils/guild-icon.util';
+import { translateMaterialName, matchesMaterialQuery } from '../../utils/material-translation.util';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -57,6 +58,10 @@ export class SearchPage implements OnInit, OnDestroy {
     return getMaterialIcon(name);
   }
 
+  getMatName(name: string): string {
+    return translateMaterialName(name, this.currentLang);
+  }
+
   getGuildImg(name: string): string {
     return getGuildIcon(name);
   }
@@ -73,7 +78,7 @@ export class SearchPage implements OnInit, OnDestroy {
     if (this.searchQuery && this.searchQuery.trim().length > 0) {
       const query = this.searchQuery.trim().toLowerCase();
       this.filteredMaterials = this.allMaterials.filter(mat =>
-        mat.toLowerCase().includes(query)
+        matchesMaterialQuery(mat, query)
       );
       this.showSuggestions = true;
     } else {
@@ -84,7 +89,7 @@ export class SearchPage implements OnInit, OnDestroy {
 
   selectMaterial(name: string) {
     this.selectedResult = this.materialsService.searchMaterial(name);
-    this.searchQuery = name;
+    this.searchQuery = this.getMatName(name);
     this.showSuggestions = false;
   }
 
