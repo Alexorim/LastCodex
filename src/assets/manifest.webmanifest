@@ -1,0 +1,17 @@
+{
+  "name": "LastResources — Orna Guild Forecast",
+  "short_name": "LastResources",
+  "start_url": "./home",
+  "display": "standalone",
+  "background_color": "#1F1F1F",
+  "theme_color": "#1F1F1F",
+  "description": "Orna Guild Material Forecast & Codex Application",
+  "icons": [
+    {
+      "src": "assets/icon/last_codex.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
