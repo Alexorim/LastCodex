@@ -1,0 +1,1 @@
+https://playorna.com/codex/items/?lang=en&t=10&c=weapon

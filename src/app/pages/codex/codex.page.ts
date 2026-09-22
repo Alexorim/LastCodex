@@ -23,6 +23,7 @@ import {
 } from 'ionicons/icons';
 import { SettingsService, Language } from '../../services/settings.service';
 import { Subscription } from 'rxjs';
+import codexData from '../../data/codex-items.json';
 
 export interface CodexCategory {
   id: string;
@@ -38,6 +39,7 @@ export interface CodexEntry {
   id: string;
   name: string;
   category: string;
+  subcategory?: string;
   tier: number;
   icon: string;
   type: string;
@@ -63,8 +65,10 @@ export class CodexPage implements OnInit, OnDestroy {
 
   searchQuery = '';
   selectedCategory = 'all';
+  selectedSubcategory: string | null = null;
   selectedTier: number | null = null;
   selectedEntry: CodexEntry | null = null;
+  displayLimit = 60;
 
   categories: CodexCategory[] = [
     {
@@ -150,7 +154,18 @@ export class CodexPage implements OnInit, OnDestroy {
     }
   ];
 
-  codexDatabase: CodexEntry[] = [];
+  subcategoryLabels: { [key: string]: { es: string; en: string } } = {
+    armors: { es: 'Armaduras', en: 'Armors' },
+    weapons: { es: 'Armas', en: 'Weapons' },
+    adornment: { es: 'Adornos', en: 'Adornments' },
+    currency: { es: 'Monedas', en: 'Currency' },
+    field: { es: 'Campo', en: 'Field' },
+    fish: { es: 'Peces', en: 'Fish' },
+    material: { es: 'Materiales', en: 'Materials' },
+    useable: { es: 'Consumibles', en: 'Consumables' }
+  };
+
+  codexDatabase: CodexEntry[] = codexData as CodexEntry[];
 
   constructor() {
     addIcons({
@@ -185,6 +200,7 @@ export class CodexPage implements OnInit, OnDestroy {
   get filteredEntries(): CodexEntry[] {
     return this.codexDatabase.filter(entry => {
       const matchCat = this.selectedCategory === 'all' || entry.category === this.selectedCategory;
+      const matchSub = this.selectedSubcategory === null || entry.subcategory === this.selectedSubcategory;
       const matchTier = this.selectedTier === null || entry.tier === this.selectedTier;
       const q = this.searchQuery.trim().toLowerCase();
       const matchQuery =
@@ -194,16 +210,45 @@ export class CodexPage implements OnInit, OnDestroy {
         entry.descriptionEs.toLowerCase().includes(q) ||
         entry.descriptionEn.toLowerCase().includes(q);
 
-      return matchCat && matchTier && matchQuery;
+      return matchCat && matchSub && matchTier && matchQuery;
     });
   }
 
+  get displayedEntries(): CodexEntry[] {
+    return this.filteredEntries.slice(0, this.displayLimit);
+  }
+
+  get availableSubcategories(): string[] {
+    if (this.selectedCategory !== 'items') return [];
+    const subs = new Set<string>();
+    this.codexDatabase
+      .filter(e => e.category === 'items' && e.subcategory)
+      .forEach(e => subs.add(e.subcategory!));
+    return Array.from(subs).sort();
+  }
+
   selectCategory(catId: string): void {
+    if (catId === 'classes') {
+      this.router.navigate(['/codex/classes']);
+      return;
+    }
     this.selectedCategory = catId;
+    this.selectedSubcategory = null;
+    this.displayLimit = 60;
+  }
+
+  filterSubcategory(sub: string | null): void {
+    this.selectedSubcategory = this.selectedSubcategory === sub ? null : sub;
+    this.displayLimit = 60;
   }
 
   filterTier(tier: number | null): void {
     this.selectedTier = this.selectedTier === tier ? null : tier;
+    this.displayLimit = 60;
+  }
+
+  loadMore(): void {
+    this.displayLimit += 60;
   }
 
   openEntry(entry: CodexEntry): void {
@@ -221,4 +266,11 @@ export class CodexPage implements OnInit, OnDestroy {
   onImageError(event: any): void {
     event.target.style.display = 'none';
   }
+
+  getSubcategoryLabel(sub: string): string {
+    const label = this.subcategoryLabels[sub];
+    if (!label) return sub;
+    return this.currentLang === 'es' ? label.es : label.en;
+  }
 }
+

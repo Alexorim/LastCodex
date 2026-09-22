@@ -87,34 +87,35 @@
     </div>
   </div>
 
+  <!-- Subcategory Filter Pills (only when Items is selected) -->
+  <div class="tier-filter-row subcategory-row" *ngIf="availableSubcategories.length > 0">
+    <span class="tier-label">{{ currentLang === 'es' ? 'Tipo:' : 'Type:' }}</span>
+    <div class="tier-pills">
+      <button
+        *ngFor="let sub of availableSubcategories"
+        type="button"
+        class="tier-pill sub-pill"
+        [class.active]="selectedSubcategory === sub"
+        (click)="filterSubcategory(sub)">
+        {{ getSubcategoryLabel(sub) }}
+      </button>
+    </div>
+  </div>
+
   <!-- Results Count -->
   <div class="results-header">
-    <span class="count-badge">{{ filteredEntries.length }} {{ currentLang === 'es' ? 'entradas encontradas' : 'entries found' }}</span>
+    <span class="count-badge">
+      {{ filteredEntries.length }} {{ currentLang === 'es' ? 'entradas encontradas' : 'entries found' }}
+      <span *ngIf="displayedEntries.length < filteredEntries.length" class="showing-badge">
+        ({{ currentLang === 'es' ? 'mostrando' : 'showing' }} {{ displayedEntries.length }})
+      </span>
+    </span>
   </div>
 
-  <!-- En construcción / Actualización si no hay entradas cargadas -->
-  <div *ngIf="codexDatabase.length === 0" class="empty-state codex-box under-construction">
-    <ion-icon name="book-outline" class="empty-icon"></ion-icon>
-    <h4>{{ currentLang === 'es' ? 'Códice en Actualización' : 'Codex Under Update' }}</h4>
-    <p>
-      {{ currentLang === 'es'
-        ? 'Estamos preparando y sincronizando los datos completos y oficiales del Códice. Mientras tanto, puedes explorar la enciclopedia oficial:'
-        : 'We are preparing and synchronizing full verified official Codex data. In the meantime, you can explore the official encyclopedia:' }}
-    </p>
-    <a
-      href="https://playorna.com/codex/"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="reset-filter-btn official-codex-direct">
-      <ion-icon name="open-outline"></ion-icon>
-      <span>{{ currentLang === 'es' ? 'Abrir Códice Oficial PlayOrna ↗' : 'Open Official PlayOrna Codex ↗' }}</span>
-    </a>
-  </div>
-
-  <!-- Codex Entries Grid (cuando existan entradas) -->
-  <div class="codex-grid" *ngIf="codexDatabase.length > 0 && filteredEntries.length > 0">
+  <!-- Codex Entries Grid -->
+  <div class="codex-grid" *ngIf="filteredEntries.length > 0">
     <div
-      *ngFor="let entry of filteredEntries"
+      *ngFor="let entry of displayedEntries"
       class="codex-card codex-box"
       (click)="openEntry(entry)">
       <div class="card-top">
@@ -122,7 +123,7 @@
           <img [src]="entry.icon" (error)="onImageError($event)" class="entry-sprite" alt="" />
         </div>
         <div class="card-titles">
-          <div class="tier-tag">★ Tier {{ entry.tier }}</div>
+          <div class="tier-tag" *ngIf="entry.tier > 0">★ Tier {{ entry.tier }}</div>
           <h4 class="entry-name">{{ entry.name }}</h4>
           <span class="entry-type">{{ entry.type }}</span>
         </div>
@@ -139,12 +140,20 @@
     </div>
   </div>
 
-  <!-- Empty State por filtros (cuando la base tenga datos pero el filtro no coincida) -->
-  <div *ngIf="codexDatabase.length > 0 && filteredEntries.length === 0" class="empty-state codex-box">
+  <!-- Load More Button -->
+  <div class="load-more-wrap" *ngIf="displayedEntries.length < filteredEntries.length">
+    <button type="button" class="load-more-btn" (click)="loadMore()">
+      {{ currentLang === 'es' ? 'Cargar más...' : 'Load more...' }}
+      ({{ filteredEntries.length - displayedEntries.length }} {{ currentLang === 'es' ? 'restantes' : 'remaining' }})
+    </button>
+  </div>
+
+  <!-- Empty State por filtros -->
+  <div *ngIf="filteredEntries.length === 0" class="empty-state codex-box">
     <ion-icon name="search-outline" class="empty-icon"></ion-icon>
     <h4>{{ currentLang === 'es' ? 'No se encontraron resultados' : 'No entries found' }}</h4>
     <p>{{ currentLang === 'es' ? 'Intenta con otro término o limpia los filtros de búsqueda.' : 'Try another query or clear filters.' }}</p>
-    <button type="button" class="reset-filter-btn" (click)="selectedCategory = 'all'; selectedTier = null; searchQuery = ''">
+    <button type="button" class="reset-filter-btn" (click)="selectedCategory = 'all'; selectedTier = null; selectedSubcategory = null; searchQuery = ''">
       {{ currentLang === 'es' ? 'Restablecer filtros' : 'Reset filters' }}
     </button>
   </div>

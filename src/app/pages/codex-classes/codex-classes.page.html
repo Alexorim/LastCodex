@@ -1,0 +1,105 @@
+<ion-header class="ion-no-border">
+  <!-- Brand toolbar -->
+  <ion-toolbar class="codex-toolbar">
+    <div class="header-inner">
+      <div class="brand-left clickable" (click)="goBack()" title="Volver al Códice">
+        <img src="assets/icon/last_codex.png" alt="LastResources Logo" class="brand-emblem" />
+        <div>
+          <span class="brand-name">LastResources</span>
+          <span class="brand-subtitle">{{ currentLang === 'es' ? 'Árbol de Progresión de Clases' : 'Class Progression Tree' }}</span>
+        </div>
+      </div>
+      <button type="button" class="back-codex-btn" (click)="goBack()">
+        <ion-icon name="close-circle-outline"></ion-icon>
+        <span class="desktop-only">{{ currentLang === 'es' ? 'Códice' : 'Codex' }}</span>
+      </button>
+    </div>
+  </ion-toolbar>
+
+  <!-- Horizontal Family Tabs Bar (User requested: valor | omnimancy | shadowmancy | valhallan | elysian | the old gods | the elderred) -->
+  <div class="family-tabs-bar">
+    <div class="family-tabs-track">
+      <button
+        *ngFor="let fam of families; let idx = index"
+        type="button"
+        class="family-tab-pill"
+        [class.active]="currentFamilyIndex === idx"
+        [style.--pill-color]="fam.color"
+        (click)="selectFamily(idx)">
+        <span class="pill-dot"></span>
+        <span class="pill-name">{{ fam.name }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Carousel navigation header -->
+  <ion-toolbar class="classes-toolbar">
+    <div class="family-nav">
+      <button class="nav-arrow" (click)="prevFamily()" [disabled]="currentFamilyIndex === 0" title="Anterior">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+        <span class="arrow-label" *ngIf="currentFamilyIndex > 0">{{ families[currentFamilyIndex - 1].name }}</span>
+      </button>
+      <div class="family-title">
+        <span class="family-path">{{ currentLang === 'es' ? currentFamily.pathEs : currentFamily.pathEn }}</span>
+        <h2 [style.color]="currentFamily.color">{{ currentFamily.name }}</h2>
+      </div>
+      <button class="nav-arrow right-arrow" (click)="nextFamily()" [disabled]="currentFamilyIndex === families.length - 1" title="Siguiente">
+        <span class="arrow-label" *ngIf="currentFamilyIndex < families.length - 1">{{ families[currentFamilyIndex + 1].name }}</span>
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </button>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="classes-content">
+  <!-- For each tier in currentFamily.tiers -->
+  <div class="tier-section" *ngFor="let tier of currentFamily.tiers; let last = last">
+    <!-- Tier indicator row -->
+    <div class="tier-indicator">
+      <span class="tier-stars">{{ getStars(tier.tier) }}</span>
+      <span class="tier-level">LEVEL {{ tier.level }}</span>
+    </div>
+
+    <!-- Class cards - 1 col if 1 class, 2-col grid if 2+, special layout for 3-4 -->
+    <div class="tier-classes" [class.multi]="tier.classes.length > 1" [class.quad]="tier.classes.length >= 4">
+      <div class="class-card" *ngFor="let cls of tier.classes" [style.border-color]="currentFamily.color">
+        <div class="card-inner">
+          <div class="sprite-frame" [style.border-color]="currentFamily.color">
+            <img [src]="cls.sprite" (error)="onImageError($event)" class="class-sprite" alt="" />
+          </div>
+          <div class="class-info">
+            <h4 class="class-name">{{ cls.name }}</h4>
+            <span class="class-subclass" *ngIf="cls.subclass">{{ cls.subclass }}</span>
+          </div>
+          <span class="hybrid-badge" *ngIf="cls.isHybrid" title="Clase Híbrida">⚔️</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Connector chevrons between tiers -->
+    <div class="tier-connector" *ngIf="!last">
+      <ion-icon name="chevron-down"></ion-icon>
+      <ion-icon name="chevron-down"></ion-icon>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="codex-footer">
+    <div class="brand-credit">LastResources</div>
+    <p class="disclaimer-text">Fan-made project. Not affiliated with Northern Forge Studios or official Orna RPG.</p>
+  </div>
+</ion-content>
+
+<!-- Floating Action Buttons matching reference screenshot -->
+<ion-fab vertical="bottom" horizontal="start" slot="fixed">
+  <ion-fab-button size="small" color="dark" class="fab-circle" (click)="goBack()" title="Volver al Códice">
+    <ion-icon name="close"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+
+<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab-button size="small" color="dark" class="fab-circle fab-heart" title="Favorito">
+    <ion-icon name="heart"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+
