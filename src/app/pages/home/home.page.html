@@ -56,6 +56,32 @@
     <ion-skeleton-text *ngFor="let i of [1,2,3,4,5,6]" animated style="width: 100%; height: 56px; margin-bottom: 10px; border-radius: 6px;"></ion-skeleton-text>
   </div>
 
+  <!-- Outdated App / Web Banner (Solo se muestra en navegador web / cuando la versión anterior redirige) -->
+  <div *ngIf="showUpdateBanner" class="update-alert-banner codex-box">
+    <div class="banner-icon-col">
+      <ion-icon name="cloud-download-outline" class="banner-main-icon"></ion-icon>
+    </div>
+    <div class="banner-body-col">
+      <div class="banner-title-row">
+        <h4>{{ currentLang === 'es' ? '¡Versión Desactualizada Detectada!' : 'Outdated Version Detected!' }}</h4>
+        <button type="button" class="banner-close-btn" (click)="dismissUpdateBanner()" title="Cerrar">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+      <p class="banner-desc">
+        {{ currentLang === 'es'
+          ? 'Tu aplicación instalada anterior ha quedado obsoleta y por eso te redirigió aquí. Descarga e instala la nueva versión oficial para disfrutar de la experiencia nativa a pantalla completa y con actualizaciones automáticas.'
+          : 'Your previously installed app is outdated and redirected you here. Download and install the new official version for the native full-screen experience and automatic live updates.' }}
+      </p>
+      <div class="banner-actions">
+        <a href="assets/LastCodex.apk" download class="download-apk-btn">
+          <ion-icon name="download-outline"></ion-icon>
+          <span>{{ currentLang === 'es' ? 'Descargar e Instalar Nuevo APK (11.7 MB)' : 'Download & Install New APK (11.7 MB)' }}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
   <div *ngIf="!isLoading" class="forecast-container">
 
     <!-- SECCIÓN DE HOY -->

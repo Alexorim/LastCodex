@@ -21,8 +21,11 @@ import {
   logoWhatsapp,
   imageOutline,
   informationCircleOutline,
-  openOutline
+  openOutline,
+  cloudDownloadOutline,
+  closeOutline
 } from 'ionicons/icons';
+import { Capacitor } from '@capacitor/core';
 import { toPng } from 'html-to-image';
 import { MaterialsService } from '../../services/materials.service';
 import { TimerService } from '../../services/timer.service';
@@ -83,6 +86,7 @@ export class HomePage implements OnInit, OnDestroy {
 
   // Export Modal States
   showExportModal = false;
+  showUpdateBanner = false;
   exportMode: 'single' | 'both' = 'both';
   isExporting = false;
   exportFeedback: string | null = null;
@@ -206,7 +210,9 @@ export class HomePage implements OnInit, OnDestroy {
       logoWhatsapp,
       imageOutline,
       informationCircleOutline,
-      openOutline
+      openOutline,
+      cloudDownloadOutline,
+      closeOutline
     });
   }
 
@@ -219,6 +225,12 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    const isNative = Capacitor.isNativePlatform();
+    const isDismissed = sessionStorage.getItem('orna_update_banner_dismissed') === 'true';
+    if (!isNative && !isDismissed) {
+      this.showUpdateBanner = true;
+    }
+
     this.langSub = this.settingsService.lang$.subscribe(lang => {
       this.currentLang = lang;
       this.updateCalendarMonthName();
@@ -445,5 +457,10 @@ export class HomePage implements OnInit, OnDestroy {
         event.target.complete();
       }
     }, 2000);
+  }
+
+  dismissUpdateBanner(): void {
+    this.showUpdateBanner = false;
+    sessionStorage.setItem('orna_update_banner_dismissed', 'true');
   }
 }
