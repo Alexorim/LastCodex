@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu } = require('electron');
+const { app, BrowserWindow, Menu, shell } = require('electron');
 const path = require('path');
 
 let mainWindow;
@@ -22,6 +22,14 @@ function createWindow() {
   });
 
   Menu.setApplicationMenu(null);
+
+  // Open external links in default browser instead of navigating inside the app
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      shell.openExternal(url);
+    }
+    return { action: 'deny' };
+  });
 
   // Press F12 to toggle DevTools
   mainWindow.webContents.on('before-input-event', (event, input) => {

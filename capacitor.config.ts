@@ -5,18 +5,16 @@ const config: CapacitorConfig = {
   appName: 'LastResources',
   webDir: 'www',
   server: {
-    androidScheme: 'https',
-    url: 'https://lastresources.vercel.app/home',
-    cleartext: true
+    androidScheme: 'https'
   },
   plugins: {
     StatusBar: {
       style: 'DARK',
-      backgroundColor: '#0d1117'
+      backgroundColor: '#1F1F1F'
     },
     SplashScreen: {
-      launchShowDuration: 2000,
-      backgroundColor: '#0d1117',
+      launchShowDuration: 1500,
+      backgroundColor: '#1F1F1F',
       showSpinner: false
     }
   }
