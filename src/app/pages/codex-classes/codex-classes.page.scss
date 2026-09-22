@@ -86,8 +86,8 @@
 }
 
 .tier-section {
-  padding: 2px 10px;
-  max-width: 640px;
+  padding: 3px 12px;
+  max-width: 720px;
   margin: 0 auto;
 }
 
@@ -95,21 +95,21 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 4px;
-  padding-bottom: 2px;
+  margin-bottom: 5px;
+  padding-bottom: 3px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 
   .tier-stars {
     color: var(--codex-gold, #bda545);
-    font-size: 0.8rem;
-    letter-spacing: 1px;
+    font-size: 0.88rem;
+    letter-spacing: 1.5px;
     font-family: var(--codex-font-heading, serif);
     font-weight: 700;
   }
 
   .tier-level {
     color: var(--codex-text-muted, #8a847c);
-    font-size: 0.68rem;
+    font-size: 0.72rem;
     font-family: monospace;
     letter-spacing: 0.05em;
     font-weight: 700;
@@ -119,7 +119,7 @@
 .tier-classes {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 6px;
+  gap: 8px;
 
   &.multi,
   &.quad {
@@ -127,30 +127,34 @@
   }
 }
 
-/* Class card: pure black background, border in family color, compact padding */
+/* Class card: pure black background, larger box size */
 .class-card {
   background-color: #000000;
-  border-radius: 6px;
-  border: 1.5px solid;
-  padding: 5px 8px;
+  border-radius: 8px;
+  border: 1.8px solid;
+  padding: 10px 14px;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
   position: relative;
   transition: transform 0.18s ease, box-shadow 0.18s ease;
 
   &:hover {
     transform: translateY(-1px);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.8);
   }
 
   .card-inner {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
+    width: 100%;
   }
 
-  /* Sprite frame: no border, transparent background */
+  /* Sprite frame: larger size without border */
   .sprite-frame {
-    width: 32px;
-    height: 32px;
+    width: 44px;
+    height: 44px;
     background: transparent;
     border: none;
     display: flex;
@@ -159,8 +163,8 @@
     flex-shrink: 0;
 
     .class-sprite {
-      width: 32px;
-      height: 32px;
+      width: 44px;
+      height: 44px;
       object-fit: contain;
       image-rendering: pixelated;
     }
@@ -173,21 +177,21 @@
     .class-name {
       margin: 0;
       font-family: var(--codex-font-heading, serif);
-      font-size: 0.82rem;
+      font-size: 0.98rem;
       font-weight: 700;
       color: #f0eae1;
-      line-height: 1.15;
+      line-height: 1.2;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
     .class-subclass {
-      font-size: 0.67rem;
+      font-size: 0.74rem;
       color: var(--codex-text-muted, #8a847c);
       display: block;
-      margin-top: 1px;
-      line-height: 1.1;
+      margin-top: 2px;
+      line-height: 1.15;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -196,10 +200,10 @@
 
   .hybrid-badge {
     position: absolute;
-    top: 4px;
-    right: 5px;
-    font-size: 0.72rem;
-    opacity: 0.8;
+    top: 6px;
+    right: 8px;
+    font-size: 0.82rem;
+    opacity: 0.85;
   }
 }
 
