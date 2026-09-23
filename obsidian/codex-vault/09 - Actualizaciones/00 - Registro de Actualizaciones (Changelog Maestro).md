@@ -36,10 +36,17 @@ Conexiones:
 
 | Versión | Nombre Clave | Estado | Fecha de Corte | Commits Clave |
 | :--- | :--- | :--- | :--- | :--- |
-| **[[v1.3.0 - Renacimiento LastCodex, Subcategorías y APK Versionada]]** | *Branding & Subcategorías* | **Actual (Producción)** | Septiembre 2026 | `14039c3`, `dd3d54f`, `998984e`, `c2d471c` |
+| **[[v1.3.1 - Paginación Numérica y Modo Cuadrícula en Códice]]** | *Paginación & Vista Cuadrícula* | **Actual (Producción)** | Septiembre 2026 | `9e48510` |
+| **[[v1.3.0 - Renacimiento LastCodex, Subcategorías y APK Versionada]]** | *Branding & Subcategorías* | Precedente | Septiembre 2026 | `14039c3`, `dd3d54f`, `998984e`, `c2d471c` |
 | **[[v1.2.0 - Códice Masivo Offline (5065 ítems) y Sincronización]]** | *Offline IndexedDB & Sync* | Precedente | Septiembre 2026 | `c041b4e`, `38d628a`, `82c28f0`, `41eded1` |
 | **[[v1.1.0 - Clases, Eventos, Canvas Offline y Soporte Android]]** | *Expansión de Funcionalidades* | Precedente | Septiembre 2026 | `1d39d71`, `7e9b8d7`, `158f6bc`, `27e4d69` |
 | **[[v1.0.0 - Lanzamiento Inicial Orna Guild Forecast y Multiplataforma]]** | *Génesis del Proyecto* | Fundación | Agosto 2026 | `6ea2411`, `1793c8a`, `417b2ab`, `fb28397` |
+
+---
+
+## 📐 Regla Oficial de Incremento de Versiones
+- **Cambios Menores (Ajustes, correcciones, mejoras puntuales)**: Sube el **tercer dígito** (PATCH) — Ejemplo: `1.3.0` ➔ `1.3.1`.
+- **Cambios Notables (Nuevas implementaciones, módulos o rediseño)**: Sube el **segundo dígito** (MINOR) — Ejemplo: `1.3.x` ➔ `1.4.0`.
 
 ---
 

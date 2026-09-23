@@ -46,7 +46,7 @@ export class SettingsPage implements OnInit, OnDestroy {
   deviceTimezone = '';
   localResetTime = '';
 
-  versionNumber = '1.3.0';
+  versionNumber = '1.3.1';
   appVersion = `v${this.versionNumber}`;
   apkFileName = `lastcodex_${this.versionNumber}.apk`;
   apkDownloadUrl = `https://github.com/Alexorim/LastCodex/raw/main/src/assets/${this.apkFileName}`;

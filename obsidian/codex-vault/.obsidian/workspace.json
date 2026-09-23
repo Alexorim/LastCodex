@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "00 - Nodo Central (MOC) - LastCodex.md",
+                "file": "09 - Actualizaciones/v1.3.1 - Paginación Numérica y Modo Cuadrícula en Códice.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "00 - Nodo Central (MOC) - LastCodex"
+              "title": "v1.3.1 - Paginación Numérica y Modo Cuadrícula en Códice"
             }
           }
         ]
@@ -99,7 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "00 - Nodo Central (MOC) - LastCodex.md",
+                "file": "09 - Actualizaciones/v1.3.1 - Paginación Numérica y Modo Cuadrícula en Códice.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +118,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "00 - Nodo Central (MOC) - LastCodex.md",
+                "file": "09 - Actualizaciones/v1.3.1 - Paginación Numérica y Modo Cuadrícula en Códice.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -161,7 +161,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "00 - Nodo Central (MOC) - LastCodex.md",
+                "file": "09 - Actualizaciones/v1.3.1 - Paginación Numérica y Modo Cuadrícula en Códice.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -188,17 +188,18 @@
       "bases:Crear nueva base": false
     }
   },
-  "active": "1784754082cac28f",
+  "active": "49ccbce848ccd837",
   "lastOpenFiles": [
-    "01 - General/04 - Stack Tecnológico.md",
-    "00 - Nodo Central (MOC) - LastCodex.md",
-    "09 - Actualizaciones/00 - Registro de Actualizaciones (Changelog Maestro).md",
     "09 - Actualizaciones/v1.3.0 - Renacimiento LastCodex, Subcategorías y APK Versionada.md",
+    "09 - Actualizaciones/v1.3.1 - Paginación Numérica y Modo Cuadrícula en Códice.md",
+    "09 - Actualizaciones/Plantilla de Nueva Versión.md",
+    "09 - Actualizaciones/00 - Registro de Actualizaciones (Changelog Maestro).md",
+    "00 - Nodo Central (MOC) - LastCodex.md",
+    "01 - General/04 - Stack Tecnológico.md",
     "08 - Utilidades/Iconos y Sprites.md",
     "08 - Utilidades/Traducciones y Mapeo de Nombres.md",
     "08 - Utilidades/Forecast Canvas.md",
     "09 - Actualizaciones/v1.0.0 - Lanzamiento Inicial Orna Guild Forecast y Multiplataforma.md",
-    "09 - Actualizaciones/Plantilla de Nueva Versión.md",
     "06 - Plataformas/Plataforma Android y Capacitor.md",
     "09 - Actualizaciones/v1.1.0 - Clases, Eventos, Canvas Offline y Soporte Android.md",
     "09 - Actualizaciones/v1.2.0 - Códice Masivo Offline (5065 ítems) y Sincronización.md",
@@ -220,7 +221,6 @@
     "04 - Paginas/SettingsPage - Configuración.md",
     "04 - Paginas/EventsPage - Eventos en Vivo.md",
     "04 - Paginas/SearchPage - Buscador de Materiales.md",
-    "04 - Paginas/CalendarPage - Calendario de Materiales.md",
     "04 - Paginas",
     "03 - Servicios",
     "02 - Modulos",
