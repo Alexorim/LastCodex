@@ -24,8 +24,8 @@ import {
   informationCircleOutline
 } from 'ionicons/icons';
 import { SettingsService, Language } from '../../services/settings.service';
+import { CodexService, CodexEntry } from '../../services/codex.service';
 import { Subscription } from 'rxjs';
-import codexData from '../../data/codex-items.json';
 
 export interface CodexCategory {
   id: string;
@@ -37,20 +37,6 @@ export interface CodexCategory {
   descriptionEn: string;
 }
 
-export interface CodexEntry {
-  id: string;
-  name: string;
-  category: string;
-  subcategory?: string;
-  tier: number;
-  icon: string;
-  type: string;
-  descriptionEs: string;
-  descriptionEn: string;
-  stats?: string;
-  officialUrl: string;
-}
-
 @Component({
   selector: 'app-codex',
   templateUrl: './codex.page.html',
@@ -60,9 +46,11 @@ export interface CodexEntry {
 })
 export class CodexPage implements OnInit, OnDestroy {
   private settingsService = inject(SettingsService);
+  private codexService = inject(CodexService);
   private router = inject(Router);
 
   private langSub: Subscription | null = null;
+  private codexSub: Subscription | null = null;
   currentLang: Language = 'es';
 
   searchQuery = '';
@@ -79,17 +67,8 @@ export class CodexPage implements OnInit, OnDestroy {
       nameEn: 'Items & Gear',
       icon: 'shield-outline',
       sprite: 'https://playorna.com/static/img/weapons/blue_flame.png',
-      descriptionEs: 'Armas, armaduras, accesorios y materiales de forja.',
-      descriptionEn: 'Weapons, armor, accessories and forging materials.'
-    },
-    {
-      id: 'classes',
-      nameEs: 'Clases',
-      nameEn: 'Classes',
-      icon: 'sparkles-outline',
-      sprite: 'https://playorna.com/static/img/classes/mage/default_m.png',
-      descriptionEs: 'Especializaciones y ramas de progresión de héroe.',
-      descriptionEn: 'Specializations and hero progression trees.'
+      descriptionEs: 'Armas, armaduras, accesorios y consumibles.',
+      descriptionEn: 'Weapons, armor, accessories and consumables.'
     },
     {
       id: 'monsters',
@@ -110,15 +89,6 @@ export class CodexPage implements OnInit, OnDestroy {
       descriptionEn: 'Elite enemies guarding legendary treasures.'
     },
     {
-      id: 'followers',
-      nameEs: 'Seguidores',
-      nameEn: 'Followers',
-      icon: 'paw-outline',
-      sprite: 'https://playorna.com/static/img/monsters/dog.png',
-      descriptionEs: 'Mascotas de combate y apoyo en batalla.',
-      descriptionEn: 'Combat pets and battle companions.'
-    },
-    {
       id: 'raids',
       nameEs: 'Asaltos (Raids)',
       nameEn: 'Raids',
@@ -126,6 +96,15 @@ export class CodexPage implements OnInit, OnDestroy {
       sprite: 'https://playorna.com/static/img/bosses/abaddon.png',
       descriptionEs: 'Jefes colosales de gremio y eventos del reino.',
       descriptionEn: 'Colossal kingdom and guild raid bosses.'
+    },
+    {
+      id: 'followers',
+      nameEs: 'Seguidores',
+      nameEn: 'Followers',
+      icon: 'paw-outline',
+      sprite: 'https://playorna.com/static/img/monsters/dog.png',
+      descriptionEs: 'Mascotas de combate y apoyo en batalla.',
+      descriptionEn: 'Combat pets and battle companions.'
     },
     {
       id: 'spells',
@@ -153,21 +132,19 @@ export class CodexPage implements OnInit, OnDestroy {
       sprite: 'https://playorna.com/static/img/shops/dragon_roost.png',
       descriptionEs: 'Guaridas, torres de titanes y desafíos épicos.',
       descriptionEn: 'Roosts, titan towers and labyrinth challenges.'
+    },
+    {
+      id: 'classes',
+      nameEs: 'Clases',
+      nameEn: 'Classes',
+      icon: 'sparkles-outline',
+      sprite: 'https://playorna.com/static/img/classes/mage/default_m.png',
+      descriptionEs: 'Especializaciones y ramas de progresión de héroe.',
+      descriptionEn: 'Specializations and hero progression trees.'
     }
   ];
 
-  subcategoryLabels: { [key: string]: { es: string; en: string } } = {
-    armors: { es: 'Armaduras', en: 'Armors' },
-    weapons: { es: 'Armas', en: 'Weapons' },
-    adornment: { es: 'Adornos', en: 'Adornments' },
-    currency: { es: 'Monedas', en: 'Currency' },
-    field: { es: 'Campo', en: 'Field' },
-    fish: { es: 'Peces', en: 'Fish' },
-    material: { es: 'Materiales', en: 'Materials' },
-    useable: { es: 'Consumibles', en: 'Consumables' }
-  };
-
-  codexDatabase: CodexEntry[] = codexData as CodexEntry[];
+  codexDatabase: CodexEntry[] = [];
 
   constructor() {
     addIcons({
@@ -195,26 +172,38 @@ export class CodexPage implements OnInit, OnDestroy {
     this.langSub = this.settingsService.lang$.subscribe(lang => {
       this.currentLang = lang;
     });
+
+    this.codexSub = this.codexService.entries$.subscribe(entries => {
+      this.codexDatabase = entries;
+    });
   }
 
   ngOnDestroy() {
     this.langSub?.unsubscribe();
+    this.codexSub?.unsubscribe();
   }
 
   get filteredEntries(): CodexEntry[] {
     return this.codexDatabase.filter(entry => {
       const matchCat = this.selectedCategory === 'all' || entry.category === this.selectedCategory;
-      const matchSub = this.selectedSubcategory === null || entry.subcategory === this.selectedSubcategory;
       const matchTier = this.selectedTier === null || entry.tier === this.selectedTier;
-      const q = this.searchQuery.trim().toLowerCase();
-      const matchQuery =
-        !q ||
-        entry.name.toLowerCase().includes(q) ||
-        entry.type.toLowerCase().includes(q) ||
-        entry.descriptionEs.toLowerCase().includes(q) ||
-        entry.descriptionEn.toLowerCase().includes(q);
 
-      return matchCat && matchSub && matchTier && matchQuery;
+      const q = this.searchQuery.trim().toLowerCase();
+      if (!q) {
+        return matchCat && matchTier;
+      }
+
+      const matchQuery =
+        (entry.name && entry.name.toLowerCase().includes(q)) ||
+        (entry.nameEs && entry.nameEs.toLowerCase().includes(q)) ||
+        (entry.nameEn && entry.nameEn.toLowerCase().includes(q)) ||
+        (entry.type && entry.type.toLowerCase().includes(q)) ||
+        (entry.rarity && entry.rarity.toLowerCase().includes(q)) ||
+        (entry.description && entry.description.toLowerCase().includes(q)) ||
+        (entry.descriptionEs && entry.descriptionEs.toLowerCase().includes(q)) ||
+        (entry.descriptionEn && entry.descriptionEn.toLowerCase().includes(q));
+
+      return matchCat && matchTier && matchQuery;
     });
   }
 
@@ -222,44 +211,20 @@ export class CodexPage implements OnInit, OnDestroy {
     return this.filteredEntries.slice(0, this.displayLimit);
   }
 
-  get availableSubcategories(): string[] {
-    if (this.selectedCategory !== 'items') return [];
-    const subs = new Set<string>();
-    this.codexDatabase
-      .filter(e => e.category === 'items' && e.subcategory)
-      .forEach(e => subs.add(e.subcategory!));
-    return Array.from(subs).sort();
-  }
-
   selectCategory(catId: string): void {
-    if (catId === 'classes') {
-      this.router.navigate(['/codex/classes']);
-      return;
-    }
     this.selectedCategory = catId;
     this.selectedSubcategory = null;
     this.displayLimit = 60;
   }
 
-  filterSubcategory(sub: string | null): void {
-    this.selectedSubcategory = this.selectedSubcategory === sub ? null : sub;
-    this.displayLimit = 60;
-  }
-
-  filterTier(tier: number | null): void {
-    this.selectedTier = this.selectedTier === tier ? null : tier;
-    this.displayLimit = 60;
+  openClassesTree(event: MouseEvent): void {
+    event.stopPropagation();
+    this.router.navigate(['/codex/classes']);
   }
 
   onTierChange(event: Event): void {
     const val = (event.target as HTMLSelectElement).value;
     this.selectedTier = val ? Number(val) : null;
-    this.displayLimit = 60;
-  }
-
-  onSubcategoryChange(event: Event): void {
-    const val = (event.target as HTMLSelectElement).value;
-    this.selectedSubcategory = val || null;
     this.displayLimit = 60;
   }
 
@@ -283,10 +248,15 @@ export class CodexPage implements OnInit, OnDestroy {
     event.target.style.display = 'none';
   }
 
-  getSubcategoryLabel(sub: string): string {
-    const label = this.subcategoryLabels[sub];
-    if (!label) return sub;
-    return this.currentLang === 'es' ? label.es : label.en;
+  getDisplayName(entry: CodexEntry): string {
+    if (this.currentLang === 'es' && entry.nameEs) return entry.nameEs;
+    if (this.currentLang === 'en' && entry.nameEn) return entry.nameEn;
+    return entry.name;
+  }
+
+  getDisplayDescription(entry: CodexEntry): string {
+    if (this.currentLang === 'es' && entry.descriptionEs) return entry.descriptionEs;
+    if (this.currentLang === 'en' && entry.descriptionEn) return entry.descriptionEn;
+    return entry.description || '';
   }
 }
-

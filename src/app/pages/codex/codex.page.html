@@ -45,12 +45,17 @@
               <img [src]="cat.sprite" (error)="onImageError($event)" class="cat-nav-sprite" alt="" />
             </div>
             <span class="cat-nav-label">{{ currentLang === 'es' ? cat.nameEs : cat.nameEn }}</span>
-            <ion-icon *ngIf="cat.id === 'classes'" name="open-outline" class="cat-external-glyph" title="Ver árbol de clases"></ion-icon>
+            <ion-icon
+              *ngIf="cat.id === 'classes'"
+              name="open-outline"
+              class="cat-external-glyph"
+              (click)="openClassesTree($event)"
+              title="Ver árbol de clases"></ion-icon>
           </div>
         </nav>
       </aside>
 
-      <!-- Right Area: Slicer Filter, Counter, and Results Grid -->
+      <!-- Right Area: Filter, Counter, and Results Grid -->
       <section class="codex-content-area">
 
         <!-- Dropdown Filters (Listas Desplegables) -->
@@ -68,28 +73,14 @@
               <ion-icon name="chevron-down-outline" class="select-arrow-icon"></ion-icon>
             </div>
           </div>
-
-          <!-- Subcategory Dropdown (only when Items is selected) -->
-          <div class="filter-dropdown-group" *ngIf="availableSubcategories.length > 0">
-            <label class="dropdown-label">{{ currentLang === 'es' ? 'Tipo:' : 'Type:' }}</label>
-            <div class="custom-select-box">
-              <select [value]="selectedSubcategory || ''" (change)="onSubcategoryChange($event)" class="codex-native-select">
-                <option value="">{{ currentLang === 'es' ? 'Todos los tipos' : 'All types' }}</option>
-                <option *ngFor="let sub of availableSubcategories" [value]="sub">
-                  {{ getSubcategoryLabel(sub) }}
-                </option>
-              </select>
-              <ion-icon name="chevron-down-outline" class="select-arrow-icon"></ion-icon>
-            </div>
-          </div>
         </div>
 
         <!-- Results Count -->
         <div class="results-header">
           <span class="count-badge">
-            {{ filteredEntries.length }} {{ currentLang === 'es' ? 'entradas' : 'entries' }}
+            {{ filteredEntries.length | number }} {{ currentLang === 'es' ? 'entradas' : 'entries' }}
             <span *ngIf="displayedEntries.length < filteredEntries.length" class="showing-badge">
-              ({{ currentLang === 'es' ? 'mostrando' : 'showing' }} {{ displayedEntries.length }})
+              ({{ currentLang === 'es' ? 'mostrando' : 'showing' }} {{ displayedEntries.length | number }})
             </span>
           </span>
         </div>
@@ -106,13 +97,14 @@
               </div>
               <div class="card-titles">
                 <div class="tier-tag" *ngIf="entry.tier > 0">★ Tier {{ entry.tier }}</div>
-                <h4 class="entry-name">{{ entry.name }}</h4>
+                <h4 class="entry-name">{{ getDisplayName(entry) }}</h4>
                 <span class="entry-type">{{ entry.type }}</span>
               </div>
             </div>
 
-            <div class="card-bottom" *ngIf="entry.stats">
-              <span class="stat-pill">{{ entry.stats }}</span>
+            <div class="card-bottom" *ngIf="entry.stats || entry.rarity">
+              <span class="stat-pill" *ngIf="entry.rarity">{{ entry.rarity }}</span>
+              <span class="stat-pill" *ngIf="entry.stats">{{ entry.stats }}</span>
               <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
             </div>
           </div>
@@ -122,7 +114,7 @@
         <div class="load-more-wrap" *ngIf="displayedEntries.length < filteredEntries.length">
           <button type="button" class="load-more-btn" (click)="loadMore()">
             {{ currentLang === 'es' ? 'Cargar más...' : 'Load more...' }}
-            ({{ filteredEntries.length - displayedEntries.length }} {{ currentLang === 'es' ? 'restantes' : 'remaining' }})
+            ({{ (filteredEntries.length - displayedEntries.length) | number }} {{ currentLang === 'es' ? 'restantes' : 'remaining' }})
           </button>
         </div>
 
@@ -131,7 +123,7 @@
           <ion-icon name="search-outline" class="empty-icon"></ion-icon>
           <h4>{{ currentLang === 'es' ? 'No se encontraron resultados' : 'No entries found' }}</h4>
           <p>{{ currentLang === 'es' ? 'Intenta con otro término o limpia los filtros de búsqueda.' : 'Try another query or clear filters.' }}</p>
-          <button type="button" class="reset-filter-btn" (click)="selectedCategory = 'all'; selectedTier = null; selectedSubcategory = null; searchQuery = ''">
+          <button type="button" class="reset-filter-btn" (click)="selectedCategory = 'all'; selectedTier = null; searchQuery = ''">
             {{ currentLang === 'es' ? 'Restablecer filtros' : 'Reset filters' }}
           </button>
         </div>
@@ -151,10 +143,16 @@
           <div class="modal-sprite-wrap">
             <img [src]="selectedEntry.icon" class="modal-entry-sprite" alt="" />
           </div>
-          <h3 class="modal-entry-title">{{ selectedEntry.name }}</h3>
+          <h3 class="modal-entry-title">{{ getDisplayName(selectedEntry) }}</h3>
           <div class="modal-badges-row">
-            <span class="modal-tier-tag">★ Tier {{ selectedEntry.tier }}</span>
+            <span class="modal-tier-tag" *ngIf="selectedEntry.tier > 0">★ Tier {{ selectedEntry.tier }}</span>
             <span class="modal-type-tag">{{ selectedEntry.type }}</span>
+            <span class="modal-type-tag" *ngIf="selectedEntry.rarity" style="text-transform: capitalize; background: rgba(189, 165, 69, 0.2); color: var(--codex-gold-bright);">
+              {{ selectedEntry.rarity }}
+            </span>
+            <span class="modal-type-tag" *ngIf="selectedEntry.arisen" style="background: rgba(163, 53, 238, 0.2); color: #d88aff;">
+              Arisen
+            </span>
           </div>
         </div>
 
@@ -163,13 +161,15 @@
           <div class="modal-desc-box">
             <div class="desc-tier-header">
               <ion-icon name="information-circle-outline"></ion-icon>
-              <span>{{ currentLang === 'es' ? ('Detalles — Tier ' + selectedEntry.tier) : ('Details — Tier ' + selectedEntry.tier) }}</span>
+              <span>{{ currentLang === 'es'
+                ? ('Detalles' + (selectedEntry.tier > 0 ? (' — Tier ' + selectedEntry.tier) : ''))
+                : ('Details' + (selectedEntry.tier > 0 ? (' — Tier ' + selectedEntry.tier) : '')) }}</span>
             </div>
             <p class="modal-desc">
-              {{ (currentLang === 'es' ? selectedEntry.descriptionEs : selectedEntry.descriptionEn) ||
+              {{ getDisplayDescription(selectedEntry) ||
                  (currentLang === 'es'
-                   ? ('Entrada oficial del Códice de Orna clasificada como Tier ' + selectedEntry.tier + ' en la categoría ' + selectedEntry.type + '.')
-                   : ('Official Orna Codex entry classified as Tier ' + selectedEntry.tier + ' under ' + selectedEntry.type + '.')) }}
+                   ? ('Entrada oficial del Códice de Orna' + (selectedEntry.tier > 0 ? (' clasificada como Tier ' + selectedEntry.tier) : '') + ' en la categoría ' + selectedEntry.type + '.')
+                   : ('Official Orna Codex entry' + (selectedEntry.tier > 0 ? (' classified as Tier ' + selectedEntry.tier) : '') + ' under ' + selectedEntry.type + '.')) }}
             </p>
           </div>
 
@@ -179,6 +179,7 @@
           </div>
 
           <a
+            *ngIf="selectedEntry.officialUrl"
             [href]="selectedEntry.officialUrl"
             target="_blank"
             rel="noopener noreferrer"

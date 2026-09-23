@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular/lazy';
@@ -10,11 +10,19 @@ import {
   timeOutline,
   informationCircleOutline,
   shieldCheckmarkOutline,
-  refreshOutline
+  refreshOutline,
+  cloudDownloadOutline,
+  syncOutline,
+  trashOutline,
+  checkmarkCircleOutline,
+  alertCircleOutline,
+  fileTrayFullOutline
 } from 'ionicons/icons';
 import { Router } from '@angular/router';
 import { SettingsService, Language, ThemeMode } from '../../services/settings.service';
 import { TimerService } from '../../services/timer.service';
+import { CodexService, SyncProgress } from '../../services/codex.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-settings',
@@ -23,15 +31,31 @@ import { TimerService } from '../../services/timer.service';
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule]
 })
-export class SettingsPage implements OnInit {
+export class SettingsPage implements OnInit, OnDestroy {
   private settingsService = inject(SettingsService);
   private timerService = inject(TimerService);
+  private codexService = inject(CodexService);
   private router = inject(Router);
+
+  private subs = new Subscription();
 
   currentLang: Language = 'es';
   currentTheme: ThemeMode = 'codex-dark';
   deviceTimezone = '';
   localResetTime = '';
+
+  // Codex status & sync
+  totalCodexEntries = 0;
+  lastSyncFormatted: string | null = null;
+  isCustomData = false;
+  syncProgress: SyncProgress = {
+    running: false,
+    percent: 0,
+    currentCategory: '',
+    statusText: ''
+  };
+  syncSuccessMessage: string | null = null;
+  syncErrorMessage: string | null = null;
 
   constructor() {
     addIcons({
@@ -41,7 +65,13 @@ export class SettingsPage implements OnInit {
       timeOutline,
       informationCircleOutline,
       shieldCheckmarkOutline,
-      refreshOutline
+      refreshOutline,
+      cloudDownloadOutline,
+      syncOutline,
+      trashOutline,
+      checkmarkCircleOutline,
+      alertCircleOutline,
+      fileTrayFullOutline
     });
   }
 
@@ -55,13 +85,61 @@ export class SettingsPage implements OnInit {
       this.deviceTimezone = 'UTC-5';
     }
 
-    this.settingsService.theme$.subscribe(theme => {
-      this.currentTheme = theme;
-    });
+    this.subs.add(
+      this.settingsService.theme$.subscribe(theme => {
+        this.currentTheme = theme;
+      })
+    );
 
-    this.timerService.localResetTime$.subscribe(time => {
-      this.localResetTime = time;
-    });
+    this.subs.add(
+      this.timerService.localResetTime$.subscribe(time => {
+        this.localResetTime = time;
+      })
+    );
+
+    this.subs.add(
+      this.codexService.entries$.subscribe(entries => {
+        this.totalCodexEntries = entries.length;
+      })
+    );
+
+    this.subs.add(
+      this.codexService.lastSync$.subscribe(syncDate => {
+        if (!syncDate) {
+          this.lastSyncFormatted = null;
+        } else {
+          try {
+            const date = new Date(syncDate);
+            this.lastSyncFormatted = date.toLocaleString(
+              this.currentLang === 'es' ? 'es-ES' : 'en-US',
+              { dateStyle: 'medium', timeStyle: 'short' }
+            );
+          } catch {
+            this.lastSyncFormatted = syncDate;
+          }
+        }
+      })
+    );
+
+    this.subs.add(
+      this.codexService.isCustomData$.subscribe(custom => {
+        this.isCustomData = custom;
+      })
+    );
+
+    this.subs.add(
+      this.codexService.syncProgress$.subscribe(prog => {
+        this.syncProgress = prog;
+        if (prog.error) {
+          this.syncErrorMessage = prog.error;
+          this.syncSuccessMessage = null;
+        }
+      })
+    );
+  }
+
+  ngOnDestroy() {
+    this.subs.unsubscribe();
   }
 
   goToHome(): void {
@@ -76,5 +154,30 @@ export class SettingsPage implements OnInit {
   onThemeChange(theme: ThemeMode) {
     this.currentTheme = theme;
     this.settingsService.setTheme(theme);
+  }
+
+  async syncCodex(): Promise<void> {
+    this.syncSuccessMessage = null;
+    this.syncErrorMessage = null;
+    const result = await this.codexService.syncFromPlayOrna();
+    if (result.success) {
+      this.syncSuccessMessage = this.currentLang === 'es'
+        ? `¡Códice actualizado con éxito! Se cargaron ${result.count.toLocaleString()} entradas directamente de PlayOrna.`
+        : `Codex successfully synced! Loaded ${result.count.toLocaleString()} entries directly from PlayOrna.`;
+    } else if (result.error) {
+      this.syncErrorMessage = result.error;
+    }
+  }
+
+  async resetCodex(): Promise<void> {
+    if (confirm(this.currentLang === 'es'
+      ? '¿Deseas restaurar la base de datos preinstalada de fábrica?'
+      : 'Do you want to reset to the factory bundled database?')) {
+      await this.codexService.resetToDefault();
+      this.syncSuccessMessage = this.currentLang === 'es'
+        ? 'Base de datos restaurada a la versión preinstalada de fábrica.'
+        : 'Database reset to bundled factory version.';
+      this.syncErrorMessage = null;
+    }
   }
 }

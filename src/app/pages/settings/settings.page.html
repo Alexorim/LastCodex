@@ -73,7 +73,84 @@
       </div>
     </div>
 
-    <!-- Section 3: Timezone & Rotation Info -->
+    <!-- Section 3: Codex & Offline Database Sync -->
+    <div class="settings-card codex-sync-card">
+      <div class="card-header">
+        <ion-icon name="cloud-download-outline" class="card-icon"></ion-icon>
+        <h3>{{ currentLang === 'es' ? 'Códice & Base de Datos Offline' : 'Codex & Offline Database' }}</h3>
+      </div>
+      <p class="card-desc">
+        {{ currentLang === 'es'
+          ? 'Toda la base de datos de PlayOrna está integrada y es 100% accesible sin internet. Si el juego añade nuevos objetos o criaturas, puedes sincronizar aquí con el servidor oficial.'
+          : 'The entire PlayOrna database is bundled and 100% accessible offline. If the game adds new items or monsters, you can sync directly with the official codex.' }}
+      </p>
+
+      <div class="info-row">
+        <span class="info-label">{{ currentLang === 'es' ? 'Estado Offline:' : 'Offline Status:' }}</span>
+        <span class="info-val highlight">
+          <ion-icon name="checkmark-circle-outline" style="color: #4cd964; vertical-align: middle; margin-right: 4px;"></ion-icon>
+          {{ currentLang === 'es' ? 'Disponible 100% sin conexión' : 'Available 100% offline' }}
+        </span>
+      </div>
+
+      <div class="info-row">
+        <span class="info-label">{{ currentLang === 'es' ? 'Entradas Registradas:' : 'Total Entries:' }}</span>
+        <span class="info-val highlight">{{ totalCodexEntries | number }} {{ currentLang === 'es' ? 'entradas' : 'entries' }}</span>
+      </div>
+
+      <div class="info-row">
+        <span class="info-label">{{ currentLang === 'es' ? 'Última Sincronización:' : 'Last Synced:' }}</span>
+        <span class="info-val">{{ lastSyncFormatted || (currentLang === 'es' ? 'Versión oficial integrada' : 'Official bundled version') }}</span>
+      </div>
+
+      <!-- Sync Progress Indicator -->
+      <div class="sync-progress-box" *ngIf="syncProgress.running">
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" [style.width.%]="syncProgress.percent"></div>
+        </div>
+        <div class="progress-status-row">
+          <span class="progress-label">{{ syncProgress.statusText }}</span>
+          <span class="progress-percent">{{ syncProgress.percent }}%</span>
+        </div>
+      </div>
+
+      <!-- Feedback Messages -->
+      <div class="sync-feedback success" *ngIf="syncSuccessMessage">
+        <ion-icon name="checkmark-circle-outline"></ion-icon>
+        <span>{{ syncSuccessMessage }}</span>
+      </div>
+      <div class="sync-feedback error" *ngIf="syncErrorMessage">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <span>{{ syncErrorMessage }}</span>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="sync-actions-row">
+        <button
+          type="button"
+          class="sync-btn primary"
+          [disabled]="syncProgress.running"
+          (click)="syncCodex()">
+          <ion-icon name="sync-outline" [class.spinning]="syncProgress.running"></ion-icon>
+          <span>{{ syncProgress.running
+            ? (currentLang === 'es' ? 'Sincronizando...' : 'Syncing...')
+            : (currentLang === 'es' ? 'Sincronizar con PlayOrna Codex' : 'Sync with PlayOrna Codex') }}</span>
+        </button>
+
+        <button
+          type="button"
+          class="sync-btn secondary"
+          *ngIf="isCustomData"
+          [disabled]="syncProgress.running"
+          (click)="resetCodex()"
+          title="Restablecer base de datos inicial">
+          <ion-icon name="trash-outline"></ion-icon>
+          <span>{{ currentLang === 'es' ? 'Restaurar de fábrica' : 'Reset to default' }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Section 4: Timezone & Rotation Info -->
     <div class="settings-card">
       <div class="card-header">
         <ion-icon name="time-outline" class="card-icon"></ion-icon>
@@ -98,7 +175,7 @@
       </p>
     </div>
 
-    <!-- Section 4: About & Credits -->
+    <!-- Section 5: About & Credits -->
     <div class="settings-card about-card">
       <div class="card-header">
         <ion-icon name="shield-checkmark-outline" class="card-icon"></ion-icon>
