@@ -249,6 +249,7 @@
 
         <div
           class="export-option-tile"
+          *ngIf="tomorrowForecast"
           [class.selected]="exportMode === 'both'"
           (click)="exportMode = 'both'">
           <div class="tile-radio">

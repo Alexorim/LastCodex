@@ -172,6 +172,9 @@ export class HomePage implements OnInit, OnDestroy {
 
   // Export Modal Methods
   openExportModal(): void {
+    if (!this.tomorrowForecast) {
+      this.exportMode = 'single';
+    }
     this.showExportModal = true;
     this.exportFeedback = null;
     if (this.unregisterExportOverlay) this.unregisterExportOverlay();
@@ -264,9 +267,13 @@ export class HomePage implements OnInit, OnDestroy {
     try {
       await new Promise(r => setTimeout(r, 250));
 
-      const targetEl = this.exportMode === 'single'
+      let targetEl = this.exportMode === 'single'
         ? this.exportTargetSingle?.nativeElement
         : this.exportTargetBoth?.nativeElement;
+
+      if (!targetEl) {
+        targetEl = this.exportTargetSingle?.nativeElement;
+      }
 
       if (!targetEl) {
         throw new Error('Element to capture not found');
@@ -295,10 +302,14 @@ export class HomePage implements OnInit, OnDestroy {
               data: base64Data,
               directory: Directory.Cache
             });
+
             await Share.share({
               title: 'LastResources — Orna Guild Forecast',
-              url: saved.uri,
-              dialogTitle: this.currentLang === 'es' ? 'Compartir Pronóstico' : 'Share Guild Forecast'
+              text: this.currentLang === 'es'
+                ? 'Pronóstico de materiales de gremio en Orna RPG'
+                : 'Orna RPG Guild Material Stock Forecast',
+              files: [saved.uri],
+              dialogTitle: this.currentLang === 'es' ? 'Compartir Imagen de Pronóstico' : 'Share Forecast Image'
             });
             this.exportFeedback = this.currentLang === 'es' ? '¡Compartido con éxito!' : 'Shared successfully!';
             setTimeout(() => this.closeExportModal(), 1800);
