@@ -19,6 +19,7 @@ import {
   homeOutline
 } from 'ionicons/icons';
 import { SettingsService, Language } from '../../services/settings.service';
+import { BackButtonService } from '../../services/back-button.service';
 import { Subscription } from 'rxjs';
 import { OrnaCalendarEvent, CalendarCell } from '../../models/event.model';
 
@@ -31,9 +32,11 @@ import { OrnaCalendarEvent, CalendarCell } from '../../models/event.model';
 })
 export class EventsPage implements OnInit, OnDestroy {
   private settingsService = inject(SettingsService);
+  private backButtonService = inject(BackButtonService);
   private router = inject(Router);
 
   private langSub: Subscription | null = null;
+  private unregisterBackOverlay: (() => void) | null = null;
   currentLang: Language = 'es';
 
   calendarMonthName = '';
@@ -238,7 +241,7 @@ export class EventsPage implements OnInit, OnDestroy {
     if (!cell.isCurrentMonth) return;
     this.selectedDayCell = cell;
     if (cell.events.length > 0) {
-      this.selectedEventDetail = cell.events[0];
+      this.viewEventDetail(cell.events[0]);
     }
   }
 
@@ -247,6 +250,22 @@ export class EventsPage implements OnInit, OnDestroy {
       event.stopPropagation();
     }
     this.selectedEventDetail = ev;
+    if (this.unregisterBackOverlay) this.unregisterBackOverlay();
+    this.unregisterBackOverlay = this.backButtonService.registerOverlay(() => {
+      if (this.selectedEventDetail) {
+        this.closeEventDetail();
+        return true;
+      }
+      return false;
+    });
+  }
+
+  closeEventDetail(): void {
+    this.selectedEventDetail = null;
+    if (this.unregisterBackOverlay) {
+      this.unregisterBackOverlay();
+      this.unregisterBackOverlay = null;
+    }
   }
 
   goToHome(): void {

@@ -1,6 +1,6 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import { Platform, ToastController } from '@ionic/angular';
+import { Platform, ToastController, NavController } from '@ionic/angular';
 import { App } from '@capacitor/app';
 import { SettingsService } from './settings.service';
 
@@ -11,12 +11,15 @@ export type OverlayCloseFn = () => boolean | void;
 })
 export class BackButtonService {
   private router = inject(Router);
+  private navCtrl = inject(NavController);
   private platform = inject(Platform);
   private toastCtrl = inject(ToastController);
   private settingsService = inject(SettingsService);
+  private ngZone = inject(NgZone);
 
   private overlayStack: OverlayCloseFn[] = [];
-  private lastBackPress = 0;
+  private lastHomeBackPress = 0;
+  private lastHandledTimestamp = 0;
   private isToastOpen = false;
 
   constructor() {
@@ -42,63 +45,81 @@ export class BackButtonService {
   }
 
   private initBackButtonListener(): void {
-    // 1. Capacitor native Android back button event
-    App.addListener('backButton', () => {
-      this.handleBackButton();
+    const onBack = () => {
+      this.ngZone.run(() => {
+        this.handleBackButton();
+      });
+    };
+
+    // 1. Ionic platform backButton with maximum priority (99999)
+    this.platform.backButton.subscribeWithPriority(99999, () => {
+      onBack();
     });
 
-    // 2. Ionic platform back button with high priority (9999)
-    this.platform.backButton.subscribeWithPriority(9999, (processNextHandler) => {
-      const handled = this.handleBackButton();
-      if (!handled && processNextHandler) {
-        processNextHandler();
-      }
+    // 2. Direct Capacitor App listener as fallback (debounced to avoid duplicate triggers)
+    App.addListener('backButton', () => {
+      onBack();
     });
   }
 
   public handleBackButton(): boolean {
-    // Priority 1: Check custom overlay stack
+    const now = Date.now();
+
+    // 1. Debounce guard: Ignore any duplicate trigger within 350ms (avoids hardware bounce / dual listener calls)
+    if (now - this.lastHandledTimestamp < 350) {
+      return true;
+    }
+    this.lastHandledTimestamp = now;
+
+    // 2. Priority 1: Check custom registered overlay stack (modals, dialogs, sheets)
     while (this.overlayStack.length > 0) {
       const closeFn = this.overlayStack.pop();
       if (closeFn) {
         const handled = closeFn();
         if (handled !== false) {
-          return true; // Successfully closed an overlay
+          // Closed an overlay; reset home back exit counter and stop
+          this.lastHomeBackPress = 0;
+          return true;
         }
       }
     }
 
-    // Priority 2: Check any DOM overlays (Ionic modals, alerts, custom backdrops)
+    // 3. Priority 2: Check any open DOM overlay elements (Ionic alerts, action-sheets, modals)
     const domOverlay = document.querySelector(
       'ion-modal.can-go-back, ion-alert, ion-action-sheet, ion-popover, .modal-backdrop, .export-modal-backdrop, .events-modal-backdrop, .material-modal-backdrop'
     );
     if (domOverlay) {
-      // Find close button inside DOM overlay if any
       const closeBtn = domOverlay.querySelector(
-        '.modal-close-btn, .banner-close-btn, [data-action="close"], .alert-button-cancel'
+        '.modal-close-btn, .modal-close, .banner-close-btn, [data-action="close"], .alert-button-cancel'
       ) as HTMLElement | null;
       if (closeBtn) {
         closeBtn.click();
+        this.lastHomeBackPress = 0;
         return true;
       }
     }
 
-    // Priority 3: Check current route
-    const currentUrl = this.router.url.split('?')[0];
-    if (currentUrl !== '/home' && currentUrl !== '/') {
-      // If anywhere other than /home, navigate back to /home
-      this.router.navigate(['/home']);
+    // 4. Priority 3: Check current route
+    const rawUrl = (this.router.url || '').split('?')[0].split('#')[0].replace(/^\//, '');
+    const isHome = rawUrl === 'home' || rawUrl === '' || rawUrl === 'tabs/home';
+
+    if (!isHome) {
+      // If we are on ANY page other than /home (e.g. /codex, /codex/classes, /calendar, /search, /events, /settings),
+      // navigate back to /home and reset the exit counter.
+      this.lastHomeBackPress = 0;
+      this.navCtrl.navigateRoot('/home', { animated: true, animationDirection: 'back' });
       return true;
     }
 
-    // Priority 4: Double back to exit on /home
-    const now = Date.now();
-    if (now - this.lastBackPress < 2000) {
+    // 5. Priority 4: On /home: Double back to exit
+    if (this.lastHomeBackPress > 0 && (now - this.lastHomeBackPress) <= 2000) {
+      // Second back press within 2000ms: exit application
       App.exitApp();
       return true;
     }
 
-    this.lastBackPress = now;
+    // First back press on /home: record timestamp and show prompt toast
+    this.lastHomeBackPress = now;
     this.showExitToast();
     return true;
   }
