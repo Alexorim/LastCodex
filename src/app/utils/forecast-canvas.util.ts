@@ -256,17 +256,10 @@ export async function generateForecastImage(options: ForecastExportOptions): Pro
     ctx.stroke();
   }
 
-  // App Title & Subtitle
+  // App Title (Clean, without default subtitle message)
   ctx.fillStyle = '#bda545';
-  ctx.font = 'bold 20px serif, Georgia, sans-serif';
-  ctx.fillText('LastResources', paddingX + 54, 38);
-
-  ctx.fillStyle = '#8f887c';
-  ctx.font = '11px sans-serif';
-  const subtitle = lang === 'es'
-    ? 'Pronóstico de Tiendas de Gremio — Orna RPG'
-    : 'Guild Shop Material Stock Forecast — Orna RPG';
-  ctx.fillText(subtitle, paddingX + 54, 55);
+  ctx.font = 'bold 22px serif, Georgia, sans-serif';
+  ctx.fillText('LastResources', paddingX + 54, 46);
 
   if (!isBoth) {
     // Single Day Badge on right

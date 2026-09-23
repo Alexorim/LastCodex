@@ -14,7 +14,7 @@
     "electron": "electron .",
     "dist:win": "ng build --configuration production && electron-builder --win --dir",
     "dist:win:exe": "ng build --configuration production && electron-builder --win portable",
-    "build:apk": "ng build --configuration production && npx cap sync android && cd android && gradlew.bat assembleDebug && cd .. && powershell -Command \"Copy-Item android/app/build/outputs/apk/debug/LastCodex.apk src/assets/LastCodex.apk -Force; Copy-Item android/app/build/outputs/apk/debug/LastCodex.apk www/assets/LastCodex.apk -Force\""
+    "build:apk": "node scripts/build-apk.js"
   },
   "build": {
     "appId": "com.lastresources.app",

@@ -316,12 +316,9 @@ export class HomePage implements OnInit, OnDestroy {
             });
 
             await Share.share({
-              title: 'LastResources — Orna Guild Forecast',
-              text: this.currentLang === 'es'
-                ? 'Pronóstico de materiales de gremio en Orna RPG'
-                : 'Orna RPG Guild Material Stock Forecast',
+              title: 'LastResources',
               files: [saved.uri],
-              dialogTitle: this.currentLang === 'es' ? 'Compartir Imagen de Pronóstico' : 'Share Forecast Image'
+              dialogTitle: this.currentLang === 'es' ? 'Compartir Imagen' : 'Share Image'
             });
             this.exportFeedback = this.currentLang === 'es' ? '¡Compartido con éxito!' : 'Shared successfully!';
             setTimeout(() => this.closeExportModal(), 1800);

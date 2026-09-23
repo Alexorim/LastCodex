@@ -220,14 +220,14 @@
 
       <!-- APK Download Button -->
       <div class="apk-download-box">
-        <a [href]="apkDownloadUrl" target="_system" (click)="downloadApk($event)" class="apk-download-btn">
+        <a [href]="apkDownloadUrl" [download]="apkFileName" target="_system" (click)="downloadApk($event)" class="apk-download-btn">
           <div class="apk-btn-left">
             <div class="apk-icon-circle">
               <ion-icon name="cloud-download-outline"></ion-icon>
             </div>
             <div class="apk-text-group">
               <span class="apk-title">{{ currentLang === 'es' ? 'Descargar Última APK' : 'Download Latest APK' }}</span>
-              <span class="apk-subtitle">LastCodex.apk ({{ appVersion }})</span>
+              <span class="apk-subtitle">{{ apkFileName }} ({{ appVersion }})</span>
             </div>
           </div>
           <ion-icon name="open-outline" class="apk-external-icon"></ion-icon>

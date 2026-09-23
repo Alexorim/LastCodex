@@ -83,5 +83,5 @@ Thumbs.db
 .vercel
 .env*
 *.apk
-!src/assets/LastCodex.apk
+!src/assets/*.apk
 *.jks
