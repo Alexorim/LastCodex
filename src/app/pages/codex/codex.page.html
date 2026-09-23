@@ -1,20 +1,25 @@
-<ion-content class="ion-padding codex-content">
+<ion-content class="codex-content">
   <div class="codex-container">
 
-    <!-- Transparent Searchbar at top (no ion-header) -->
-    <div class="codex-search-transparent-wrap">
-      <ion-searchbar
-        [(ngModel)]="searchQuery"
-        [placeholder]="currentLang === 'es' ? '¿Qué buscas en el Códice? (objetos, monstruos, clases...)' : 'Search Codex (items, monsters, classes...)'"
-        debounce="150"
-        class="codex-searchbar-transparent"
-      ></ion-searchbar>
+    <!-- Search Row with Brand Logo on the Left -->
+    <div class="codex-search-row">
+      <div class="brand-search-btn clickable" (click)="goToHome()" [title]="currentLang === 'es' ? 'Ir a Inicio' : 'Go to Home'">
+        <img src="assets/icon/last_codex.png" alt="LastResources Logo" class="brand-search-logo" />
+      </div>
+      <div class="codex-search-flex">
+        <ion-searchbar
+          [(ngModel)]="searchQuery"
+          [placeholder]="currentLang === 'es' ? '¿Qué buscas en el Códice? (objetos, monstruos...)' : 'Search Codex (items, monsters...)'"
+          debounce="150"
+          class="codex-searchbar-transparent"
+        ></ion-searchbar>
+      </div>
     </div>
 
     <!-- Main Two-Column Layout: Categories on Left, Content on Right -->
     <div class="codex-main-layout">
 
-      <!-- Left Sidebar: Categorías -->
+      <!-- Left Sidebar: Categorías (No Box, No Header) -->
       <aside class="codex-categories-sidebar">
         <nav class="categories-nav">
           <!-- Option: Todo / All -->
@@ -45,32 +50,50 @@
         </nav>
       </aside>
 
-      <!-- Right Area: Filters, Counter, and Results Grid -->
+      <!-- Right Area: Slicer Filter, Counter, and Results Grid -->
       <section class="codex-content-area">
 
-        <!-- Tier Filter Pills -->
-        <div class="tier-filter-row">
-          <span class="tier-label">{{ currentLang === 'es' ? 'Tier:' : 'Tier:' }}</span>
-          <div class="tier-pills">
-            <button
-              *ngFor="let t of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
-              type="button"
-              class="tier-pill"
-              [class.active]="selectedTier === t"
-              (click)="filterTier(t)">
-              T{{ t }}
+        <!-- Tier Slicer Filter (Slider interactivo T1-T10) -->
+        <div class="tier-slicer-card">
+          <div class="slicer-header">
+            <div class="slicer-title-wrap">
+              <span class="slicer-label">{{ currentLang === 'es' ? 'Tier:' : 'Tier:' }}</span>
+              <span class="slicer-badge" *ngIf="selectedTier !== null">★ Tier {{ selectedTier }}</span>
+              <span class="slicer-badge badge-all" *ngIf="selectedTier === null">{{ currentLang === 'es' ? 'Todos los Tiers' : 'All Tiers' }}</span>
+            </div>
+            <button type="button" class="slicer-reset-btn" *ngIf="selectedTier !== null" (click)="filterTier(null)">
+              {{ currentLang === 'es' ? 'Ver Todos' : 'View All' }}
             </button>
+          </div>
+
+          <div class="slicer-track-container">
+            <input
+              type="range"
+              min="0"
+              max="10"
+              step="1"
+              [value]="selectedTier === null ? 0 : selectedTier"
+              (input)="onTierSliderInput($event)"
+              class="tier-range-input"
+              title="Desliza para cambiar Tier"
+            />
+            <div class="slicer-ticks-row">
+              <span class="slicer-tick" [class.active]="selectedTier === null" (click)="filterTier(null)">ALL</span>
+              <span *ngFor="let t of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" class="slicer-tick" [class.active]="selectedTier === t" (click)="filterTier(t)">
+                T{{ t }}
+              </span>
+            </div>
           </div>
         </div>
 
         <!-- Subcategory Filter Pills (only when Items is selected) -->
-        <div class="tier-filter-row subcategory-row" *ngIf="availableSubcategories.length > 0">
-          <span class="tier-label">{{ currentLang === 'es' ? 'Tipo:' : 'Type:' }}</span>
-          <div class="tier-pills">
+        <div class="subcategory-filter-row" *ngIf="availableSubcategories.length > 0">
+          <span class="sub-label">{{ currentLang === 'es' ? 'Tipo:' : 'Type:' }}</span>
+          <div class="sub-pills">
             <button
               *ngFor="let sub of availableSubcategories"
               type="button"
-              class="tier-pill sub-pill"
+              class="sub-pill"
               [class.active]="selectedSubcategory === sub"
               (click)="filterSubcategory(sub)">
               {{ getSubcategoryLabel(sub) }}
@@ -88,7 +111,7 @@
           </span>
         </div>
 
-        <!-- Codex Entries Grid -->
+        <!-- Codex Entries Grid (NO description inside card, clean & fully responsive) -->
         <div class="codex-grid" *ngIf="filteredEntries.length > 0">
           <div
             *ngFor="let entry of displayedEntries"
@@ -104,10 +127,6 @@
                 <span class="entry-type">{{ entry.type }}</span>
               </div>
             </div>
-
-            <p class="entry-desc">
-              {{ currentLang === 'es' ? entry.descriptionEs : entry.descriptionEn }}
-            </p>
 
             <div class="card-bottom" *ngIf="entry.stats">
               <span class="stat-pill">{{ entry.stats }}</span>
@@ -137,29 +156,39 @@
       </section>
     </div>
 
-    <!-- Detail Modal if an entry is tapped -->
+    <!-- Detail Modal / Overlay with Extra Large Sprite & Tier in Description -->
     <div class="modal-backdrop" *ngIf="selectedEntry" (click)="closeEntry()">
       <div class="modal-card codex-box" (click)="$event.stopPropagation()">
-        <div class="modal-header">
-          <div class="modal-title-wrap">
-            <div class="sprite-frame modal-frame">
-              <img [src]="selectedEntry.icon" class="entry-sprite" alt="" />
-            </div>
-            <div>
-              <span class="tier-tag">★ Tier {{ selectedEntry.tier }}</span>
-              <h3>{{ selectedEntry.name }}</h3>
-              <span class="entry-type">{{ selectedEntry.type }}</span>
-            </div>
+        <button type="button" class="modal-close-btn" (click)="closeEntry()" title="Cerrar">
+          <ion-icon name="close-circle-outline"></ion-icon>
+        </button>
+
+        <!-- Big Sprite Showcase Header -->
+        <div class="modal-hero-showcase">
+          <div class="modal-sprite-wrap">
+            <img [src]="selectedEntry.icon" class="modal-entry-sprite" alt="" />
           </div>
-          <button type="button" class="modal-close-btn" (click)="closeEntry()">
-            <ion-icon name="close-circle-outline"></ion-icon>
-          </button>
+          <h3 class="modal-entry-title">{{ selectedEntry.name }}</h3>
+          <div class="modal-badges-row">
+            <span class="modal-tier-tag">★ Tier {{ selectedEntry.tier }}</span>
+            <span class="modal-type-tag">{{ selectedEntry.type }}</span>
+          </div>
         </div>
 
         <div class="modal-body">
-          <p class="modal-desc">
-            {{ currentLang === 'es' ? selectedEntry.descriptionEs : selectedEntry.descriptionEn }}
-          </p>
+          <!-- Description Box with Tier prominently shown -->
+          <div class="modal-desc-box">
+            <div class="desc-tier-header">
+              <ion-icon name="information-circle-outline"></ion-icon>
+              <span>{{ currentLang === 'es' ? ('Detalles — Tier ' + selectedEntry.tier) : ('Details — Tier ' + selectedEntry.tier) }}</span>
+            </div>
+            <p class="modal-desc">
+              {{ (currentLang === 'es' ? selectedEntry.descriptionEs : selectedEntry.descriptionEn) ||
+                 (currentLang === 'es'
+                   ? ('Entrada oficial del Códice de Orna clasificada como Tier ' + selectedEntry.tier + ' en la categoría ' + selectedEntry.type + '.')
+                   : ('Official Orna Codex entry classified as Tier ' + selectedEntry.tier + ' under ' + selectedEntry.type + '.')) }}
+            </p>
+          </div>
 
           <div class="stat-highlight" *ngIf="selectedEntry.stats">
             <span class="stat-key">{{ currentLang === 'es' ? 'Propiedades / Efecto:' : 'Properties / Effect:' }}</span>

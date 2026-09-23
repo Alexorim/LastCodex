@@ -19,7 +19,8 @@ import {
   cubeOutline,
   flashOutline,
   chevronForwardOutline,
-  closeCircleOutline
+  closeCircleOutline,
+  informationCircleOutline
 } from 'ionicons/icons';
 import { SettingsService, Language } from '../../services/settings.service';
 import { Subscription } from 'rxjs';
@@ -183,7 +184,8 @@ export class CodexPage implements OnInit, OnDestroy {
       cubeOutline,
       flashOutline,
       chevronForwardOutline,
-      closeCircleOutline
+      closeCircleOutline,
+      informationCircleOutline
     });
   }
 
@@ -244,6 +246,12 @@ export class CodexPage implements OnInit, OnDestroy {
 
   filterTier(tier: number | null): void {
     this.selectedTier = this.selectedTier === tier ? null : tier;
+    this.displayLimit = 60;
+  }
+
+  onTierSliderInput(event: any): void {
+    const val = parseInt(event.target.value, 10);
+    this.selectedTier = val === 0 ? null : val;
     this.displayLimit = 60;
   }
 
