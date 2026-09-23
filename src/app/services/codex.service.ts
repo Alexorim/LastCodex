@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import defaultCodexData from '../data/codex-items.json';
+import itemSubcategoriesData from '../data/item-subcategories.json';
 
 export interface CodexSubItem {
   name: string;
@@ -134,11 +135,68 @@ export class CodexService {
   }
 
   /**
+   * Deduces the official subcategory for an item entry if missing.
+   * Matches against the 2,764 official playorna categories.
+   */
+  deduceSubcategory(entry: Partial<CodexEntry>): string {
+    if (entry.subcategory && entry.subcategory.trim()) {
+      return entry.subcategory.trim().toLowerCase();
+    }
+    if (entry.category && entry.category !== 'items') {
+      return '';
+    }
+
+    const map = itemSubcategoriesData as Record<string, string>;
+
+    // 1. Match from officialUrl slug (e.g. /codex/items/azure-carp/)
+    const url = entry.officialUrl || '';
+    const slug = url.split('/').filter(Boolean).pop() || '';
+    if (slug && map[slug]) {
+      return map[slug];
+    }
+
+    // 2. Match from id if slug-formatted
+    const idSlug = (entry.id || '').toLowerCase().replace(/[^a-z0-9-]/g, '-');
+    if (map[idSlug]) {
+      return map[idSlug];
+    }
+
+    // 3. Match from English or Spanish name
+    const nameSlug = (entry.nameEn || entry.name || '').toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    if (map[nameSlug]) {
+      return map[nameSlug];
+    }
+
+    // 4. Fallback deduction based on equipment place
+    const place = (entry.place || '').toLowerCase();
+    if (['accesorio', 'casco', 'armadura', 'pantalones', 'cabeza', 'cuerpo', 'piernas', 'head', 'armor', 'legs', 'accessory', 'off-hand', 'escudo', 'shield'].some(p => place.includes(p))) {
+      return 'armor';
+    }
+    if (['mano principal', 'a dos manos', 'arma', 'main hand', 'two-handed', 'weapon', 'arco', 'báculo', 'espada', 'daga', 'martillo', 'hacha'].some(p => place.includes(p))) {
+      return 'weapon';
+    }
+
+    return 'material';
+  }
+
+  /**
+   * Ensures all entries in category 'items' have their subcategory populated.
+   */
+  ensureSubcategories(entries: CodexEntry[]): CodexEntry[] {
+    for (const e of entries) {
+      if (e.category === 'items' && (!e.subcategory || !e.subcategory.trim())) {
+        e.subcategory = this.deduceSubcategory(e);
+      }
+    }
+    return entries;
+  }
+
+  /**
    * Initializes data: Loads from IndexedDB if synced with enriched data,
    * otherwise auto-migrates old un-enriched caches to the bundled enriched dataset with local sprites.
    */
   private async initDatabase(): Promise<void> {
-    const bundled = (defaultCodexData as unknown as CodexEntry[]) || [];
+    const bundled = this.ensureSubcategories((defaultCodexData as unknown as CodexEntry[]) || []);
 
     try {
       const timeoutPromise = new Promise<{ entries: CodexEntry[]; lastSync: string } | null>((resolve) =>
@@ -147,6 +205,8 @@ export class CodexService {
       const cached = await Promise.race([this.getFromIndexedDB(), timeoutPromise]);
 
       if (cached && cached.entries && cached.entries.length > 0) {
+        this.ensureSubcategories(cached.entries);
+
         // Verify that cached entries contain enriched itemStats, local sprites, and item subcategories
         const hasEnrichedStats = cached.entries.some((e) => e.itemStats && Object.keys(e.itemStats).length > 0);
         const hasLocalSprites = cached.entries.some((e) => e.icon && e.icon.startsWith('assets/codex/'));
@@ -176,7 +236,7 @@ export class CodexService {
   }
 
   private loadBundledData(): void {
-    const bundled = (defaultCodexData as unknown as CodexEntry[]) || [];
+    const bundled = this.ensureSubcategories((defaultCodexData as unknown as CodexEntry[]) || []);
     this.entriesSubject.next(bundled);
     this.isCustomDataSubject.next(false);
     this.lastSyncSubject.next(null);
@@ -381,13 +441,22 @@ export class CodexService {
                          existingMap.get(nameEn.toLowerCase()) ||
                          existingMap.get(name.toLowerCase());
 
+        const subcategory = this.deduceSubcategory({
+          category: categoryName,
+          subcategory: existing?.subcategory,
+          officialUrl,
+          id: base.id,
+          place: existing?.place,
+          name
+        });
+
         finalEntries.push({
           id: base.id || key.replace(/[^a-zA-Z0-9_-]/g, '_'),
           name,
           nameEs,
           nameEn,
           category: categoryName,
-          subcategory: '',
+          subcategory,
           tier,
           icon,
           type: typeLabel,

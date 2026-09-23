@@ -221,6 +221,7 @@ export class CodexPage implements OnInit, OnDestroy {
     this.subs.add(
       this.codexService.entries$.subscribe(entries => {
         this.codexDatabase = entries;
+        this.updateSubcatCounts();
       })
     );
 
@@ -245,13 +246,55 @@ export class CodexPage implements OnInit, OnDestroy {
     }
   }
 
+  subcatCounts: Record<string, number> = {
+    all: 0,
+    armor: 0,
+    weapon: 0,
+    consumable: 0,
+    material: 0,
+    currency: 0,
+    adornment: 0,
+    fish: 0
+  };
+
+  getItemSubcategory(entry: CodexEntry): string {
+    if (entry.subcategory && entry.subcategory.trim()) {
+      return entry.subcategory.trim().toLowerCase();
+    }
+    return this.codexService.deduceSubcategory(entry);
+  }
+
+  updateSubcatCounts(): void {
+    const counts: Record<string, number> = {
+      all: 0,
+      armor: 0,
+      weapon: 0,
+      consumable: 0,
+      material: 0,
+      currency: 0,
+      adornment: 0,
+      fish: 0
+    };
+    for (const e of this.codexDatabase) {
+      if (e.category !== 'items') continue;
+      if (this.selectedTier !== null && e.tier !== this.selectedTier) continue;
+      counts['all']++;
+      const sub = this.getItemSubcategory(e);
+      if (counts[sub] !== undefined) {
+        counts[sub]++;
+      }
+    }
+    this.subcatCounts = counts;
+  }
+
   get filteredEntries(): CodexEntry[] {
     return this.codexDatabase.filter(entry => {
       const matchCat = this.selectedCategory === 'all' || entry.category === this.selectedCategory;
+      const subcat = this.getItemSubcategory(entry);
       const matchSubcat =
         this.selectedCategory !== 'items' ||
         this.selectedSubcategory === 'all' ||
-        entry.subcategory === this.selectedSubcategory;
+        subcat === this.selectedSubcategory;
       const matchTier = this.selectedTier === null || entry.tier === this.selectedTier;
 
       const q = this.searchQuery.trim().toLowerCase();
@@ -281,6 +324,14 @@ export class CodexPage implements OnInit, OnDestroy {
     this.selectedCategory = catId;
     this.selectedSubcategory = 'all';
     this.displayLimit = 60;
+    if (catId === 'items') {
+      this.updateSubcatCounts();
+    }
+  }
+
+  setSubcategory(subcatId: string): void {
+    this.selectedSubcategory = subcatId;
+    this.displayLimit = 60;
   }
 
   openClassesTree(event: MouseEvent): void {
@@ -292,6 +343,7 @@ export class CodexPage implements OnInit, OnDestroy {
     const val = (event.target as HTMLSelectElement).value;
     this.selectedTier = val ? Number(val) : null;
     this.displayLimit = 60;
+    this.updateSubcatCounts();
   }
 
   onSubcategoryChange(event: Event): void {

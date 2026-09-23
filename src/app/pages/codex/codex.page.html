@@ -136,19 +136,95 @@
             <div class="filter-dropdown-group" *ngIf="selectedCategory === 'items'">
               <label class="dropdown-label">{{ currentLang === 'es' ? 'Tipo:' : 'Type:' }}</label>
               <div class="custom-select-box">
-                <select [value]="selectedSubcategory" (change)="onSubcategoryChange($event)" class="codex-native-select">
-                  <option value="all">{{ currentLang === 'es' ? 'Todos los tipos' : 'All Types' }}</option>
-                  <option value="armor">{{ currentLang === 'es' ? '🛡️ Armadura' : '🛡️ Armor' }}</option>
-                  <option value="weapon">{{ currentLang === 'es' ? '⚔️ Armas' : '⚔️ Weapons' }}</option>
-                  <option value="consumable">{{ currentLang === 'es' ? '🧪 Consumibles' : '🧪 Consumibles' }}</option>
-                  <option value="material">{{ currentLang === 'es' ? '🧱 Materiales' : '🧱 Materials' }}</option>
-                  <option value="currency">{{ currentLang === 'es' ? '🪙 Monedas' : '🪙 Currencies' }}</option>
-                  <option value="adornment">{{ currentLang === 'es' ? '💎 Adornos' : '💎 Adornments' }}</option>
-                  <option value="fish">{{ currentLang === 'es' ? '🐟 Peces' : '🐟 Fish' }}</option>
+                <select [ngModel]="selectedSubcategory" (ngModelChange)="setSubcategory($event)" class="codex-native-select">
+                  <option value="all">{{ currentLang === 'es' ? 'Todos los tipos' : 'All Types' }} ({{ subcatCounts['all'] || 0 }})</option>
+                  <option value="armor">{{ currentLang === 'es' ? '🛡️ Armadura' : '🛡️ Armor' }} ({{ subcatCounts['armor'] || 0 }})</option>
+                  <option value="weapon">{{ currentLang === 'es' ? '⚔️ Armas' : '⚔️ Weapons' }} ({{ subcatCounts['weapon'] || 0 }})</option>
+                  <option value="consumable">{{ currentLang === 'es' ? '🧪 Consumibles' : '🧪 Consumibles' }} ({{ subcatCounts['consumable'] || 0 }})</option>
+                  <option value="material">{{ currentLang === 'es' ? '🧱 Materiales' : '🧱 Materials' }} ({{ subcatCounts['material'] || 0 }})</option>
+                  <option value="currency">{{ currentLang === 'es' ? '🪙 Monedas' : '🪙 Currencies' }} ({{ subcatCounts['currency'] || 0 }})</option>
+                  <option value="adornment">{{ currentLang === 'es' ? '💎 Adornos' : '💎 Adornments' }} ({{ subcatCounts['adornment'] || 0 }})</option>
+                  <option value="fish">{{ currentLang === 'es' ? '🐟 Peces' : '🐟 Fish' }} ({{ subcatCounts['fish'] || 0 }})</option>
                 </select>
                 <ion-icon name="chevron-down-outline" class="select-arrow-icon"></ion-icon>
               </div>
             </div>
+          </div>
+
+          <!-- Interactive Subcategory Pills (Directly Clickable Buttons) -->
+          <div class="subcategory-pills-bar" *ngIf="selectedCategory === 'items'">
+            <button
+              type="button"
+              class="subcat-chip"
+              [class.active]="selectedSubcategory === 'all'"
+              (click)="setSubcategory('all')">
+              <span class="chip-icon">✨</span>
+              <span class="chip-text">{{ currentLang === 'es' ? 'Todos' : 'All' }}</span>
+              <span class="chip-badge">{{ subcatCounts['all'] || 0 }}</span>
+            </button>
+            <button
+              type="button"
+              class="subcat-chip"
+              [class.active]="selectedSubcategory === 'armor'"
+              (click)="setSubcategory('armor')">
+              <span class="chip-icon">🛡️</span>
+              <span class="chip-text">{{ currentLang === 'es' ? 'Armadura' : 'Armor' }}</span>
+              <span class="chip-badge">{{ subcatCounts['armor'] || 0 }}</span>
+            </button>
+            <button
+              type="button"
+              class="subcat-chip"
+              [class.active]="selectedSubcategory === 'weapon'"
+              (click)="setSubcategory('weapon')">
+              <span class="chip-icon">⚔️</span>
+              <span class="chip-text">{{ currentLang === 'es' ? 'Armas' : 'Weapons' }}</span>
+              <span class="chip-badge">{{ subcatCounts['weapon'] || 0 }}</span>
+            </button>
+            <button
+              type="button"
+              class="subcat-chip"
+              [class.active]="selectedSubcategory === 'consumable'"
+              (click)="setSubcategory('consumable')">
+              <span class="chip-icon">🧪</span>
+              <span class="chip-text">{{ currentLang === 'es' ? 'Consumibles' : 'Consumables' }}</span>
+              <span class="chip-badge">{{ subcatCounts['consumable'] || 0 }}</span>
+            </button>
+            <button
+              type="button"
+              class="subcat-chip"
+              [class.active]="selectedSubcategory === 'material'"
+              (click)="setSubcategory('material')">
+              <span class="chip-icon">🧱</span>
+              <span class="chip-text">{{ currentLang === 'es' ? 'Materiales' : 'Materials' }}</span>
+              <span class="chip-badge">{{ subcatCounts['material'] || 0 }}</span>
+            </button>
+            <button
+              type="button"
+              class="subcat-chip"
+              [class.active]="selectedSubcategory === 'currency'"
+              (click)="setSubcategory('currency')">
+              <span class="chip-icon">🪙</span>
+              <span class="chip-text">{{ currentLang === 'es' ? 'Monedas' : 'Currency' }}</span>
+              <span class="chip-badge">{{ subcatCounts['currency'] || 0 }}</span>
+            </button>
+            <button
+              type="button"
+              class="subcat-chip"
+              [class.active]="selectedSubcategory === 'adornment'"
+              (click)="setSubcategory('adornment')">
+              <span class="chip-icon">💎</span>
+              <span class="chip-text">{{ currentLang === 'es' ? 'Adornos' : 'Adornments' }}</span>
+              <span class="chip-badge">{{ subcatCounts['adornment'] || 0 }}</span>
+            </button>
+            <button
+              type="button"
+              class="subcat-chip"
+              [class.active]="selectedSubcategory === 'fish'"
+              (click)="setSubcategory('fish')">
+              <span class="chip-icon">🐟</span>
+              <span class="chip-text">{{ currentLang === 'es' ? 'Peces' : 'Fish' }}</span>
+              <span class="chip-badge">{{ subcatCounts['fish'] || 0 }}</span>
+            </button>
           </div>
 
           <!-- Results Count -->
