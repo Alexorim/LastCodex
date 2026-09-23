@@ -33,11 +33,10 @@
     }
 
     .brand-emblem {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border: 1px solid var(--codex-gold);
-      box-shadow: 0 0 10px rgba(189, 165, 69, 0.4);
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 6px rgba(189, 165, 69, 0.45));
     }
 
     .brand-name {
