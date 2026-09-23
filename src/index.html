@@ -7,7 +7,7 @@
 
   <base href="/" />
   <script>
-    if (typeof window !== 'undefined' && window.location.protocol === 'file:') {
+    if (typeof window !== 'undefined' && (window.location.protocol === 'file:' || window.location.protocol === 'capacitor:')) {
       var base = document.querySelector('base');
       if (base) base.href = './';
     }
@@ -18,6 +18,7 @@
   <meta name="format-detection" content="telephone=no" />
   <meta name="msapplication-tap-highlight" content="no" />
   <meta name="theme-color" content="#1F1F1F" />
+
   <script>
     (function () {
       var _w = console.warn;
@@ -27,10 +28,29 @@
       };
     })();
 
-    if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+    // Service Worker safety check:
+    // Inside Capacitor Android/iOS WebView or localhost, NEVER run a ServiceWorker.
+    // Unregister any lingering service worker to prevent black screens.
+    var isNativeOrLocal = typeof window !== 'undefined' && (
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1' ||
+      window.location.protocol === 'capacitor:' ||
+      window.location.protocol === 'file:'
+    );
+
+    if (isNativeOrLocal) {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function (regs) {
+          for (var r of regs) {
+            r.unregister();
+          }
+        }).catch(function () {});
+      }
+    } else if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+      // Only register Service Worker on remote production domains (e.g. Vercel)
       window.addEventListener('load', function () {
         navigator.serviceWorker.register('/sw.js').catch(function (err) {
-          console.log('SW registration error:', err);
+          console.log('SW registration skipped:', err);
         });
       });
     }
@@ -41,10 +61,18 @@
   <link rel="apple-touch-icon" href="assets/icon/last_codex.png" />
   <link rel="manifest" href="assets/manifest.webmanifest" />
 
-  <!-- Official Orna Codex Google Fonts: Cinzel & Merriweather Sans -->
+  <!-- Official Orna Codex Google Fonts (Non-blocking async load for instant offline startup) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Merriweather+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Merriweather+Sans:wght@300;400;500;600;700&display=swap"
+    media="print"
+    onload="this.media='all'"
+  />
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Merriweather+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  </noscript>
 
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />

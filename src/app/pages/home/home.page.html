@@ -170,6 +170,23 @@
       </div>
     </div>
 
+    <!-- Offline Empty State when no internet and no cache -->
+    <div class="empty-state codex-box" *ngIf="!isLoading && !todayForecast && !tomorrowForecast" style="margin: 20px 0; text-align: center; padding: 30px 16px;">
+      <ion-icon name="cloud-offline-outline" style="font-size: 3rem; color: var(--codex-gold); margin-bottom: 12px;"></ion-icon>
+      <h3 style="font-family: var(--codex-font-heading); color: var(--codex-gold); margin: 0 0 8px 0; font-size: 1.1rem;">
+        {{ currentLang === 'es' ? 'Modo Offline Activado' : 'Offline Mode Active' }}
+      </h3>
+      <p style="font-size: 0.82rem; color: var(--codex-text-muted); line-height: 1.5; margin: 0 auto 16px; max-width: 440px;">
+        {{ currentLang === 'es'
+          ? 'El pronóstico de materiales diarios de tiendas requiere internet para consultar la rotación en vivo. Sin embargo, todo el Códice (5,065 entradas), Clases y Eventos están 100% disponibles sin conexión.'
+          : 'Daily shop material forecast requires internet for live sheet updates. However, the complete Codex (5,065 entries), Classes and Events are 100% available offline.' }}
+      </p>
+      <button type="button" class="export-box-btn" (click)="goToCodex()" style="margin: 0 auto; display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; font-size: 0.88rem;">
+        <ion-icon name="book-outline"></ion-icon>
+        <span>{{ currentLang === 'es' ? 'Abrir Códice Oficial Offline' : 'Open Offline Official Codex' }}</span>
+      </button>
+    </div>
+
     <!-- Sincronización info -->
     <div class="sync-info" *ngIf="lastUpdated">
       <span>{{ currentLang === 'es' ? 'Última sincronización con Google Sheets: ' : 'Last synced with Google Sheets: ' }}</span>

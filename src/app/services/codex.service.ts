@@ -63,7 +63,7 @@ const CATEGORIES = [
   providedIn: 'root'
 })
 export class CodexService {
-  private entriesSubject = new BehaviorSubject<CodexEntry[]>([]);
+  private entriesSubject = new BehaviorSubject<CodexEntry[]>((defaultCodexData as unknown as CodexEntry[]) || []);
   public entries$: Observable<CodexEntry[]> = this.entriesSubject.asObservable();
 
   private lastSyncSubject = new BehaviorSubject<string | null>(null);
@@ -113,7 +113,10 @@ export class CodexService {
    */
   private async initDatabase(): Promise<void> {
     try {
-      const cached = await this.getFromIndexedDB();
+      const timeoutPromise = new Promise<{ entries: CodexEntry[]; lastSync: string } | null>((resolve) =>
+        setTimeout(() => resolve(null), 1000)
+      );
+      const cached = await Promise.race([this.getFromIndexedDB(), timeoutPromise]);
       if (cached && cached.entries && cached.entries.length > 0) {
         this.entriesSubject.next(cached.entries);
         this.lastSyncSubject.next(cached.lastSync || null);

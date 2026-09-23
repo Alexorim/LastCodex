@@ -23,7 +23,9 @@ import {
   informationCircleOutline,
   openOutline,
   cloudDownloadOutline,
-  closeOutline
+  closeOutline,
+  bookOutline,
+  cloudOfflineOutline
 } from 'ionicons/icons';
 import { Capacitor } from '@capacitor/core';
 import { toPng } from 'html-to-image';
@@ -92,7 +94,9 @@ export class HomePage implements OnInit, OnDestroy {
       informationCircleOutline,
       openOutline,
       cloudDownloadOutline,
-      closeOutline
+      closeOutline,
+      bookOutline,
+      cloudOfflineOutline
     });
   }
 
@@ -128,6 +132,13 @@ export class HomePage implements OnInit, OnDestroy {
         this.isLoading = false;
       }
     });
+
+    // Safety fallback: ensure skeleton loading stops after 2.5s if offline
+    setTimeout(() => {
+      if (this.isLoading) {
+        this.isLoading = false;
+      }
+    }, 2500);
   }
 
   ngOnDestroy() {
@@ -138,6 +149,10 @@ export class HomePage implements OnInit, OnDestroy {
 
   goToEvents(): void {
     this.router.navigate(['/events']);
+  }
+
+  goToCodex(): void {
+    this.router.navigate(['/codex']);
   }
 
   // Export Modal Methods
