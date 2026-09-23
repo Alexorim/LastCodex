@@ -72,6 +72,7 @@ export class CodexPage implements OnInit, OnDestroy {
 
   searchQuery = '';
   selectedCategory = 'all';
+  selectedSubcategory = 'all';
   selectedTier: number | null = null;
   selectedEntry: CodexEntry | null = null;
   displayLimit = 60;
@@ -247,11 +248,15 @@ export class CodexPage implements OnInit, OnDestroy {
   get filteredEntries(): CodexEntry[] {
     return this.codexDatabase.filter(entry => {
       const matchCat = this.selectedCategory === 'all' || entry.category === this.selectedCategory;
+      const matchSubcat =
+        this.selectedCategory !== 'items' ||
+        this.selectedSubcategory === 'all' ||
+        entry.subcategory === this.selectedSubcategory;
       const matchTier = this.selectedTier === null || entry.tier === this.selectedTier;
 
       const q = this.searchQuery.trim().toLowerCase();
       if (!q) {
-        return matchCat && matchTier;
+        return matchCat && matchSubcat && matchTier;
       }
 
       const matchQuery =
@@ -264,7 +269,7 @@ export class CodexPage implements OnInit, OnDestroy {
         (entry.descriptionEs && entry.descriptionEs.toLowerCase().includes(q)) ||
         (entry.descriptionEn && entry.descriptionEn.toLowerCase().includes(q));
 
-      return matchCat && matchTier && matchQuery;
+      return matchCat && matchSubcat && matchTier && matchQuery;
     });
   }
 
@@ -274,6 +279,7 @@ export class CodexPage implements OnInit, OnDestroy {
 
   selectCategory(catId: string): void {
     this.selectedCategory = catId;
+    this.selectedSubcategory = 'all';
     this.displayLimit = 60;
   }
 
@@ -285,6 +291,12 @@ export class CodexPage implements OnInit, OnDestroy {
   onTierChange(event: Event): void {
     const val = (event.target as HTMLSelectElement).value;
     this.selectedTier = val ? Number(val) : null;
+    this.displayLimit = 60;
+  }
+
+  onSubcategoryChange(event: Event): void {
+    const val = (event.target as HTMLSelectElement).value;
+    this.selectedSubcategory = val || 'all';
     this.displayLimit = 60;
   }
 

@@ -131,6 +131,24 @@
                 <ion-icon name="chevron-down-outline" class="select-arrow-icon"></ion-icon>
               </div>
             </div>
+
+            <!-- Subcategory Dropdown (Only for Items & Gear) -->
+            <div class="filter-dropdown-group" *ngIf="selectedCategory === 'items'">
+              <label class="dropdown-label">{{ currentLang === 'es' ? 'Tipo:' : 'Type:' }}</label>
+              <div class="custom-select-box">
+                <select [value]="selectedSubcategory" (change)="onSubcategoryChange($event)" class="codex-native-select">
+                  <option value="all">{{ currentLang === 'es' ? 'Todos los tipos' : 'All Types' }}</option>
+                  <option value="armor">{{ currentLang === 'es' ? '🛡️ Armadura' : '🛡️ Armor' }}</option>
+                  <option value="weapon">{{ currentLang === 'es' ? '⚔️ Armas' : '⚔️ Weapons' }}</option>
+                  <option value="consumable">{{ currentLang === 'es' ? '🧪 Consumibles' : '🧪 Consumibles' }}</option>
+                  <option value="material">{{ currentLang === 'es' ? '🧱 Materiales' : '🧱 Materials' }}</option>
+                  <option value="currency">{{ currentLang === 'es' ? '🪙 Monedas' : '🪙 Currencies' }}</option>
+                  <option value="adornment">{{ currentLang === 'es' ? '💎 Adornos' : '💎 Adornments' }}</option>
+                  <option value="fish">{{ currentLang === 'es' ? '🐟 Peces' : '🐟 Fish' }}</option>
+                </select>
+                <ion-icon name="chevron-down-outline" class="select-arrow-icon"></ion-icon>
+              </div>
+            </div>
           </div>
 
           <!-- Results Count -->
@@ -398,15 +416,6 @@
             </div>
           </div>
 
-          <a
-            *ngIf="selectedEntry.officialUrl"
-            [href]="selectedEntry.officialUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="official-link-btn">
-            <ion-icon name="open-outline"></ion-icon>
-            <span>{{ currentLang === 'es' ? 'Ver en Official Orna Codex' : 'View on Official Orna Codex' }}</span>
-          </a>
         </div>
       </div>
     </div>

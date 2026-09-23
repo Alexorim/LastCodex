@@ -67,7 +67,7 @@ export interface UpdateCheckResult {
 }
 
 const DB_NAME = 'lastcodex_offline_db';
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 const STORE_NAME = 'codex_store';
 const KEY_ENTRIES = 'entries';
 const KEY_METADATA = 'metadata';
@@ -147,19 +147,20 @@ export class CodexService {
       const cached = await Promise.race([this.getFromIndexedDB(), timeoutPromise]);
 
       if (cached && cached.entries && cached.entries.length > 0) {
-        // Verify that cached entries contain enriched itemStats and local sprites
+        // Verify that cached entries contain enriched itemStats, local sprites, and item subcategories
         const hasEnrichedStats = cached.entries.some((e) => e.itemStats && Object.keys(e.itemStats).length > 0);
         const hasLocalSprites = cached.entries.some((e) => e.icon && e.icon.startsWith('assets/codex/'));
+        const hasSubcategories = cached.entries.some((e) => e.category === 'items' && !!e.subcategory);
 
-        if (hasEnrichedStats && hasLocalSprites) {
+        if (hasEnrichedStats && hasLocalSprites && hasSubcategories) {
           this.entriesSubject.next(cached.entries);
           this.lastSyncSubject.next(cached.lastSync || null);
           this.isCustomDataSubject.next(true);
           return;
         }
 
-        // Old cache was missing enriched stats or local sprites; auto-migrate!
-        console.log('Migrating legacy cache to enriched dataset with local sprites...');
+        // Old cache was missing enriched stats, local sprites, or subcategories; auto-migrate!
+        console.log('Migrating legacy cache to enriched dataset with subcategories and local sprites...');
         await this.saveToIndexedDB(bundled, new Date().toISOString());
         this.entriesSubject.next(bundled);
         this.lastSyncSubject.next(null);
