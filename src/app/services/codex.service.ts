@@ -2,6 +2,15 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import defaultCodexData from '../data/codex-items.json';
 
+export interface CodexSubItem {
+  name: string;
+  sprite?: string;
+  tier?: number;
+  rarity?: string;
+  url?: string;
+  meta?: string;
+}
+
 export interface CodexEntry {
   id: string;
   name: string;
@@ -20,6 +29,22 @@ export interface CodexEntry {
   descriptionEn?: string;
   stats?: string;
   officialUrl?: string;
+  facts?: Array<{ label: string; value: string }>;
+  itemStats?: { [key: string]: string };
+  useableBy?: string;
+  place?: string;
+  itemType?: string;
+  element?: string;
+  family?: string;
+  event?: string;
+  effects?: string[];
+  upgradeMaterials?: CodexSubItem[];
+  droppedBy?: CodexSubItem[];
+  causes?: CodexSubItem[];
+  gives?: CodexSubItem[];
+  skills?: CodexSubItem[];
+  drops?: CodexSubItem[];
+  learnedBy?: CodexSubItem[];
 }
 
 export interface SyncProgress {
@@ -299,6 +324,14 @@ export class CodexService {
         statusText: 'Compilando y optimizando base de datos enriquecida...'
       });
 
+      const existingMap = new Map<string, CodexEntry>();
+      for (const e of this.entriesSubject.value) {
+        if (e.id) existingMap.set(e.id, e);
+        if (e.officialUrl) existingMap.set(e.officialUrl, e);
+        if (e.nameEn) existingMap.set(e.nameEn.toLowerCase(), e);
+        if (e.name) existingMap.set(e.name.toLowerCase(), e);
+      }
+
       const finalEntries: CodexEntry[] = [];
       const allKeys = new Set([...esEntriesMap.keys(), ...enEntriesMap.keys()]);
 
@@ -322,6 +355,12 @@ export class CodexService {
 
         const categoryName = base.category || 'items';
         const typeLabel = categoryName.charAt(0).toUpperCase() + categoryName.slice(1);
+        const officialUrl = base.url ? `https://playorna.com${base.url}` : 'https://playorna.com/codex/';
+
+        const existing = existingMap.get(base.id) ||
+                         existingMap.get(officialUrl) ||
+                         existingMap.get(nameEn.toLowerCase()) ||
+                         existingMap.get(name.toLowerCase());
 
         finalEntries.push({
           id: base.id || key.replace(/[^a-zA-Z0-9_-]/g, '_'),
@@ -333,13 +372,29 @@ export class CodexService {
           tier,
           icon,
           type: typeLabel,
-          rarity: base.rarity || '',
+          rarity: base.rarity || existing?.rarity || '',
           exotic: !!base.exotic,
           arisen: !!base.arisen,
-          description: descEs || descEn || '',
-          descriptionEs: descEs,
-          descriptionEn: descEn,
-          officialUrl: base.url ? `https://playorna.com${base.url}` : 'https://playorna.com/codex/'
+          description: descEs || descEn || existing?.description || '',
+          descriptionEs: descEs || existing?.descriptionEs,
+          descriptionEn: descEn || existing?.descriptionEn,
+          officialUrl,
+          facts: existing?.facts,
+          itemStats: existing?.itemStats,
+          useableBy: existing?.useableBy,
+          place: existing?.place,
+          itemType: existing?.itemType,
+          element: existing?.element,
+          family: existing?.family,
+          event: existing?.event,
+          effects: existing?.effects,
+          upgradeMaterials: existing?.upgradeMaterials,
+          droppedBy: existing?.droppedBy,
+          causes: existing?.causes,
+          gives: existing?.gives,
+          skills: existing?.skills,
+          drops: existing?.drops,
+          learnedBy: existing?.learnedBy
         });
       }
 

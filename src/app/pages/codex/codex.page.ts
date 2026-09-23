@@ -25,10 +25,21 @@ import {
   informationCircleOutline,
   syncOutline,
   cloudDownloadOutline,
-  alertCircleOutline
+  alertCircleOutline,
+  hammerOutline,
+  shieldCheckmarkOutline,
+  skull,
+  flash,
+  heartOutline,
+  waterOutline,
+  hardwareChipOutline,
+  bagCheckOutline,
+  constructOutline,
+  ribbonOutline,
+  layersOutline
 } from 'ionicons/icons';
 import { SettingsService, Language } from '../../services/settings.service';
-import { CodexService, CodexEntry, SyncProgress, UpdateCheckResult } from '../../services/codex.service';
+import { CodexService, CodexEntry, CodexSubItem, SyncProgress, UpdateCheckResult } from '../../services/codex.service';
 import { Subscription } from 'rxjs';
 
 export interface CodexCategory {
@@ -181,7 +192,18 @@ export class CodexPage implements OnInit, OnDestroy {
       informationCircleOutline,
       syncOutline,
       cloudDownloadOutline,
-      alertCircleOutline
+      alertCircleOutline,
+      hammerOutline,
+      shieldCheckmarkOutline,
+      skull,
+      flash,
+      heartOutline,
+      waterOutline,
+      hardwareChipOutline,
+      bagCheckOutline,
+      constructOutline,
+      ribbonOutline,
+      layersOutline
     });
   }
 
@@ -297,5 +319,40 @@ export class CodexPage implements OnInit, OnDestroy {
 
   dismissBanner(): void {
     this.bannerDismissed = true;
+  }
+
+  getItemStatEntries(entry: CodexEntry): Array<{ label: string; value: string }> {
+    if (!entry.itemStats) return [];
+    return Object.entries(entry.itemStats).map(([label, value]) => ({ label, value }));
+  }
+
+  getStatClass(label: string): string {
+    const l = label.toLowerCase();
+    if (l.includes('ataque') || l.includes('attack') || l.includes('power')) return 'stat-attack';
+    if (l.includes('magia') || l.includes('magic')) return 'stat-magic';
+    if (l.includes('defensa') || l.includes('defense')) return 'stat-defense';
+    if (l.includes('resistencia') || l.includes('resistance')) return 'stat-resistance';
+    if (l.includes('destreza') || l.includes('dexterity')) return 'stat-dexterity';
+    if (l.includes('guard') || l.includes('ward')) return 'stat-ward';
+    if (l.includes('salud') || l.includes('hp') || l.includes('ps')) return 'stat-hp';
+    if (l.includes('maná') || l.includes('mana')) return 'stat-mana';
+    if (l.includes('crít') || l.includes('crit')) return 'stat-crit';
+    if (l.includes('adornment')) return 'stat-slots';
+    if (l.includes('previsión')) return 'stat-foresight';
+    return 'stat-general';
+  }
+
+  openSubItem(subItem: { name: string; url?: string }): void {
+    if (!subItem || !subItem.name) return;
+    const target = this.codexDatabase.find(e =>
+      e.name.toLowerCase() === subItem.name.toLowerCase() ||
+      (e.nameEs && e.nameEs.toLowerCase() === subItem.name.toLowerCase()) ||
+      (e.nameEn && e.nameEn.toLowerCase() === subItem.name.toLowerCase())
+    );
+    if (target) {
+      this.selectedEntry = target;
+    } else if (subItem.url) {
+      window.open(`https://playorna.com${subItem.url}`, '_blank');
+    }
   }
 }

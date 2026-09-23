@@ -216,25 +216,186 @@
         </div>
 
         <div class="modal-body">
+          <!-- Equipment & Usability Info Grid (Place, Usable by, Item Type, Element) -->
+          <div class="item-specs-grid" *ngIf="selectedEntry.place || selectedEntry.useableBy || selectedEntry.itemType || selectedEntry.element || selectedEntry.family">
+            <div class="spec-card" *ngIf="selectedEntry.place">
+              <span class="spec-label">{{ currentLang === 'es' ? 'Ranura / Lugar' : 'Equipment Slot' }}</span>
+              <span class="spec-val highlight">{{ selectedEntry.place }}</span>
+            </div>
+            <div class="spec-card" *ngIf="selectedEntry.itemType">
+              <span class="spec-label">{{ currentLang === 'es' ? 'Tipo de Objeto' : 'Item Type' }}</span>
+              <span class="spec-val">{{ selectedEntry.itemType }}</span>
+            </div>
+            <div class="spec-card full-span" *ngIf="selectedEntry.useableBy">
+              <span class="spec-label">{{ currentLang === 'es' ? 'Usable por' : 'Useable by' }}</span>
+              <span class="spec-val">{{ selectedEntry.useableBy }}</span>
+            </div>
+            <div class="spec-card" *ngIf="selectedEntry.element">
+              <span class="spec-label">{{ currentLang === 'es' ? 'Elemento' : 'Element' }}</span>
+              <span class="spec-val element-badge">{{ selectedEntry.element }}</span>
+            </div>
+            <div class="spec-card" *ngIf="selectedEntry.family">
+              <span class="spec-label">{{ currentLang === 'es' ? 'Familia' : 'Family' }}</span>
+              <span class="spec-val">{{ selectedEntry.family }}</span>
+            </div>
+          </div>
+
           <!-- Description Box with Tier prominently shown -->
-          <div class="modal-desc-box">
+          <div class="modal-desc-box" *ngIf="getDisplayDescription(selectedEntry)">
             <div class="desc-tier-header">
               <ion-icon name="information-circle-outline"></ion-icon>
               <span>{{ currentLang === 'es'
-                ? ('Detalles' + (selectedEntry.tier > 0 ? (' — Tier ' + selectedEntry.tier) : ''))
-                : ('Details' + (selectedEntry.tier > 0 ? (' — Tier ' + selectedEntry.tier) : '')) }}</span>
+                ? ('Descripción' + (selectedEntry.tier > 0 ? (' — Tier ' + selectedEntry.tier) : ''))
+                : ('Description' + (selectedEntry.tier > 0 ? (' — Tier ' + selectedEntry.tier) : '')) }}</span>
             </div>
-            <p class="modal-desc">
-              {{ getDisplayDescription(selectedEntry) ||
-                 (currentLang === 'es'
-                   ? ('Entrada oficial del Códice de Orna' + (selectedEntry.tier > 0 ? (' clasificada como Tier ' + selectedEntry.tier) : '') + ' en la categoría ' + selectedEntry.type + '.')
-                   : ('Official Orna Codex entry' + (selectedEntry.tier > 0 ? (' classified as Tier ' + selectedEntry.tier) : '') + ' under ' + selectedEntry.type + '.')) }}
-            </p>
+            <p class="modal-desc">{{ getDisplayDescription(selectedEntry) }}</p>
           </div>
 
-          <div class="stat-highlight" *ngIf="selectedEntry.stats">
-            <span class="stat-key">{{ currentLang === 'es' ? 'Propiedades / Efecto:' : 'Properties / Effect:' }}</span>
-            <span class="stat-val">{{ selectedEntry.stats }}</span>
+          <!-- Item Stats Grid -->
+          <div class="item-stats-section" *ngIf="selectedEntry.itemStats && getItemStatEntries(selectedEntry).length > 0">
+            <h5 class="section-title">
+              <ion-icon name="shield-checkmark-outline"></ion-icon>
+              {{ currentLang === 'es' ? 'Estadísticas del Objeto' : 'Item Stats' }}
+            </h5>
+            <div class="stats-grid">
+              <div
+                *ngFor="let s of getItemStatEntries(selectedEntry)"
+                class="stat-chip"
+                [ngClass]="getStatClass(s.label)">
+                <span class="stat-name">{{ s.label }}</span>
+                <span class="stat-number">{{ s.value }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Effects / Passive Abilities -->
+          <div class="item-effects-section" *ngIf="selectedEntry.effects && selectedEntry.effects.length > 0">
+            <h5 class="section-title">
+              <ion-icon name="sparkles-outline"></ion-icon>
+              {{ currentLang === 'es' ? 'Efectos & Habilidades' : 'Effects & Passives' }}
+            </h5>
+            <div class="effects-list">
+              <div *ngFor="let eff of selectedEntry.effects" class="effect-item">
+                <span class="bullet">◆</span>
+                <span class="effect-text">{{ eff }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Causes (Status Effects Inflicted) -->
+          <div class="sub-items-section causes-section" *ngIf="selectedEntry.causes && selectedEntry.causes.length > 0">
+            <h5 class="section-title">
+              <ion-icon name="flash-outline"></ion-icon>
+              {{ currentLang === 'es' ? 'Provoca Estados' : 'Causes' }}
+            </h5>
+            <div class="sub-items-grid">
+              <div *ngFor="let cause of selectedEntry.causes" class="sub-item-card">
+                <img *ngIf="cause.sprite" [src]="cause.sprite" class="sub-item-sprite" alt="" />
+                <div class="sub-item-info">
+                  <span class="sub-item-name">{{ cause.name }}</span>
+                  <span class="sub-item-meta" *ngIf="cause.meta">{{ cause.meta }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gives (Immunities / Buffs) -->
+          <div class="sub-items-section gives-section" *ngIf="selectedEntry.gives && selectedEntry.gives.length > 0">
+            <h5 class="section-title">
+              <ion-icon name="shield-outline"></ion-icon>
+              {{ currentLang === 'es' ? 'Otorga Inmunidad / Beneficio' : 'Gives' }}
+            </h5>
+            <div class="sub-items-grid">
+              <div *ngFor="let give of selectedEntry.gives" class="sub-item-card">
+                <img *ngIf="give.sprite" [src]="give.sprite" class="sub-item-sprite" alt="" />
+                <div class="sub-item-info">
+                  <span class="sub-item-name">{{ give.name }}</span>
+                  <span class="sub-item-meta" *ngIf="give.meta">{{ give.meta }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Upgrade Materials (Materiales de mejora) -->
+          <div class="sub-items-section materials-section" *ngIf="selectedEntry.upgradeMaterials && selectedEntry.upgradeMaterials.length > 0">
+            <h5 class="section-title">
+              <ion-icon name="hammer-outline"></ion-icon>
+              {{ currentLang === 'es' ? 'Materiales de Mejora' : 'Upgrade Materials' }}
+            </h5>
+            <div class="sub-items-grid">
+              <div
+                *ngFor="let mat of selectedEntry.upgradeMaterials"
+                class="sub-item-card clickable"
+                (click)="openSubItem(mat)">
+                <img *ngIf="mat.sprite" [src]="mat.sprite" class="sub-item-sprite" alt="" />
+                <div class="sub-item-info">
+                  <span class="sub-item-name">{{ mat.name }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dropped by (Soltado por) -->
+          <div class="sub-items-section dropped-by-section" *ngIf="selectedEntry.droppedBy && selectedEntry.droppedBy.length > 0">
+            <h5 class="section-title">
+              <ion-icon name="skull-outline"></ion-icon>
+              {{ currentLang === 'es' ? 'Soltado por' : 'Dropped by' }}
+            </h5>
+            <div class="sub-items-grid">
+              <div
+                *ngFor="let source of selectedEntry.droppedBy"
+                class="sub-item-card clickable"
+                (click)="openSubItem(source)">
+                <img *ngIf="source.sprite" [src]="source.sprite" class="sub-item-sprite" alt="" />
+                <div class="sub-item-info">
+                  <span class="sub-item-name">{{ source.name }}</span>
+                  <span class="sub-item-tier" *ngIf="source.tier">★ T{{ source.tier }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Drops (Botín de monstruos) -->
+          <div class="sub-items-section drops-section" *ngIf="selectedEntry.drops && selectedEntry.drops.length > 0">
+            <h5 class="section-title">
+              <ion-icon name="bag-check-outline"></ion-icon>
+              {{ currentLang === 'es' ? 'Botín de Objetos' : 'Drops' }}
+            </h5>
+            <div class="sub-items-grid">
+              <div
+                *ngFor="let drop of selectedEntry.drops"
+                class="sub-item-card clickable"
+                (click)="openSubItem(drop)">
+                <img *ngIf="drop.sprite" [src]="drop.sprite" class="sub-item-sprite" alt="" />
+                <div class="sub-item-info">
+                  <span class="sub-item-name">{{ drop.name }}</span>
+                  <div class="sub-item-badges">
+                    <span class="sub-item-tier" *ngIf="drop.tier">★ T{{ drop.tier }}</span>
+                    <span class="sub-item-rarity" *ngIf="drop.rarity">{{ drop.rarity }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Skills (Habilidades) -->
+          <div class="sub-items-section skills-section" *ngIf="selectedEntry.skills && selectedEntry.skills.length > 0">
+            <h5 class="section-title">
+              <ion-icon name="flash-outline"></ion-icon>
+              {{ currentLang === 'es' ? 'Habilidades & Hechizos' : 'Skills & Spells' }}
+            </h5>
+            <div class="sub-items-grid">
+              <div
+                *ngFor="let skill of selectedEntry.skills"
+                class="sub-item-card clickable"
+                (click)="openSubItem(skill)">
+                <img *ngIf="skill.sprite" [src]="skill.sprite" class="sub-item-sprite" alt="" />
+                <div class="sub-item-info">
+                  <span class="sub-item-name">{{ skill.name }}</span>
+                  <span class="sub-item-tier" *ngIf="skill.tier">★ T{{ skill.tier }}</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           <a
