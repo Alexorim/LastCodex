@@ -207,6 +207,89 @@
     }
   }
 
+  .apk-download-box {
+    margin: 16px 0 14px 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--codex-line);
+
+    .apk-download-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      background: linear-gradient(135deg, rgba(189, 165, 69, 0.18) 0%, rgba(35, 33, 30, 0.95) 100%);
+      border: 1px solid var(--codex-gold);
+      border-radius: 8px;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+      transition: all 0.2s ease;
+      cursor: pointer;
+
+      &:hover {
+        background: linear-gradient(135deg, rgba(189, 165, 69, 0.28) 0%, rgba(45, 42, 38, 0.95) 100%);
+        box-shadow: 0 4px 16px rgba(189, 165, 69, 0.3);
+        transform: translateY(-1px);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+
+      .apk-btn-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .apk-icon-circle {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: rgba(189, 165, 69, 0.2);
+        border: 1px solid var(--codex-gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--codex-gold-bright, #f0a500);
+        font-size: 1.25rem;
+      }
+
+      .apk-text-group {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+
+        .apk-title {
+          font-family: var(--codex-font-heading);
+          font-size: 0.92rem;
+          font-weight: 700;
+          color: var(--codex-gold-bright, #f0a500);
+          letter-spacing: 0.02em;
+        }
+
+        .apk-subtitle {
+          font-size: 0.75rem;
+          color: var(--codex-text-muted);
+        }
+      }
+
+      .apk-external-icon {
+        font-size: 1.1rem;
+        color: var(--codex-gold);
+        opacity: 0.8;
+      }
+    }
+
+    .apk-download-help {
+      margin: 8px 0 0 2px;
+      font-size: 0.74rem;
+      color: var(--codex-text-muted);
+      line-height: 1.3;
+    }
+  }
+
   .external-links {
     display: flex;
     gap: 12px;

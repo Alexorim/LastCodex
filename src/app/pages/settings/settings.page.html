@@ -209,7 +209,7 @@
       <div class="about-content">
         <img src="assets/icon/last_codex.png" alt="LastResources Logo" class="about-logo" />
         <div>
-          <h4>LastResources v1.3.0</h4>
+          <h4>LastResources {{ appVersion }}</h4>
           <p class="about-desc">
             {{ currentLang === 'es'
               ? 'Pronóstico de rotación de materiales de tiendas de gremio de Orna RPG.'
@@ -217,6 +217,28 @@
           </p>
         </div>
       </div>
+
+      <!-- APK Download Button -->
+      <div class="apk-download-box">
+        <a [href]="apkDownloadUrl" target="_system" (click)="downloadApk($event)" class="apk-download-btn">
+          <div class="apk-btn-left">
+            <div class="apk-icon-circle">
+              <ion-icon name="cloud-download-outline"></ion-icon>
+            </div>
+            <div class="apk-text-group">
+              <span class="apk-title">{{ currentLang === 'es' ? 'Descargar Última APK' : 'Download Latest APK' }}</span>
+              <span class="apk-subtitle">LastCodex.apk ({{ appVersion }})</span>
+            </div>
+          </div>
+          <ion-icon name="open-outline" class="apk-external-icon"></ion-icon>
+        </a>
+        <p class="apk-download-help">
+          {{ currentLang === 'es'
+            ? 'Descarga el instalador oficial más reciente para Android compilado y actualizado.'
+            : 'Download the latest compiled and updated official Android APK installer.' }}
+        </p>
+      </div>
+
       <div class="external-links">
         <a href="https://playorna.com/codex/" target="_blank" rel="noopener noreferrer" class="codex-link">
           Official Orna Codex ↗

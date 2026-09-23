@@ -17,7 +17,8 @@ import {
   checkmarkCircleOutline,
   alertCircleOutline,
   fileTrayFullOutline,
-  sparkles
+  sparkles,
+  openOutline
 } from 'ionicons/icons';
 import { Router } from '@angular/router';
 import { SettingsService, Language, ThemeMode } from '../../services/settings.service';
@@ -44,6 +45,9 @@ export class SettingsPage implements OnInit, OnDestroy {
   currentTheme: ThemeMode = 'codex-dark';
   deviceTimezone = '';
   localResetTime = '';
+
+  appVersion = 'v1.3.0';
+  apkDownloadUrl = 'https://github.com/Alexorim/LastCodex/raw/main/src/assets/LastCodex.apk';
 
   // Codex status & sync
   totalCodexEntries = 0;
@@ -76,7 +80,8 @@ export class SettingsPage implements OnInit, OnDestroy {
       checkmarkCircleOutline,
       alertCircleOutline,
       fileTrayFullOutline,
-      sparkles
+      sparkles,
+      openOutline
     });
   }
 
@@ -206,5 +211,12 @@ export class SettingsPage implements OnInit, OnDestroy {
         : 'Database reset to bundled factory version.';
       this.syncErrorMessage = null;
     }
+  }
+
+  downloadApk(event?: Event): void {
+    if (event) {
+      event.preventDefault();
+    }
+    window.open(this.apkDownloadUrl, '_system');
   }
 }
