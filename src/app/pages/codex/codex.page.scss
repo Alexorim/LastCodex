@@ -271,187 +271,93 @@
 }
 
 /* ============================================================ */
-/* TIER SLICER CONTROL (SLIDER INTERACTIVO)                     */
+/* DROPDOWN FILTERS (LISTAS DESPLEGABLES)                       */
 /* ============================================================ */
-.tier-slicer-card {
-  background: #1c1b1a;
-  border: 1px solid rgba(189, 165, 69, 0.22);
-  border-radius: 8px;
-  padding: 8px 12px;
-  margin-bottom: 10px;
-  box-sizing: border-box;
-  width: 100%;
-
-  .slicer-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 6px;
-
-    .slicer-title-wrap {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-
-      .slicer-label {
-        font-family: var(--codex-font-heading);
-        font-size: 0.74rem;
-        font-weight: 700;
-        color: var(--codex-gold);
-        letter-spacing: 0.05em;
-      }
-
-      .slicer-badge {
-        font-family: var(--codex-font-heading);
-        font-size: 0.68rem;
-        font-weight: 700;
-        color: #141312;
-        background: var(--codex-gold);
-        padding: 1px 6px;
-        border-radius: 4px;
-
-        &.badge-all {
-          color: var(--codex-gold-bright);
-          background: rgba(189, 165, 69, 0.15);
-          border: 1px solid rgba(189, 165, 69, 0.35);
-        }
-      }
-    }
-
-    .slicer-reset-btn {
-      background: transparent;
-      border: none;
-      color: var(--codex-text-muted);
-      font-size: 0.68rem;
-      cursor: pointer;
-      text-decoration: underline;
-      padding: 0;
-
-      &:hover {
-        color: var(--codex-gold);
-      }
-    }
-  }
-
-  .slicer-track-container {
-    width: 100%;
-
-    .tier-range-input {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 100%;
-      height: 6px;
-      border-radius: 3px;
-      background: #2b2927;
-      outline: none;
-      margin: 6px 0 4px 0;
-      cursor: pointer;
-
-      &::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: var(--codex-gold);
-        cursor: pointer;
-        border: 2px solid #141312;
-        box-shadow: 0 0 8px rgba(189, 165, 69, 0.7);
-        transition: transform 0.12s ease;
-
-        &:hover {
-          transform: scale(1.15);
-        }
-      }
-
-      &::-moz-range-thumb {
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: var(--codex-gold);
-        cursor: pointer;
-        border: 2px solid #141312;
-        box-shadow: 0 0 8px rgba(189, 165, 69, 0.7);
-      }
-    }
-
-    .slicer-ticks-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-      user-select: none;
-
-      .slicer-tick {
-        font-family: var(--codex-font-heading);
-        font-size: 0.62rem;
-        color: var(--codex-text-muted);
-        cursor: pointer;
-        padding: 1px 3px;
-        border-radius: 3px;
-        transition: all 0.15s ease;
-
-        &:hover {
-          color: #fff;
-          background: rgba(189, 165, 69, 0.15);
-        }
-
-        &.active {
-          color: var(--codex-gold-bright, #f0a500);
-          font-weight: 700;
-          background: rgba(189, 165, 69, 0.22);
-        }
-
-        @media (max-width: 480px) {
-          font-size: 0.55rem;
-          padding: 1px 1px;
-        }
-      }
-    }
-  }
-}
-
-/* Subcategory Row */
-.subcategory-filter-row {
+.codex-filters-dropdown-row {
   display: flex;
+  gap: 10px;
   align-items: center;
   flex-wrap: wrap;
-  gap: 5px;
-  margin-bottom: 10px;
-  background: #171615;
-  padding: 6px 10px;
-  border-radius: 7px;
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  margin-bottom: 12px;
+  width: 100%;
+  box-sizing: border-box;
 
-  .sub-label {
-    font-size: 0.7rem;
-    color: var(--codex-text-muted);
-    font-weight: 600;
-  }
-
-  .sub-pills {
+  .filter-dropdown-group {
     display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 130px;
 
-    .sub-pill {
-      background: #232221;
-      border: 1px solid rgba(189, 165, 69, 0.18);
-      color: var(--codex-text-main);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 0.68rem;
-      cursor: pointer;
-      transition: all 0.15s ease;
+    .dropdown-label {
+      font-family: var(--codex-font-heading);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--codex-gold);
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
 
-      &:hover {
+    .custom-select-box {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      background: #1b1a19;
+      border: 1px solid var(--codex-line);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+
+      &:hover,
+      &:focus-within {
         border-color: var(--codex-gold);
+        box-shadow: 0 0 10px rgba(189, 165, 69, 0.22);
       }
 
-      &.active {
-        background: rgba(189, 165, 69, 0.25);
+      .codex-native-select {
+        width: 100%;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: var(--codex-text-light, #f9e8db);
+        font-family: var(--codex-font-heading);
+        font-size: 0.76rem;
+        font-weight: 600;
+        padding: 7px 28px 7px 10px;
+        appearance: none;
+        -webkit-appearance: none;
+        cursor: pointer;
+
+        option {
+          background: #1e1d1c;
+          color: #f9e8db;
+          font-family: sans-serif;
+          padding: 8px;
+        }
+      }
+
+      .select-arrow-icon {
+        position: absolute;
+        right: 8px;
+        pointer-events: none;
         color: var(--codex-gold);
-        border-color: var(--codex-gold);
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  @media (max-width: 500px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+
+    .filter-dropdown-group {
+      width: 100%;
+      min-width: 0;
+
+      .dropdown-label {
+        width: 45px;
+        font-size: 0.68rem;
       }
     }
   }

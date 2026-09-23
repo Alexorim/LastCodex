@@ -19,6 +19,7 @@ import {
   cubeOutline,
   flashOutline,
   chevronForwardOutline,
+  chevronDownOutline,
   closeCircleOutline,
   informationCircleOutline
 } from 'ionicons/icons';
@@ -184,6 +185,7 @@ export class CodexPage implements OnInit, OnDestroy {
       cubeOutline,
       flashOutline,
       chevronForwardOutline,
+      chevronDownOutline,
       closeCircleOutline,
       informationCircleOutline
     });
@@ -249,9 +251,15 @@ export class CodexPage implements OnInit, OnDestroy {
     this.displayLimit = 60;
   }
 
-  onTierSliderInput(event: any): void {
-    const val = parseInt(event.target.value, 10);
-    this.selectedTier = val === 0 ? null : val;
+  onTierChange(event: Event): void {
+    const val = (event.target as HTMLSelectElement).value;
+    this.selectedTier = val ? Number(val) : null;
+    this.displayLimit = 60;
+  }
+
+  onSubcategoryChange(event: Event): void {
+    const val = (event.target as HTMLSelectElement).value;
+    this.selectedSubcategory = val || null;
     this.displayLimit = 60;
   }
 

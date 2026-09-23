@@ -53,51 +53,34 @@
       <!-- Right Area: Slicer Filter, Counter, and Results Grid -->
       <section class="codex-content-area">
 
-        <!-- Tier Slicer Filter (Slider interactivo T1-T10) -->
-        <div class="tier-slicer-card">
-          <div class="slicer-header">
-            <div class="slicer-title-wrap">
-              <span class="slicer-label">{{ currentLang === 'es' ? 'Tier:' : 'Tier:' }}</span>
-              <span class="slicer-badge" *ngIf="selectedTier !== null">★ Tier {{ selectedTier }}</span>
-              <span class="slicer-badge badge-all" *ngIf="selectedTier === null">{{ currentLang === 'es' ? 'Todos los Tiers' : 'All Tiers' }}</span>
-            </div>
-            <button type="button" class="slicer-reset-btn" *ngIf="selectedTier !== null" (click)="filterTier(null)">
-              {{ currentLang === 'es' ? 'Ver Todos' : 'View All' }}
-            </button>
-          </div>
-
-          <div class="slicer-track-container">
-            <input
-              type="range"
-              min="0"
-              max="10"
-              step="1"
-              [value]="selectedTier === null ? 0 : selectedTier"
-              (input)="onTierSliderInput($event)"
-              class="tier-range-input"
-              title="Desliza para cambiar Tier"
-            />
-            <div class="slicer-ticks-row">
-              <span class="slicer-tick" [class.active]="selectedTier === null" (click)="filterTier(null)">ALL</span>
-              <span *ngFor="let t of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" class="slicer-tick" [class.active]="selectedTier === t" (click)="filterTier(t)">
-                T{{ t }}
-              </span>
+        <!-- Dropdown Filters (Listas Desplegables) -->
+        <div class="codex-filters-dropdown-row">
+          <!-- Tier Dropdown -->
+          <div class="filter-dropdown-group">
+            <label class="dropdown-label">{{ currentLang === 'es' ? 'Tier:' : 'Tier:' }}</label>
+            <div class="custom-select-box">
+              <select [value]="selectedTier === null ? '' : selectedTier" (change)="onTierChange($event)" class="codex-native-select">
+                <option value="">{{ currentLang === 'es' ? '★ Todos los Tiers' : '★ All Tiers' }}</option>
+                <option *ngFor="let t of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" [value]="t">
+                  ★ Tier {{ t }}
+                </option>
+              </select>
+              <ion-icon name="chevron-down-outline" class="select-arrow-icon"></ion-icon>
             </div>
           </div>
-        </div>
 
-        <!-- Subcategory Filter Pills (only when Items is selected) -->
-        <div class="subcategory-filter-row" *ngIf="availableSubcategories.length > 0">
-          <span class="sub-label">{{ currentLang === 'es' ? 'Tipo:' : 'Type:' }}</span>
-          <div class="sub-pills">
-            <button
-              *ngFor="let sub of availableSubcategories"
-              type="button"
-              class="sub-pill"
-              [class.active]="selectedSubcategory === sub"
-              (click)="filterSubcategory(sub)">
-              {{ getSubcategoryLabel(sub) }}
-            </button>
+          <!-- Subcategory Dropdown (only when Items is selected) -->
+          <div class="filter-dropdown-group" *ngIf="availableSubcategories.length > 0">
+            <label class="dropdown-label">{{ currentLang === 'es' ? 'Tipo:' : 'Type:' }}</label>
+            <div class="custom-select-box">
+              <select [value]="selectedSubcategory || ''" (change)="onSubcategoryChange($event)" class="codex-native-select">
+                <option value="">{{ currentLang === 'es' ? 'Todos los tipos' : 'All types' }}</option>
+                <option *ngFor="let sub of availableSubcategories" [value]="sub">
+                  {{ getSubcategoryLabel(sub) }}
+                </option>
+              </select>
+              <ion-icon name="chevron-down-outline" class="select-arrow-icon"></ion-icon>
+            </div>
           </div>
         </div>
 
