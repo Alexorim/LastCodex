@@ -224,6 +224,11 @@ export class CodexPage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    const savedViewMode = localStorage.getItem('codex_view_mode') as 'list' | 'grid';
+    if (savedViewMode === 'grid' || savedViewMode === 'list') {
+      this.viewMode = savedViewMode;
+    }
+
     this.subs.add(
       this.settingsService.lang$.subscribe(lang => {
         this.currentLang = lang;
@@ -248,11 +253,6 @@ export class CodexPage implements OnInit, OnDestroy {
         this.updateStatus = status;
       })
     );
-
-    const savedViewMode = localStorage.getItem('codex_view_mode');
-    if (savedViewMode === 'grid' || savedViewMode === 'list') {
-      this.viewMode = savedViewMode;
-    }
   }
 
   ngOnDestroy() {
@@ -384,9 +384,13 @@ export class CodexPage implements OnInit, OnDestroy {
     }
   }
 
+  setViewMode(mode: 'list' | 'grid'): void {
+    this.viewMode = mode;
+    localStorage.setItem('codex_view_mode', mode);
+  }
+
   toggleViewMode(): void {
-    this.viewMode = this.viewMode === 'list' ? 'grid' : 'list';
-    localStorage.setItem('codex_view_mode', this.viewMode);
+    this.setViewMode(this.viewMode === 'list' ? 'grid' : 'list');
   }
 
   onSearchChange(): void {

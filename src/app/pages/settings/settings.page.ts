@@ -18,10 +18,13 @@ import {
   alertCircleOutline,
   fileTrayFullOutline,
   sparkles,
-  openOutline
+  openOutline,
+  closeOutline,
+  chevronForwardOutline,
+  searchOutline
 } from 'ionicons/icons';
 import { Router } from '@angular/router';
-import { SettingsService, Language, ThemeMode } from '../../services/settings.service';
+import { SettingsService, Language, ThemeMode, AVAILABLE_LANGUAGES, LanguageOption } from '../../services/settings.service';
 import { TimerService } from '../../services/timer.service';
 import { CodexService, SyncProgress, UpdateCheckResult } from '../../services/codex.service';
 import { Subscription } from 'rxjs';
@@ -46,10 +49,16 @@ export class SettingsPage implements OnInit, OnDestroy {
   deviceTimezone = '';
   localResetTime = '';
 
-  versionNumber = '1.3.1';
+  versionNumber = '1.4.0';
   appVersion = `v${this.versionNumber}`;
   apkFileName = `lastcodex_${this.versionNumber}.apk`;
   apkDownloadUrl = `https://github.com/Alexorim/LastCodex/raw/main/src/assets/${this.apkFileName}`;
+
+  // Multi-language support (22 Orna languages)
+  availableLanguages = AVAILABLE_LANGUAGES;
+  selectedLangOption: LanguageOption = AVAILABLE_LANGUAGES[5]; // Default Spanish
+  isLanguageModalOpen = false;
+  languageFilter = '';
 
   // Codex status & sync
   totalCodexEntries = 0;
@@ -83,19 +92,30 @@ export class SettingsPage implements OnInit, OnDestroy {
       alertCircleOutline,
       fileTrayFullOutline,
       sparkles,
-      openOutline
+      openOutline,
+      closeOutline,
+      chevronForwardOutline,
+      searchOutline
     });
   }
 
   ngOnInit() {
     this.currentLang = this.settingsService.currentLang;
     this.currentTheme = this.settingsService.currentTheme;
+    this.selectedLangOption = this.settingsService.getCurrentLanguageOption();
 
     try {
       this.deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC-5';
     } catch {
       this.deviceTimezone = 'UTC-5';
     }
+
+    this.subs.add(
+      this.settingsService.lang$.subscribe(lang => {
+        this.currentLang = lang;
+        this.selectedLangOption = this.settingsService.getCurrentLanguageOption();
+      })
+    );
 
     this.subs.add(
       this.settingsService.theme$.subscribe(theme => {
@@ -164,9 +184,36 @@ export class SettingsPage implements OnInit, OnDestroy {
     this.router.navigate(['/home']);
   }
 
+  get filteredLanguages(): LanguageOption[] {
+    if (!this.languageFilter.trim()) return this.availableLanguages;
+    const q = this.languageFilter.toLowerCase().trim();
+    return this.availableLanguages.filter(l =>
+      l.name.toLowerCase().includes(q) ||
+      (l.subname && l.subname.toLowerCase().includes(q)) ||
+      l.code.toLowerCase().includes(q)
+    );
+  }
+
+  openLanguageModal() {
+    this.languageFilter = '';
+    this.isLanguageModalOpen = true;
+  }
+
+  closeLanguageModal() {
+    this.isLanguageModalOpen = false;
+  }
+
+  selectLanguage(lang: LanguageOption) {
+    this.selectedLangOption = lang;
+    this.currentLang = lang.code;
+    this.settingsService.setLanguage(lang.code);
+    this.isLanguageModalOpen = false;
+  }
+
   onLanguageChange(lang: Language) {
     this.currentLang = lang;
     this.settingsService.setLanguage(lang);
+    this.selectedLangOption = this.settingsService.getCurrentLanguageOption();
   }
 
   onThemeChange(theme: ThemeMode) {

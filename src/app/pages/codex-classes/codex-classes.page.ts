@@ -175,7 +175,7 @@ export class CodexClassesPage {
   }
 
   get currentLang(): 'es' | 'en' {
-    return this.settings.currentLang;
+    return this.settings.currentLang === 'es' ? 'es' : 'en';
   }
 
   getStars(count: number): string {

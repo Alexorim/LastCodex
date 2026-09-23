@@ -188,6 +188,211 @@ html.theme-amoled {
   }
 }
 
+/* ==========================================================================
+   LIGHT THEME MODE (Codex Pergamino Claro)
+   ========================================================================== */
+body.theme-light,
+html.theme-light {
+  --ion-background-color: #f7f3eb !important;
+  --codex-box-bg: #ffffff !important;
+  --codex-pill-bg: #ece5dc !important;
+  --codex-line: rgba(160, 130, 40, 0.28) !important;
+  --codex-text-light: #24211e !important;
+  --codex-text-muted: #6e655c !important;
+  --ion-text-color: #24211e !important;
+  --ion-toolbar-background: #faf7f2 !important;
+  --ion-tab-bar-background: #ffffff !important;
+
+  background-color: #f7f3eb !important;
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(189, 165, 69, 0.12) 0%, transparent 55%),
+    linear-gradient(180deg, #faf7f2 0%, #ece5da 100%) !important;
+  color: #24211e !important;
+
+  ion-header, .codex-header {
+    border-bottom-color: rgba(160, 130, 40, 0.28) !important;
+  }
+
+  ion-toolbar, .codex-toolbar, .search-toolbar, .countdown-toolbar {
+    --background: #faf7f2 !important;
+    background: #faf7f2 !important;
+    color: #24211e !important;
+  }
+
+  .header-countdown-block {
+    background: #ffffff !important;
+    border-color: rgba(160, 130, 40, 0.28) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+  }
+
+  .countdown-digits, .countdown-unit-label {
+    color: #24211e !important;
+  }
+
+  .codex-box, ion-card, .settings-card, .result-card {
+    background-color: #ffffff !important;
+    border-color: rgba(160, 130, 40, 0.28) !important;
+    box-shadow: 0 2px 12px rgba(80, 60, 20, 0.08) !important;
+    color: #24211e !important;
+  }
+
+  .codex-card {
+    background-color: #ffffff !important;
+    border-color: rgba(160, 130, 40, 0.28) !important;
+    box-shadow: 0 2px 10px rgba(80, 60, 20, 0.07) !important;
+    color: #24211e !important;
+
+    .entry-name, .compact-name {
+      color: #1e1b18 !important;
+    }
+    .entry-type, .compact-category {
+      color: #8c6d1f !important;
+    }
+  }
+
+  .codex-searchbar, .codex-searchbar-transparent {
+    --background: #ffffff !important;
+    --color: #24211e !important;
+    --placeholder-color: #7b7268 !important;
+    --icon-color: #967828 !important;
+  }
+
+  .material-pill {
+    background: #ece5dc !important;
+    border-color: rgba(160, 130, 40, 0.28) !important;
+    color: #24211e !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+
+    &:hover {
+      background: #e1d8cc !important;
+      border-color: #bda545 !important;
+    }
+  }
+
+  .mat-icon-frame {
+    background: #e8e0d2 !important;
+    border-color: rgba(160, 130, 40, 0.25) !important;
+  }
+
+  .suggestions-list {
+    background: #ffffff !important;
+    border-color: rgba(160, 130, 40, 0.3) !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12) !important;
+  }
+
+  .toggle-btn {
+    background: #ffffff !important;
+    border-color: rgba(160, 130, 40, 0.3) !important;
+    color: #554d45 !important;
+
+    &.active {
+      background: rgba(189, 165, 69, 0.18) !important;
+      border-color: #9d7c20 !important;
+      color: #856108 !important;
+    }
+  }
+
+  .codex-semicircular-bar {
+    --background: rgba(255, 255, 255, 0.96) !important;
+    background: rgba(255, 255, 255, 0.96) !important;
+    border-top: 1px solid rgba(160, 130, 40, 0.32) !important;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08) !important;
+
+    ion-tab-button {
+      --color: #6a6055 !important;
+      --color-selected: #946e09 !important;
+      color: #6a6055 !important;
+
+      &.tab-selected {
+        color: #946e09 !important;
+      }
+    }
+  }
+
+  .calendar-banner {
+    background: #fdfbf7 !important;
+    border-color: rgba(160, 130, 40, 0.25) !important;
+  }
+
+  .guild-expand-panel {
+    background: #fbf8f2 !important;
+    border-color: rgba(160, 130, 40, 0.2) !important;
+  }
+
+  .custom-select-box {
+    background: #ffffff !important;
+    border-color: rgba(160, 130, 40, 0.3) !important;
+
+    .codex-native-select {
+      color: #24211e !important;
+
+      option {
+        background: #ffffff !important;
+        color: #24211e !important;
+      }
+    }
+  }
+
+  .category-nav-item {
+    background: rgba(0, 0, 0, 0.03) !important;
+    border-color: rgba(160, 130, 40, 0.22) !important;
+
+    .cat-nav-label {
+      color: #3b352f !important;
+    }
+
+    &:hover {
+      background: rgba(189, 165, 69, 0.15) !important;
+      .cat-nav-label {
+        color: #1e1b18 !important;
+      }
+    }
+
+    &.active {
+      background: rgba(189, 165, 69, 0.22) !important;
+      border-color: #946e09 !important;
+
+      .cat-nav-label {
+        color: #856108 !important;
+      }
+    }
+  }
+
+  .pag-btn {
+    background: #ffffff !important;
+    border-color: rgba(160, 130, 40, 0.28) !important;
+    color: #443c33 !important;
+
+    &:hover:not(:disabled) {
+      background: rgba(189, 165, 69, 0.15) !important;
+      border-color: #946e09 !important;
+      color: #1e1b18 !important;
+    }
+
+    &.active {
+      background: linear-gradient(135deg, #a8831e 0%, #856108 100%) !important;
+      color: #ffffff !important;
+      border-color: #856108 !important;
+    }
+  }
+
+  .subcat-chip {
+    background: #ffffff !important;
+    border-color: rgba(160, 130, 40, 0.28) !important;
+    color: #443c33 !important;
+
+    &.active {
+      background: rgba(189, 165, 69, 0.2) !important;
+      border-color: #946e09 !important;
+      color: #856108 !important;
+    }
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #ede6d9;
+  }
+}
+
 /* Custom Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;

@@ -1,8 +1,40 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-export type Language = 'es' | 'en';
-export type ThemeMode = 'codex-dark' | 'amoled';
+export interface LanguageOption {
+  code: string;
+  name: string;
+  subname?: string;
+  flag: string;
+}
+
+export const AVAILABLE_LANGUAGES: LanguageOption[] = [
+  { code: 'en-US', name: 'English (US)', subname: 'United States', flag: '🇺🇸' },
+  { code: 'en-GB', name: 'English (UK)', subname: 'United Kingdom', flag: '🇬🇧' },
+  { code: 'en-CA', name: 'English (CA)', subname: 'Canada', flag: '🇨🇦' },
+  { code: 'en-AU', name: 'English (AU)', subname: 'Australia', flag: '🇦🇺' },
+  { code: 'fr', name: 'Français', subname: 'French', flag: '🇫🇷' },
+  { code: 'es', name: 'Español', subname: 'Spanish', flag: '🇪🇸' },
+  { code: 'ru', name: 'Русский', subname: 'Russian', flag: '🇷🇺' },
+  { code: 'uk', name: 'Українська', subname: 'Ukrainian', flag: '🇺🇦' },
+  { code: 'de', name: 'Deutsch', subname: 'German', flag: '🇩🇪' },
+  { code: 'it', name: 'Italiano', subname: 'Italian', flag: '🇮🇹' },
+  { code: 'pt-BR', name: 'Português (Brasil)', subname: 'Portuguese (BR)', flag: '🇧🇷' },
+  { code: 'cs', name: 'Čeština', subname: 'Czech', flag: '🇨🇿' },
+  { code: 'pl', name: 'Polski', subname: 'Polish', flag: '🇵🇱' },
+  { code: 'ja', name: '日本語', subname: 'Japanese', flag: '🇯🇵' },
+  { code: 'vi', name: 'Tiếng Việt', subname: 'Vietnamese', flag: '🇻🇳' },
+  { code: 'id', name: 'Bahasa Indonesia', subname: 'Indonesian', flag: '🇮🇩' },
+  { code: 'zh-TW', name: '繁體中文', subname: 'Traditional Chinese', flag: '🇹🇼' },
+  { code: 'zh-CN', name: '简体中文', subname: 'Simplified Chinese', flag: '🇨🇳' },
+  { code: 'ko', name: '한국어', subname: 'Korean', flag: '🇰🇷' },
+  { code: 'nl', name: 'Nederlands', subname: 'Dutch', flag: '🇳🇱' },
+  { code: 'nb', name: 'Norsk bokmål', subname: 'Norwegian', flag: '🇳🇴' },
+  { code: 'hu', name: 'Magyar', subname: 'Hungarian', flag: '🇭🇺' }
+];
+
+export type Language = string;
+export type ThemeMode = 'codex-dark' | 'amoled' | 'light';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +67,12 @@ export class SettingsService {
     return this.themeSubject.value;
   }
 
+  getCurrentLanguageOption(): LanguageOption {
+    const current = this.currentLang;
+    const match = AVAILABLE_LANGUAGES.find(l => l.code === current || l.code.startsWith(current));
+    return match || AVAILABLE_LANGUAGES.find(l => l.code === 'es') || AVAILABLE_LANGUAGES[0];
+  }
+
   setLanguage(lang: Language): void {
     this.langSubject.next(lang);
     localStorage.setItem(this.LANG_KEY, lang);
@@ -48,9 +86,9 @@ export class SettingsService {
 
   private applyTheme(theme: ThemeMode): void {
     if (typeof document !== 'undefined') {
-      document.body.classList.remove('theme-codex-dark', 'theme-amoled');
+      document.body.classList.remove('theme-codex-dark', 'theme-amoled', 'theme-light');
       document.body.classList.add(`theme-${theme}`);
-      document.documentElement.classList.remove('theme-codex-dark', 'theme-amoled');
+      document.documentElement.classList.remove('theme-codex-dark', 'theme-amoled', 'theme-light');
       document.documentElement.classList.add(`theme-${theme}`);
     }
   }

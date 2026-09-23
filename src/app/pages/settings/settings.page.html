@@ -15,32 +15,29 @@
 <ion-content class="ion-padding codex-content">
   <div class="settings-container">
 
-    <!-- Section 1: Language -->
+    <!-- Section 1: Language (22 Orna Languages) -->
     <div class="settings-card">
       <div class="card-header">
         <ion-icon name="globe-outline" class="card-icon"></ion-icon>
         <h3>{{ currentLang === 'es' ? 'Idioma' : 'Language' }}</h3>
       </div>
       <p class="card-desc">
-        {{ currentLang === 'es' ? 'Selecciona el idioma de la aplicación' : 'Select your preferred language' }}
+        {{ currentLang === 'es' ? 'Selecciona el idioma de la aplicación (22 idiomas oficiales soportados)' : 'Select application language (22 official languages supported)' }}
       </p>
-      <div class="button-toggle-group">
-        <button
-          type="button"
-          class="toggle-btn"
-          [class.active]="currentLang === 'es'"
-          (click)="onLanguageChange('es')">
-          <span class="btn-flag">🇪🇸</span>
-          <span>Español</span>
-        </button>
-        <button
-          type="button"
-          class="toggle-btn"
-          [class.active]="currentLang === 'en'"
-          (click)="onLanguageChange('en')">
-          <span class="btn-flag">🇺🇸</span>
-          <span>English</span>
-        </button>
+
+      <!-- Active Language Display & Trigger -->
+      <div class="language-picker-trigger clickable" (click)="openLanguageModal()">
+        <div class="lang-trigger-left">
+          <span class="lang-trigger-flag">{{ selectedLangOption.flag }}</span>
+          <div class="lang-trigger-info">
+            <span class="lang-trigger-name">{{ selectedLangOption.name }}</span>
+            <span class="lang-trigger-subname" *ngIf="selectedLangOption.subname">{{ selectedLangOption.subname }}</span>
+          </div>
+        </div>
+        <div class="lang-trigger-right">
+          <span class="lang-change-btn-text">{{ currentLang === 'es' ? 'Cambiar' : 'Change' }}</span>
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </div>
       </div>
     </div>
 
@@ -60,7 +57,7 @@
           [class.active]="currentTheme === 'codex-dark'"
           (click)="onThemeChange('codex-dark')">
           <span class="theme-dot dot-codex"></span>
-          <span>Codex Dark (#1F1F1F)</span>
+          <span>Codex Dark</span>
         </button>
         <button
           type="button"
@@ -69,6 +66,14 @@
           (click)="onThemeChange('amoled')">
           <span class="theme-dot dot-amoled"></span>
           <span>AMOLED Pure</span>
+        </button>
+        <button
+          type="button"
+          class="toggle-btn"
+          [class.active]="currentTheme === 'light'"
+          (click)="onThemeChange('light')">
+          <span class="theme-dot dot-light"></span>
+          <span>{{ currentLang === 'es' ? 'Claro / Pergamino' : 'Light Theme' }}</span>
         </button>
       </div>
     </div>
@@ -255,4 +260,49 @@
     </div>
 
   </div>
+
+  <!-- Modal: Selector de Idiomas (22 Idiomas de Orna) -->
+  <ion-modal [isOpen]="isLanguageModalOpen" (didDismiss)="closeLanguageModal()" class="codex-lang-modal">
+    <ng-template>
+      <ion-header class="ion-no-border">
+        <ion-toolbar class="modal-toolbar">
+          <ion-title>{{ currentLang === 'es' ? 'Seleccionar Idioma' : 'Select Language' }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeLanguageModal()">
+              <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+        <ion-toolbar class="modal-search-toolbar">
+          <ion-searchbar
+            [(ngModel)]="languageFilter"
+            [placeholder]="currentLang === 'es' ? 'Buscar idioma...' : 'Search language...'"
+            class="modal-searchbar"
+            debounce="100">
+          </ion-searchbar>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="modal-content ion-padding">
+        <div class="languages-list">
+          <div
+            *ngFor="let lang of filteredLanguages"
+            class="lang-list-item"
+            [class.selected]="selectedLangOption.code === lang.code"
+            (click)="selectLanguage(lang)">
+            <span class="lang-flag">{{ lang.flag }}</span>
+            <div class="lang-details">
+              <span class="lang-name">{{ lang.name }}</span>
+              <span class="lang-sub" *ngIf="lang.subname">{{ lang.subname }}</span>
+            </div>
+            <ion-icon
+              *ngIf="selectedLangOption.code === lang.code"
+              name="checkmark-circle-outline"
+              class="lang-check-icon">
+            </ion-icon>
+          </div>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>

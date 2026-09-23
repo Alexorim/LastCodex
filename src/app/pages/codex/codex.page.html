@@ -63,16 +63,27 @@
 
       <!-- Left Sidebar: Categorías (No Box, No Header) -->
       <aside class="codex-categories-sidebar">
-        <!-- Mobile View Toggle Button (Only visible on mobile <= 767px) -->
-        <div
-          class="category-view-toggle-item mobile-view-toggle"
-          (click)="toggleViewMode()"
-          [class.active-grid]="viewMode === 'grid'"
-          [title]="viewMode === 'list' ? (currentLang === 'es' ? 'Cambiar a cuadrícula' : 'Switch to grid') : (currentLang === 'es' ? 'Cambiar a lista' : 'Switch to list')">
-          <div class="cat-nav-icon-wrap fallback-icon toggle-icon-wrap">
-            <ion-icon [name]="viewMode === 'list' ? 'grid-outline' : 'list-outline'"></ion-icon>
+        <!-- Mobile View Toggle Buttons (Only visible on mobile <= 767px) -->
+        <div class="mobile-view-toggle-wrap">
+          <span class="mobile-view-label">{{ currentLang === 'es' ? 'Vista' : 'View' }}</span>
+          <div class="mobile-toggle-btn-group">
+            <button
+              type="button"
+              class="mobile-toggle-btn"
+              [class.active]="viewMode === 'list'"
+              (click)="setViewMode('list')"
+              [title]="currentLang === 'es' ? 'Vista de lista' : 'List view'">
+              <ion-icon name="list-outline"></ion-icon>
+            </button>
+            <button
+              type="button"
+              class="mobile-toggle-btn"
+              [class.active]="viewMode === 'grid'"
+              (click)="setViewMode('grid')"
+              [title]="currentLang === 'es' ? 'Vista de cuadrícula' : 'Grid view'">
+              <ion-icon name="grid-outline"></ion-icon>
+            </button>
           </div>
-          <span class="cat-nav-label toggle-label">{{ viewMode === 'list' ? (currentLang === 'es' ? 'Cuadrícula' : 'Grid') : (currentLang === 'es' ? 'Lista' : 'List') }}</span>
         </div>
 
         <nav class="categories-nav">
@@ -145,20 +156,29 @@
               </div>
             </div>
 
-            <!-- Desktop View Mode Toggle Button (Next to Tier Dropdown, hidden on mobile) -->
+            <!-- Desktop View Mode Toggle (Next to Tier Dropdown, hidden on mobile) -->
             <div class="filter-dropdown-group desktop-view-toggle-group">
               <label class="dropdown-label">{{ currentLang === 'es' ? 'Vista:' : 'View:' }}</label>
-              <button
-                type="button"
-                class="desktop-view-toggle-btn"
-                (click)="toggleViewMode()"
-                [class.active-grid]="viewMode === 'grid'"
-                [title]="viewMode === 'list' ? (currentLang === 'es' ? 'Cambiar a vista de cuadrícula' : 'Switch to grid view') : (currentLang === 'es' ? 'Cambiar a vista normal' : 'Switch to normal view')">
-                <ion-icon [name]="viewMode === 'list' ? 'grid-outline' : 'list-outline'" class="view-btn-icon"></ion-icon>
-                <span class="view-btn-text">
-                  {{ viewMode === 'list' ? (currentLang === 'es' ? 'Cuadrícula' : 'Grid') : (currentLang === 'es' ? 'Normal' : 'Normal') }}
-                </span>
-              </button>
+              <div class="desktop-view-segmented-wrap">
+                <button
+                  type="button"
+                  class="desktop-seg-btn"
+                  [class.active]="viewMode === 'list'"
+                  (click)="setViewMode('list')"
+                  [title]="currentLang === 'es' ? 'Vista normal de lista' : 'Normal list view'">
+                  <ion-icon name="list-outline"></ion-icon>
+                  <span>{{ currentLang === 'es' ? 'Lista' : 'List' }}</span>
+                </button>
+                <button
+                  type="button"
+                  class="desktop-seg-btn"
+                  [class.active]="viewMode === 'grid'"
+                  (click)="setViewMode('grid')"
+                  [title]="currentLang === 'es' ? 'Vista cuadrícula compacta' : 'Compact grid view'">
+                  <ion-icon name="grid-outline"></ion-icon>
+                  <span>{{ currentLang === 'es' ? 'Cuadrícula' : 'Grid' }}</span>
+                </button>
+              </div>
             </div>
 
             <!-- Subcategory Dropdown (Only for Items & Gear) -->

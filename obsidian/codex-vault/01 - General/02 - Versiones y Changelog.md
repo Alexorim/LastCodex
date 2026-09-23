@@ -5,19 +5,20 @@ tags:
   - "#versiones"
   - "#changelog"
   - "#lastcodex"
-version: 1.3.0
+version: 1.4.0
 created: 2026-09-23
 ---
 
 # 🏷️ Versiones y Changelog del Proyecto
 
-Estado actual del proyecto: **Versión 1.3.1 (Producción)**
+Estado actual del proyecto: **Versión 1.4.0 (Producción)**
 
 Conexiones:
 - Nodo Padre: [[00 - Nodo Central (MOC) - LastCodex]]
 - Registro Histórico Detallado: [[00 - Registro de Actualizaciones (Changelog Maestro)]]
 - Hitos de Versión:
-  - [[v1.3.1 - Paginación Numérica y Modo Cuadrícula en Códice]] (Actual)
+  - [[v1.4.0 - Tema Claro, 22 Idiomas, Ajuste de Grilla Codex y Limpieza de Barra]] (Actual)
+  - [[v1.3.1 - Paginación Numérica y Modo Cuadrícula en Códice]]
   - [[v1.3.0 - Renacimiento LastCodex, Subcategorías y APK Versionada]]
   - [[v1.2.0 - Códice Masivo Offline (5065 ítems) y Sincronización]]
   - [[v1.1.0 - Clases, Eventos, Canvas Offline y Soporte Android]]
@@ -40,10 +41,10 @@ Conexiones:
 
 | Parámetro | Valor Actual | Archivo de Configuración |
 | :--- | :--- | :--- |
-| **App Version** | `1.3.1` (`v1.3.1`) | `package.json` |
-| **Android Version Code** | `4` | `android/app/build.gradle` |
-| **Android Version Name** | `1.3.1` | `android/app/build.gradle` |
-| **APK Binario** | `lastcodex_1.3.1.apk` | `release/` y `src/assets/` |
+| **App Version** | `1.4.0` (`v1.4.0`) | `package.json` |
+| **Android Version Code** | `5` | `android/app/build.gradle` |
+| **Android Version Name** | `1.4.0` | `android/app/build.gradle` |
+| **APK Binario** | `lastcodex_1.4.0.apk` | `release/` y `src/assets/` |
 | **IndexedDB Version** | `3` (`lastcodex_offline_db`) | `src/app/services/codex.service.ts` |
 | **App ID (Capacitor)** | `com.orna.forecast` | `capacitor.config.ts` |
 | **App ID (Electron)** | `com.lastresources.app` | `package.json` |

@@ -36,7 +36,8 @@ Conexiones:
 
 | Versión | Nombre Clave | Estado | Fecha de Corte | Commits Clave |
 | :--- | :--- | :--- | :--- | :--- |
-| **[[v1.3.1 - Paginación Numérica y Modo Cuadrícula en Códice]]** | *Paginación & Vista Cuadrícula* | **Actual (Producción)** | Septiembre 2026 | `9e48510` |
+| **[[v1.4.0 - Tema Claro, 22 Idiomas, Ajuste de Grilla Codex y Limpieza de Barra]]** | *Tema Claro & 22 Idiomas* | **Actual (Producción)** | Septiembre 2026 | `v1.4.0` |
+| **[[v1.3.1 - Paginación Numérica y Modo Cuadrícula en Códice]]** | *Paginación & Vista Cuadrícula* | Precedente | Septiembre 2026 | `d1389bd` |
 | **[[v1.3.0 - Renacimiento LastCodex, Subcategorías y APK Versionada]]** | *Branding & Subcategorías* | Precedente | Septiembre 2026 | `14039c3`, `dd3d54f`, `998984e`, `c2d471c` |
 | **[[v1.2.0 - Códice Masivo Offline (5065 ítems) y Sincronización]]** | *Offline IndexedDB & Sync* | Precedente | Septiembre 2026 | `c041b4e`, `38d628a`, `82c28f0`, `41eded1` |
 | **[[v1.1.0 - Clases, Eventos, Canvas Offline y Soporte Android]]** | *Expansión de Funcionalidades* | Precedente | Septiembre 2026 | `1d39d71`, `7e9b8d7`, `158f6bc`, `27e4d69` |

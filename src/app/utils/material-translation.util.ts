@@ -47,7 +47,7 @@ function normalizeKey(str: string): string {
  * Translates a material name into the requested language ('es' or 'en').
  * Falls back to the raw name if no translation is found.
  */
-export function translateMaterialName(rawName: string, lang: 'es' | 'en' = 'es'): string {
+export function translateMaterialName(rawName: string, lang: string = 'es'): string {
   if (!rawName) return '';
 
   const cleanName = rawName.replace(/\(.*?\)/g, '').replace(/:.*$/g, '').trim();
