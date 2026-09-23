@@ -21,3 +21,22 @@ export function getGuildIcon(rawName: string): string {
 
   return '';
 }
+
+export function getGuildColor(rawName: string): string {
+  if (!rawName) return '#78909c';
+  const lower = rawName.toLowerCase();
+  if (lower.includes('anguish')) return '#ff5252';
+  if (lower.includes('agony')) return '#ff7043';
+  if (lower.includes('despair')) return '#ab47bc';
+  if (lower.includes('melancholy')) return '#5c6bc0';
+  if (lower.includes('torment')) return '#26a69a';
+  if (lower.includes('coral')) return '#ec407a';
+  if (lower.includes('deepshard') || lower.includes('shard')) return '#42a5f5';
+  if (lower.includes('remembrance') || lower.includes('memory')) return '#26c6da';
+  if (lower.includes('sparring') || lower.includes('blade')) return '#66bb6a';
+  if (lower.includes('trial')) return '#ffa726';
+  if (lower.includes('tower') || lower.includes('titan')) return '#8d6e63';
+  if (lower.includes('monument')) return '#7e57c2';
+  return '#78909c';
+}
+

@@ -42,6 +42,7 @@ import { DayForecast } from '../../models/material.model';
 import { getMaterialIcon } from '../../utils/material-icon.util';
 import { getGuildIcon } from '../../utils/guild-icon.util';
 import { translateMaterialName } from '../../utils/material-translation.util';
+import { generateForecastImage } from '../../utils/forecast-canvas.util';
 import { Observable, Subscription } from 'rxjs';
 
 @Component({
@@ -265,29 +266,40 @@ export class HomePage implements OnInit, OnDestroy {
     this.exportFeedback = this.currentLang === 'es' ? 'Generando imagen...' : 'Generating image...';
 
     try {
-      await new Promise(r => setTimeout(r, 250));
+      await new Promise(r => setTimeout(r, 100));
 
-      let targetEl = this.exportMode === 'single'
-        ? this.exportTargetSingle?.nativeElement
-        : this.exportTargetBoth?.nativeElement;
-
-      if (!targetEl) {
-        targetEl = this.exportTargetSingle?.nativeElement;
+      if (!this.todayForecast) {
+        throw new Error('No forecast data to export');
       }
 
-      if (!targetEl) {
-        throw new Error('Element to capture not found');
-      }
+      // Generate PNG using the native 2D Canvas engine (100% offline-safe, no SVG foreignObject taint)
+      let dataUrl: string;
+      try {
+        dataUrl = await generateForecastImage({
+          today: this.todayForecast,
+          tomorrow: this.tomorrowForecast,
+          mode: this.exportMode,
+          lang: this.currentLang
+        });
+      } catch (canvasErr) {
+        console.warn('Canvas generator fallback to toPng:', canvasErr);
+        let targetEl = this.exportMode === 'single'
+          ? this.exportTargetSingle?.nativeElement
+          : this.exportTargetBoth?.nativeElement;
+        if (!targetEl) targetEl = this.exportTargetSingle?.nativeElement;
+        if (!targetEl) throw new Error('Element to capture not found');
 
-      // Offline-safe toPng: skipFonts and cacheBust false avoids any offline network attempt
-      const dataUrl = await toPng(targetEl, {
-        quality: 0.96,
-        pixelRatio: 2.2,
-        backgroundColor: '#161514',
-        cacheBust: false,
-        skipFonts: true,
-        fontEmbedCSS: ''
-      });
+        dataUrl = await toPng(targetEl, {
+          quality: 0.96,
+          pixelRatio: 2,
+          backgroundColor: '#161514',
+          cacheBust: false,
+          skipFonts: true,
+          fontEmbedCSS: '',
+          imagePlaceholder: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAALAAAAAABAAEAAAICRAEAOw==',
+          onImageErrorHandler: () => {}
+        });
+      }
 
       const fileName = `LastResources-Stock-${this.exportMode === 'single' ? 'Hoy' : 'Hoy-y-Manana'}-${new Date().toISOString().slice(0, 10)}.png`;
 
@@ -371,9 +383,12 @@ export class HomePage implements OnInit, OnDestroy {
           setTimeout(() => this.closeExportModal(), 2800);
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Export error:', err);
-      this.exportFeedback = this.currentLang === 'es' ? 'Error al generar la imagen' : 'Failed to export image';
+      const errMsg = err?.message || '';
+      this.exportFeedback = this.currentLang === 'es'
+        ? `Error al generar la imagen (${errMsg || 'error inesperado'})`
+        : `Failed to export image (${errMsg || 'unexpected error'})`;
     } finally {
       this.isExporting = false;
     }
