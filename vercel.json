@@ -2,6 +2,21 @@
   "buildCommand": "npm run build",
   "outputDirectory": "www",
   "framework": null,
+  "headers": [
+    {
+      "source": "/assets/(.*\\.apk)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/vnd.android.package-archive"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        }
+      ]
+    }
+  ],
   "rewrites": [
     {
       "source": "/((?!assets/|.*\\..*).*)",

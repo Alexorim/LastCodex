@@ -62,11 +62,13 @@ for (const dir of targetDirs) {
     }
   }
 
-  // Copy the fresh APK
-  const destPath = path.join(dir, expectedApkName);
-  fs.copyFileSync(apkSource, destPath);
-  const sizeMb = (fs.statSync(destPath).size / (1024 * 1024)).toFixed(1);
-  console.log(`Copied ${expectedApkName} (${sizeMb} MB) to ${destPath}`);
+  // Copy the fresh APK with aliases so all links work
+  const aliases = [expectedApkName, 'LastCodex.apk', 'lastcodex.apk', 'lastcodex_1.3.0.apk'];
+  for (const alias of aliases) {
+    const destPath = path.join(dir, alias);
+    fs.copyFileSync(apkSource, destPath);
+    console.log(`Copied APK alias: ${alias} to ${destPath}`);
+  }
 }
 
 console.log(`\nSUCCESS: LastCodex v${version} APK ready as "${expectedApkName}"!\n`);

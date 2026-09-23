@@ -52,7 +52,7 @@ export class SettingsPage implements OnInit, OnDestroy {
   versionNumber = '1.4.0';
   appVersion = `v${this.versionNumber}`;
   apkFileName = `lastcodex_${this.versionNumber}.apk`;
-  apkDownloadUrl = `https://github.com/Alexorim/LastCodex/raw/main/src/assets/${this.apkFileName}`;
+  apkDownloadUrl = `assets/${this.apkFileName}`;
 
   // Multi-language support (22 Orna languages)
   availableLanguages = AVAILABLE_LANGUAGES;
@@ -266,6 +266,11 @@ export class SettingsPage implements OnInit, OnDestroy {
     if (event) {
       event.preventDefault();
     }
-    window.open(this.apkDownloadUrl, '_system');
+    const link = document.createElement('a');
+    link.href = `assets/${this.apkFileName}`;
+    link.download = this.apkFileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 }
