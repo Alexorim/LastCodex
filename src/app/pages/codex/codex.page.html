@@ -63,27 +63,18 @@
 
       <!-- Left Sidebar: Categorías (No Box, No Header) -->
       <aside class="codex-categories-sidebar">
-        <!-- Mobile View Toggle Buttons (Only visible on mobile <= 767px) -->
-        <div class="mobile-view-toggle-wrap">
-          <span class="mobile-view-label">{{ currentLang === 'es' ? 'Vista' : 'View' }}</span>
-          <div class="mobile-toggle-btn-group">
-            <button
-              type="button"
-              class="mobile-toggle-btn"
-              [class.active]="viewMode === 'list'"
-              (click)="setViewMode('list')"
-              [title]="currentLang === 'es' ? 'Vista de lista' : 'List view'">
-              <ion-icon name="list-outline"></ion-icon>
-            </button>
-            <button
-              type="button"
-              class="mobile-toggle-btn"
-              [class.active]="viewMode === 'grid'"
-              (click)="setViewMode('grid')"
-              [title]="currentLang === 'es' ? 'Vista de cuadrícula' : 'Grid view'">
-              <ion-icon name="grid-outline"></ion-icon>
-            </button>
+        <!-- View Mode Toggle Button in Sidebar (Always visible) -->
+        <div
+          class="category-nav-item view-mode-sidebar-btn"
+          (click)="toggleViewMode()"
+          [class.active]="viewMode === 'grid'"
+          [title]="viewMode === 'list' ? (currentLang === 'es' ? 'Cambiar a cuadrícula' : 'Switch to grid') : (currentLang === 'es' ? 'Cambiar a lista' : 'Switch to list')">
+          <div class="cat-nav-icon-wrap fallback-icon">
+            <ion-icon [name]="viewMode === 'list' ? 'grid-outline' : 'list-outline'"></ion-icon>
           </div>
+          <span class="cat-nav-label">
+            {{ viewMode === 'list' ? (currentLang === 'es' ? 'Cuadrícula' : 'Grid') : (currentLang === 'es' ? 'Lista' : 'List') }}
+          </span>
         </div>
 
         <nav class="categories-nav">
