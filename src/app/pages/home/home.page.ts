@@ -36,27 +36,6 @@ import { getGuildIcon } from '../../utils/guild-icon.util';
 import { translateMaterialName } from '../../utils/material-translation.util';
 import { Observable, Subscription } from 'rxjs';
 
-export interface OrnaCalendarEvent {
-  id: string;
-  name: string;
-  startDay: number;
-  endDay: number;
-  icon: string;
-  color: string;
-  tag: string;
-  descriptionEs: string;
-  descriptionEn: string;
-  rewardsEs: string;
-  rewardsEn: string;
-}
-
-export interface CalendarCell {
-  dayNumber: number;
-  isCurrentMonth: boolean;
-  isToday: boolean;
-  events: OrnaCalendarEvent[];
-}
-
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -91,106 +70,7 @@ export class HomePage implements OnInit, OnDestroy {
   isExporting = false;
   exportFeedback: string | null = null;
 
-  // Events Calendar Modal States
-  showEventsModal = false;
-  selectedEventDetail: OrnaCalendarEvent | null = null;
-  calendarMonthName = 'Septiembre 2026';
-  calendarWeeks: CalendarCell[][] = [];
 
-  // Orna Official Events List
-  officialEvents: OrnaCalendarEvent[] = [
-    {
-      id: 'surrounded-memories',
-      name: 'Surrounded by Memories',
-      startDay: 1,
-      endDay: 5,
-      icon: 'https://playorna.com/static/img/icons/amity.png',
-      color: '#00bcd4',
-      tag: 'Amities',
-      descriptionEs: 'Aparición aumentada de recuerdos ancestrales y amities míticas en el mundo.',
-      descriptionEn: 'Increased spawn rate of memory hunts and mythic amities across the realm.',
-      rewardsEs: 'Amities exclusivas, Fragmentos de memoria',
-      rewardsEn: 'Exclusive amities, Memory shards'
-    },
-    {
-      id: 'riftfall',
-      name: 'Riftfall',
-      startDay: 2,
-      endDay: 30,
-      icon: 'https://playorna.com/static/img/icons/riftfall3.png',
-      color: '#ab47bc',
-      tag: 'Event Raid & Bosses',
-      descriptionEs: 'Fisuras dimensionales abriéndose en todo el reino. Invade los consejos oscuros y derrota a los jueces.',
-      descriptionEn: 'Dimensional rifts opening across the realm. Invade dark counsels and vanquish judges.',
-      rewardsEs: 'Shade of Rhada, Shade of Achlys, Equipo de invocador élite',
-      rewardsEn: 'Shade of Rhada, Shade of Achlys, Elite summoner gear'
-    },
-    {
-      id: 'lucky-event',
-      name: 'Lucky Event',
-      startDay: 4,
-      endDay: 8,
-      icon: 'https://playorna.com/static/img/icons/rewards.png',
-      color: '#ffb300',
-      tag: 'Bonus Boost',
-      descriptionEs: 'Bonificación extraordinaria de suerte en botines de mazmorras y enemigos en campo.',
-      descriptionEn: 'Extraordinary luck multiplier applied to dungeon loot and world foes.',
-      rewardsEs: '+25% Tasa de aparición de objetos raros',
-      rewardsEn: '+25% Rare item drop rate'
-    },
-    {
-      id: 'spelunking',
-      name: 'Spelunking Event',
-      startDay: 11,
-      endDay: 14,
-      icon: 'https://playorna.com/static/img/bosses/dweller.png',
-      color: '#8d6e63',
-      tag: 'Dungeons',
-      descriptionEs: 'Expediciones profundas en cavernas con monstruos de las profundidades y cofres secretos.',
-      descriptionEn: 'Deep cavern expeditions featuring underworld dwellers and treasure troves.',
-      rewardsEs: 'Subterranean Dwellers, Minerales raros',
-      rewardsEn: 'Subterranean Dwellers, Rare crafting minerals'
-    },
-    {
-      id: 'plight-apollyon',
-      name: 'The Plight of Apollyon',
-      startDay: 25,
-      endDay: 30,
-      icon: 'https://playorna.com/static/img/icons/apollyon.png',
-      color: '#e53935',
-      tag: 'Kingdom Raid',
-      descriptionEs: 'El destructor celestial desafía a los reinos. Consigue las armaduras más resistentes de Orna.',
-      descriptionEn: 'The celestial destroyer challenges kingdom forces. Attain high-ward armor sets.',
-      rewardsEs: 'Apollyon Raid Gear, Ward Armor',
-      rewardsEn: 'Apollyon Raid Gear, Ward Armor'
-    },
-    {
-      id: 'lunar-festival',
-      name: 'Lunar Festival',
-      startDay: 25,
-      endDay: 30,
-      icon: 'https://playorna.com/static/img/icons/moon.png',
-      color: '#5c6bc0',
-      tag: 'Moon Festival',
-      descriptionEs: 'Celebración bajo las estrellas. Criaturas nocturnas y seguidores lunares exclusivos.',
-      descriptionEn: 'Starlight celebration under moonlight. Nightstalkers and lunar followers available.',
-      rewardsEs: 'Lunar Pets, Hechizos celestiales',
-      rewardsEn: 'Lunar Pets, Celestial Spells'
-    },
-    {
-      id: 'exp-event',
-      name: 'EXP Event',
-      startDay: 25,
-      endDay: 28,
-      icon: 'https://playorna.com/static/img/icons/exp.png',
-      color: '#43a047',
-      tag: 'Double XP',
-      descriptionEs: 'Duplica toda la experiencia ganada derrotando monstruos, jefes y jefes de asalto.',
-      descriptionEn: 'Double all experience earned by slaying monsters, bosses, and raid beasts.',
-      rewardsEs: '+100% EXP global',
-      rewardsEn: '+100% Global EXP'
-    }
-  ];
 
   constructor() {
     addIcons({
@@ -233,7 +113,6 @@ export class HomePage implements OnInit, OnDestroy {
 
     this.langSub = this.settingsService.lang$.subscribe(lang => {
       this.currentLang = lang;
-      this.updateCalendarMonthName();
     });
 
     this.todaySub = this.materialsService.today$.subscribe(today => {
@@ -249,8 +128,6 @@ export class HomePage implements OnInit, OnDestroy {
         this.isLoading = false;
       }
     });
-
-    this.buildCalendarGrid();
   }
 
   ngOnDestroy() {
@@ -259,79 +136,8 @@ export class HomePage implements OnInit, OnDestroy {
     this.langSub?.unsubscribe();
   }
 
-  private updateCalendarMonthName(): void {
-    const now = new Date();
-    const month = now.toLocaleString(this.currentLang === 'es' ? 'es-ES' : 'en-US', { month: 'long', year: 'numeric' });
-    this.calendarMonthName = month.charAt(0).toUpperCase() + month.slice(1);
-  }
-
-  buildCalendarGrid(): void {
-    const now = new Date();
-    const currentDay = now.getDate();
-    const year = now.getFullYear();
-    const month = now.getMonth();
-
-    const firstDayIndex = new Date(year, month, 1).getDay(); // 0 = Sun, 1 = Mon ...
-    const totalDays = new Date(year, month + 1, 0).getDate();
-    const prevMonthDays = new Date(year, month, 0).getDate();
-
-    const cells: CalendarCell[] = [];
-
-    // Prev month padding
-    for (let i = firstDayIndex - 1; i >= 0; i--) {
-      cells.push({
-        dayNumber: prevMonthDays - i,
-        isCurrentMonth: false,
-        isToday: false,
-        events: []
-      });
-    }
-
-    // Current month days
-    for (let day = 1; day <= totalDays; day++) {
-      const activeEvents = this.officialEvents.filter(ev => day >= ev.startDay && day <= ev.endDay);
-      cells.push({
-        dayNumber: day,
-        isCurrentMonth: true,
-        isToday: day === currentDay,
-        events: activeEvents
-      });
-    }
-
-    // Next month padding to fill weeks (multiples of 7)
-    let nextDay = 1;
-    while (cells.length % 7 !== 0) {
-      cells.push({
-        dayNumber: nextDay++,
-        isCurrentMonth: false,
-        isToday: false,
-        events: []
-      });
-    }
-
-    // Split into weeks of 7 days
-    this.calendarWeeks = [];
-    for (let i = 0; i < cells.length; i += 7) {
-      this.calendarWeeks.push(cells.slice(i, i + 7));
-    }
-  }
-
-  isEventLive(ev: OrnaCalendarEvent): boolean {
-    const today = new Date().getDate();
-    return today >= ev.startDay && today <= ev.endDay;
-  }
-
-  openEventsModal(): void {
-    this.showEventsModal = true;
-  }
-
-  closeEventsModal(): void {
-    this.showEventsModal = false;
-    this.selectedEventDetail = null;
-  }
-
-  viewEventDetail(ev: OrnaCalendarEvent): void {
-    this.selectedEventDetail = ev;
+  goToEvents(): void {
+    this.router.navigate(['/events']);
   }
 
   // Export Modal Methods

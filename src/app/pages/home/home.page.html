@@ -14,7 +14,7 @@
       <!-- Header Right Group: Events Button & Countdown -->
       <div class="header-right-group">
         <!-- Events Button in Header (Only on Home) -->
-        <button type="button" class="header-event-btn" (click)="openEventsModal()" title="Ver Calendario de Eventos Orna">
+        <button type="button" class="header-event-btn" (click)="goToEvents()" title="Ver Calendario de Eventos Orna">
           <ion-icon name="sparkles"></ion-icon>
           <span>{{ currentLang === 'es' ? 'Eventos' : 'Events' }}</span>
         </button>
@@ -276,122 +276,6 @@
           <ion-icon name="logo-whatsapp"></ion-icon>
           <span>{{ currentLang === 'es' ? 'WhatsApp / Compartir' : 'WhatsApp / Share' }}</span>
         </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================ -->
-<!-- MODAL DE CALENDARIO DE EVENTOS ORNA (INSPIRADO EN PLAYORNA)   -->
-<!-- ============================================================ -->
-<div class="events-modal-backdrop" *ngIf="showEventsModal" (click)="closeEventsModal()">
-  <div class="events-modal-card codex-box" (click)="$event.stopPropagation()">
-    <div class="modal-card-header">
-      <div class="modal-heading-left">
-        <ion-icon name="sparkles" class="events-header-icon"></ion-icon>
-        <div>
-          <h3>{{ currentLang === 'es' ? 'Calendario de Eventos' : 'Event Calendar' }}</h3>
-          <span class="modal-sub">{{ calendarMonthName }} • Orna RPG</span>
-        </div>
-      </div>
-      <div class="modal-header-actions">
-        <a href="https://playorna.com/calendar/" target="_blank" rel="noopener noreferrer" class="external-btn" title="Ver en PlayOrna Oficial">
-          <ion-icon name="open-outline"></ion-icon>
-        </a>
-        <button type="button" class="modal-close" (click)="closeEventsModal()">
-          <ion-icon name="close-circle-outline"></ion-icon>
-        </button>
-      </div>
-    </div>
-
-    <div class="events-modal-body">
-      <!-- Calendar Grid Section -->
-      <div class="calendar-scroll-wrap">
-        <table class="event-calendar-table">
-          <thead>
-            <tr>
-              <th>{{ currentLang === 'es' ? 'Dom' : 'Sun' }}</th>
-              <th>{{ currentLang === 'es' ? 'Lun' : 'Mon' }}</th>
-              <th>{{ currentLang === 'es' ? 'Mar' : 'Tue' }}</th>
-              <th>{{ currentLang === 'es' ? 'Mié' : 'Wed' }}</th>
-              <th>{{ currentLang === 'es' ? 'Jue' : 'Thu' }}</th>
-              <th>{{ currentLang === 'es' ? 'Vie' : 'Fri' }}</th>
-              <th>{{ currentLang === 'es' ? 'Sáb' : 'Sat' }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let week of calendarWeeks">
-              <td
-                *ngFor="let cell of week"
-                [class.adjacent]="!cell.isCurrentMonth"
-                [class.current]="cell.isCurrentMonth"
-                [class.today-cell]="cell.isToday">
-                <span class="day-number">{{ cell.dayNumber }}</span>
-
-                <div class="cell-events" *ngIf="cell.isCurrentMonth">
-                  <div
-                    *ngFor="let ev of cell.events"
-                    class="mini-event-pill"
-                    [class.live-pill]="isEventLive(ev)"
-                    [style.border-left-color]="ev.color"
-                    (click)="viewEventDetail(ev)"
-                    [title]="ev.name">
-                    <img [src]="ev.icon" class="mini-ev-icon" alt="" />
-                    <span class="mini-ev-name">{{ ev.name }}</span>
-                  </div>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Detail Card if an event is clicked -->
-      <div class="selected-event-card" *ngIf="selectedEventDetail">
-        <div class="selected-header">
-          <div class="sel-left">
-            <img [src]="selectedEventDetail.icon" class="sel-icon" alt="" />
-            <div>
-              <div class="sel-badge-row">
-                <span class="event-tag" [style.background]="selectedEventDetail.color">{{ selectedEventDetail.tag }}</span>
-                <span class="live-badge" *ngIf="isEventLive(selectedEventDetail)">● EN VIVO</span>
-              </div>
-              <h4 class="sel-title">{{ selectedEventDetail.name }}</h4>
-              <span class="sel-dates">Días {{ selectedEventDetail.startDay }} al {{ selectedEventDetail.endDay }} de {{ calendarMonthName }}</span>
-            </div>
-          </div>
-          <button type="button" class="close-sel" (click)="selectedEventDetail = null">
-            <ion-icon name="close-circle-outline"></ion-icon>
-          </button>
-        </div>
-        <p class="sel-desc">
-          {{ currentLang === 'es' ? selectedEventDetail.descriptionEs : selectedEventDetail.descriptionEn }}
-        </p>
-        <div class="sel-rewards">
-          <span class="reward-lbl">{{ currentLang === 'es' ? 'Recompensas / Destacados:' : 'Featured Rewards:' }}</span>
-          <span class="reward-val">{{ currentLang === 'es' ? selectedEventDetail.rewardsEs : selectedEventDetail.rewardsEn }}</span>
-        </div>
-      </div>
-
-      <!-- Events List of the Month -->
-      <div class="events-roster-section">
-        <h4 class="roster-title">{{ currentLang === 'es' ? 'Eventos del Mes' : 'Events This Month' }}</h4>
-        <div class="events-roster-grid">
-          <div
-            *ngFor="let ev of officialEvents"
-            class="roster-item"
-            [class.active-item]="isEventLive(ev)"
-            (click)="viewEventDetail(ev)">
-            <img [src]="ev.icon" class="roster-icon" alt="" />
-            <div class="roster-info">
-              <div class="roster-top">
-                <span class="roster-name">{{ ev.name }}</span>
-                <span class="roster-live" *ngIf="isEventLive(ev)">EN VIVO</span>
-              </div>
-              <span class="roster-dates">Día {{ ev.startDay }} - {{ ev.endDay }}</span>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>

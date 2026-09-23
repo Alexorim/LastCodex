@@ -643,11 +643,9 @@
 /* EVENTS CALENDAR MODAL STYLES (PLAYORNA STYLE)                */
 /* ============================================================ */
 .events-modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.82);
-  backdrop-filter: blur(5px);
-  z-index: 9999;
+  display: none !important;
+}
+.events-modal-unused-styles {
   display: flex;
   align-items: center;
   justify-content: center;

@@ -28,6 +28,10 @@ const routes: Routes = [
         loadComponent: () => import('../pages/codex/codex.page').then(m => m.CodexPage)
       },
       {
+        path: 'events',
+        loadComponent: () => import('../pages/events/events.page').then(m => m.EventsPage)
+      },
+      {
         path: 'settings',
         loadComponent: () => import('../pages/settings/settings.page').then(m => m.SettingsPage)
       },
@@ -42,6 +46,7 @@ const routes: Routes = [
   { path: 'tabs/tab1', redirectTo: 'home', pathMatch: 'full' },
   { path: 'tabs/tab2', redirectTo: 'search', pathMatch: 'full' },
   { path: 'tabs/tab3', redirectTo: 'calendar', pathMatch: 'full' },
+  { path: 'tabs/events', redirectTo: 'events', pathMatch: 'full' },
   { path: 'tabs', redirectTo: 'home', pathMatch: 'full' }
 ];
 
