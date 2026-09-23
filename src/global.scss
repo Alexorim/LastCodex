@@ -319,6 +319,48 @@ html.theme-light {
     border-color: rgba(160, 130, 40, 0.2) !important;
   }
 
+  .codex-content {
+    --background: #f7f3eb !important;
+    background: #f7f3eb !important;
+    color: #24211e !important;
+  }
+
+  .brand-search-btn {
+    background: #ffffff !important;
+    border-color: rgba(160, 130, 40, 0.35) !important;
+    box-shadow: 0 2px 8px rgba(160, 130, 40, 0.15) !important;
+  }
+
+  .desktop-view-segmented-wrap {
+    background: #ede6da !important;
+    border-color: rgba(160, 130, 40, 0.28) !important;
+
+    .desktop-seg-btn {
+      color: #6a6055 !important;
+
+      &:hover {
+        color: #121212 !important;
+        background: rgba(255, 255, 255, 0.5) !important;
+      }
+
+      &.active {
+        background: #ffffff !important;
+        color: #856108 !important;
+        border-color: #bda545 !important;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1) !important;
+      }
+    }
+  }
+
+  .view-mode-sidebar-btn {
+    background: rgba(189, 165, 69, 0.18) !important;
+    border-color: #bda545 !important;
+
+    .cat-nav-label {
+      color: #856108 !important;
+    }
+  }
+
   .custom-select-box {
     background: #ffffff !important;
     border-color: rgba(160, 130, 40, 0.3) !important;
@@ -381,11 +423,36 @@ html.theme-light {
     border-color: rgba(160, 130, 40, 0.28) !important;
     color: #443c33 !important;
 
+    .chip-badge {
+      background: #eae2d5 !important;
+      color: #6e655c !important;
+    }
+
     &.active {
       background: rgba(189, 165, 69, 0.2) !important;
       border-color: #946e09 !important;
       color: #856108 !important;
+
+      .chip-badge {
+        background: #bda545 !important;
+        color: #ffffff !important;
+      }
     }
+  }
+
+  .codex-syncing-banner {
+    background: #ffffff !important;
+    border-color: rgba(160, 130, 40, 0.28) !important;
+    box-shadow: 0 2px 10px rgba(160, 130, 40, 0.1) !important;
+
+    .sync-banner-bar {
+      background: #eae2d5 !important;
+    }
+  }
+
+  .modal-backdrop {
+    background: rgba(30, 25, 20, 0.72) !important;
+    backdrop-filter: blur(6px) !important;
   }
 
   ::-webkit-scrollbar-track {

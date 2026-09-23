@@ -5,7 +5,7 @@ tags:
   - "#hub"
   - "#core"
   - "#lastcodex"
-version: 1.4.0
+version: 1.4.1
 created: 2026-09-23
 ---
 
@@ -77,7 +77,8 @@ Bienvenido al núcleo de la **red neuronal de conocimiento** de **LastCodex** (t
 
 ### 📜 9. Registro de Actualizaciones & Changelog
 - [[00 - Registro de Actualizaciones (Changelog Maestro)]]: Índice histórico completo de versiones.
-  - [[v1.4.0 - Tema Claro, 22 Idiomas, Ajuste de Grilla Codex y Limpieza de Barra]]: Versión activa en producción (Tema Claro, 22 Idiomas, Grilla corregida y Limpieza de Barra).
+  - [[v1.4.1 - Efecto Glassmorphism en Sprite Codex, Paleta Café y Corrección Tema Claro]]: Versión activa en producción (Glassmorphism en sprite, Paleta Café y Corrección Tema Claro).
+  - [[v1.4.0 - Tema Claro, 22 Idiomas, Ajuste de Grilla Codex y Limpieza de Barra]]: Versión precedente (Tema Claro, 22 Idiomas, Grilla corregida y Limpieza de Barra).
   - [[v1.3.1 - Paginación Numérica y Modo Cuadrícula en Códice]]: Paginación numérica y vista cuadrícula inicial.
   - [[v1.3.0 - Renacimiento LastCodex, Subcategorías y APK Versionada]]: Rebranding, subcategorías y APK versionada.
   - [[v1.2.0 - Códice Masivo Offline (5065 ítems) y Sincronización]]: Integración de base de datos masiva IndexedDB.

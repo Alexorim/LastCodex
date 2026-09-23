@@ -5,19 +5,20 @@ tags:
   - "#versiones"
   - "#changelog"
   - "#lastcodex"
-version: 1.4.0
+version: 1.4.1
 created: 2026-09-23
 ---
 
 # 🏷️ Versiones y Changelog del Proyecto
 
-Estado actual del proyecto: **Versión 1.4.0 (Producción)**
+Estado actual del proyecto: **Versión 1.4.1 (Producción)**
 
 Conexiones:
 - Nodo Padre: [[00 - Nodo Central (MOC) - LastCodex]]
 - Registro Histórico Detallado: [[00 - Registro de Actualizaciones (Changelog Maestro)]]
 - Hitos de Versión:
-  - [[v1.4.0 - Tema Claro, 22 Idiomas, Ajuste de Grilla Codex y Limpieza de Barra]] (Actual)
+  - [[v1.4.1 - Efecto Glassmorphism en Sprite Codex, Paleta Café y Corrección Tema Claro]] (Actual)
+  - [[v1.4.0 - Tema Claro, 22 Idiomas, Ajuste de Grilla Codex y Limpieza de Barra]]
   - [[v1.3.1 - Paginación Numérica y Modo Cuadrícula en Códice]]
   - [[v1.3.0 - Renacimiento LastCodex, Subcategorías y APK Versionada]]
   - [[v1.2.0 - Códice Masivo Offline (5065 ítems) y Sincronización]]

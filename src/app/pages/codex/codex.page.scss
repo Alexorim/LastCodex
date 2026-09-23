@@ -1,5 +1,5 @@
 .codex-content {
-  --background: #191817;
+  --background: var(--ion-background-color, #1F1F1F);
   color: var(--codex-text-main, #e0d5cb);
   --padding-start: 10px;
   --padding-end: 10px;
@@ -43,7 +43,7 @@
     height: 42px;
     border-radius: 50%;
     border: 1.5px solid var(--codex-gold);
-    background: #141312;
+    background: #2A2826;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -333,7 +333,7 @@
       flex: 1;
       display: flex;
       align-items: center;
-      background: #1b1a19;
+      background: #2A2826;
       border: 1px solid var(--codex-line);
       border-radius: 8px;
       transition: all 0.2s ease;
@@ -359,7 +359,7 @@
         cursor: pointer;
 
         option {
-          background: #1e1d1c;
+          background: #2A2826;
           color: #f9e8db;
           font-family: sans-serif;
           padding: 8px;
@@ -381,7 +381,7 @@
 
       .desktop-view-segmented-wrap {
         display: inline-flex;
-        background: #1b1a19;
+        background: #23211f;
         border: 1px solid var(--codex-line);
         border-radius: 8px;
         padding: 2px;
@@ -467,7 +467,7 @@
     align-items: center;
     gap: 6px;
     padding: 6px 10px;
-    background: #1c1b1a;
+    background: #2A2826;
     border: 1px solid var(--codex-line);
     border-radius: 18px;
     color: var(--codex-text-main, #e0d5cb);
@@ -506,7 +506,7 @@
     }
 
     &.active {
-      background: linear-gradient(135deg, rgba(189, 165, 69, 0.25) 0%, rgba(35, 33, 30, 0.95) 100%);
+      background: linear-gradient(135deg, rgba(189, 165, 69, 0.25) 0%, rgba(42, 40, 38, 0.95) 100%);
       border-color: var(--codex-gold);
       color: var(--codex-gold-bright, #f0a500);
       box-shadow: 0 0 10px rgba(189, 165, 69, 0.3);
@@ -667,7 +667,7 @@
   }
 
   .codex-card {
-    background: #201f1e;
+    background: var(--codex-box-bg, #2A2826);
     border: 1px solid var(--codex-line);
     border-radius: 8px;
     padding: 9px 11px;
@@ -808,7 +808,7 @@
       min-width: 34px;
       height: 34px;
       padding: 0 6px;
-      background: #1c1b1a;
+      background: #23211f;
       border: 1px solid var(--codex-line);
       border-radius: 6px;
       color: var(--codex-text-main, #e0d5cb);
@@ -843,7 +843,7 @@
 
       &.pag-number-btn {
         &.active {
-          background: linear-gradient(135deg, rgba(189, 165, 69, 0.3) 0%, rgba(35, 33, 30, 0.95) 100%);
+          background: linear-gradient(135deg, rgba(189, 165, 69, 0.3) 0%, rgba(42, 40, 38, 0.95) 100%);
           border-color: var(--codex-gold);
           color: var(--codex-gold-bright, #f0a500);
           box-shadow: 0 0 10px rgba(189, 165, 69, 0.35);
@@ -947,7 +947,7 @@
   padding: 16px;
 
   .modal-card {
-    background: #1f1e1d;
+    background: #2A2826;
     border: 1px solid var(--codex-gold);
     box-shadow: 0 0 28px rgba(189, 165, 69, 0.4);
     border-radius: 12px;
@@ -978,7 +978,7 @@
 
     /* Big Sprite Hero Showcase */
     .modal-hero-showcase {
-      background: #141312;
+      background: linear-gradient(180deg, #242220 0%, #1f1d1b 100%);
       border-bottom: 1px solid var(--codex-line);
       padding: 24px 16px 16px;
       text-align: center;
@@ -987,13 +987,26 @@
       align-items: center;
       justify-content: center;
 
+      /* Glassmorphism Container for Sprite Showcase */
       .modal-sprite-wrap {
-        width: 110px;
-        height: 110px;
+        width: 120px;
+        height: 120px;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 8px;
+        margin-bottom: 12px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.38), inset 0 0 14px rgba(189, 165, 69, 0.25);
+        border-radius: 16px;
+        transition: transform 0.22s ease, box-shadow 0.22s ease;
+
+        &:hover {
+          transform: scale(1.04);
+          box-shadow: 0 10px 36px 0 rgba(189, 165, 69, 0.35), inset 0 0 18px rgba(189, 165, 69, 0.4);
+        }
 
         .modal-entry-sprite {
           width: 96px;
@@ -1042,7 +1055,7 @@
       padding: 16px;
 
       .modal-desc-box {
-        background: #151413;
+        background: #23211f;
         border: 1px solid rgba(189, 165, 69, 0.25);
         border-radius: 6px;
         padding: 12px 14px;
@@ -1081,7 +1094,7 @@
         margin-bottom: 14px;
 
         .spec-card {
-          background: #151413;
+          background: #23211f;
           border: 1px solid rgba(255, 255, 255, 0.07);
           border-radius: 6px;
           padding: 7px 10px;
@@ -1151,7 +1164,7 @@
             align-items: center;
             padding: 6px 10px;
             border-radius: 6px;
-            background: #171615;
+            background: #23211f;
             border: 1px solid rgba(255, 255, 255, 0.08);
 
             .stat-name {
@@ -1250,7 +1263,7 @@
             gap: 6px;
             font-size: 0.78rem;
             color: #ddd;
-            background: #161514;
+            background: #23211f;
             padding: 5px 8px;
             border-radius: 4px;
             border: 1px solid rgba(255, 255, 255, 0.06);
@@ -1276,7 +1289,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            background: #161514;
+            background: #23211f;
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 6px;
             padding: 6px 8px;
@@ -1510,7 +1523,7 @@
 }
 
 .codex-syncing-banner {
-  background: #1c1b1a;
+  background: #2A2826;
   border: 1px solid var(--codex-gold);
   border-radius: 8px;
   padding: 12px 14px;
@@ -1549,7 +1562,7 @@
   .sync-banner-bar {
     width: 100%;
     height: 8px;
-    background: #101010;
+    background: #1f1e1d;
     border-radius: 4px;
     overflow: hidden;
     margin-bottom: 6px;
@@ -1624,6 +1637,147 @@
 @keyframes spin {
   100% {
     transform: rotate(360deg);
+  }
+}
+
+/* ============================================================ */
+/* LIGHT THEME COMPONENT OVERRIDES                              */
+/* ============================================================ */
+:host-context(body.theme-light),
+:host-context(html.theme-light) {
+  .codex-content {
+    --background: #f7f3eb !important;
+    color: #24211e !important;
+  }
+
+  .brand-search-btn {
+    background: #ffffff !important;
+    border-color: rgba(160, 130, 40, 0.35) !important;
+    box-shadow: 0 2px 8px rgba(160, 130, 40, 0.15) !important;
+  }
+
+  .desktop-view-segmented-wrap {
+    background: #ede6da !important;
+    border-color: rgba(160, 130, 40, 0.28) !important;
+
+    .desktop-seg-btn {
+      color: #6a6055 !important;
+
+      &:hover {
+        color: #121212 !important;
+        background: rgba(255, 255, 255, 0.5) !important;
+      }
+
+      &.active {
+        background: #ffffff !important;
+        color: #856108 !important;
+        border-color: #bda545 !important;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1) !important;
+      }
+    }
+  }
+
+  .custom-select-box {
+    background: #ffffff !important;
+    border-color: rgba(160, 130, 40, 0.3) !important;
+
+    .codex-native-select {
+      color: #24211e !important;
+
+      option {
+        background: #ffffff !important;
+        color: #24211e !important;
+      }
+    }
+  }
+
+  .subcategory-pills-bar .subcat-chip {
+    background: #ffffff !important;
+    border-color: rgba(160, 130, 40, 0.28) !important;
+    color: #4a3e2d !important;
+
+    .chip-badge {
+      background: #eae2d5 !important;
+      color: #6e655c !important;
+    }
+
+    &:hover {
+      background: #f5efe6 !important;
+      color: #121212 !important;
+    }
+
+    &.active {
+      background: rgba(189, 165, 69, 0.2) !important;
+      border-color: #bda545 !important;
+      color: #856108 !important;
+
+      .chip-badge {
+        background: #bda545 !important;
+        color: #ffffff !important;
+      }
+    }
+  }
+
+  .codex-card {
+    background: #ffffff !important;
+    border-color: rgba(160, 130, 40, 0.28) !important;
+    box-shadow: 0 2px 8px rgba(80, 60, 20, 0.08) !important;
+
+    .entry-name, .compact-name {
+      color: #24211e !important;
+    }
+
+    .entry-type, .compact-category {
+      color: #8c6d1f !important;
+    }
+
+    .card-bottom {
+      border-top-color: rgba(160, 130, 40, 0.15) !important;
+
+      .stat-pill {
+        background: #f4eee3 !important;
+        color: #7c5c0a !important;
+        border-color: rgba(160, 130, 40, 0.25) !important;
+      }
+    }
+
+    &:hover {
+      border-color: #bda545 !important;
+      box-shadow: 0 4px 14px rgba(160, 130, 40, 0.2) !important;
+    }
+  }
+
+  .codex-pagination-bar .pag-btn {
+    background: #ffffff !important;
+    border-color: rgba(160, 130, 40, 0.28) !important;
+    color: #4a3e2d !important;
+
+    &:hover:not([disabled]) {
+      background: #f5efe6 !important;
+      border-color: #bda545 !important;
+      color: #121212 !important;
+    }
+
+    &.pag-number-btn.active {
+      background: #bda545 !important;
+      color: #ffffff !important;
+      border-color: #a6913d !important;
+    }
+  }
+
+  .codex-syncing-banner {
+    background: #ffffff !important;
+    border-color: rgba(160, 130, 40, 0.28) !important;
+    box-shadow: 0 2px 10px rgba(160, 130, 40, 0.1) !important;
+
+    .sync-banner-bar {
+      background: #eae2d5 !important;
+    }
+  }
+
+  .modal-backdrop {
+    background: rgba(30, 25, 20, 0.72) !important;
+    backdrop-filter: blur(6px) !important;
   }
 }
 
