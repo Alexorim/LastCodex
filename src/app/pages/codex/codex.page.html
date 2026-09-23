@@ -9,6 +9,7 @@
       <div class="codex-search-flex">
         <ion-searchbar
           [(ngModel)]="searchQuery"
+          (ngModelChange)="onSearchChange()"
           [placeholder]="currentLang === 'es' ? '¿Qué buscas en el Códice? (objetos, monstruos...)' : 'Search Codex (items, monsters...)'"
           debounce="150"
           class="codex-searchbar-transparent"
@@ -62,6 +63,18 @@
 
       <!-- Left Sidebar: Categorías (No Box, No Header) -->
       <aside class="codex-categories-sidebar">
+        <!-- Mobile View Toggle Button (Only visible on mobile <= 767px) -->
+        <div
+          class="category-view-toggle-item mobile-view-toggle"
+          (click)="toggleViewMode()"
+          [class.active-grid]="viewMode === 'grid'"
+          [title]="viewMode === 'list' ? (currentLang === 'es' ? 'Cambiar a cuadrícula' : 'Switch to grid') : (currentLang === 'es' ? 'Cambiar a lista' : 'Switch to list')">
+          <div class="cat-nav-icon-wrap fallback-icon toggle-icon-wrap">
+            <ion-icon [name]="viewMode === 'list' ? 'grid-outline' : 'list-outline'"></ion-icon>
+          </div>
+          <span class="cat-nav-label toggle-label">{{ viewMode === 'list' ? (currentLang === 'es' ? 'Cuadrícula' : 'Grid') : (currentLang === 'es' ? 'Lista' : 'List') }}</span>
+        </div>
+
         <nav class="categories-nav">
           <!-- Option: Todo / All -->
           <div
@@ -130,6 +143,22 @@
                 </select>
                 <ion-icon name="chevron-down-outline" class="select-arrow-icon"></ion-icon>
               </div>
+            </div>
+
+            <!-- Desktop View Mode Toggle Button (Next to Tier Dropdown, hidden on mobile) -->
+            <div class="filter-dropdown-group desktop-view-toggle-group">
+              <label class="dropdown-label">{{ currentLang === 'es' ? 'Vista:' : 'View:' }}</label>
+              <button
+                type="button"
+                class="desktop-view-toggle-btn"
+                (click)="toggleViewMode()"
+                [class.active-grid]="viewMode === 'grid'"
+                [title]="viewMode === 'list' ? (currentLang === 'es' ? 'Cambiar a vista de cuadrícula' : 'Switch to grid view') : (currentLang === 'es' ? 'Cambiar a vista normal' : 'Switch to normal view')">
+                <ion-icon [name]="viewMode === 'list' ? 'grid-outline' : 'list-outline'" class="view-btn-icon"></ion-icon>
+                <span class="view-btn-text">
+                  {{ viewMode === 'list' ? (currentLang === 'es' ? 'Cuadrícula' : 'Grid') : (currentLang === 'es' ? 'Normal' : 'Normal') }}
+                </span>
+              </button>
             </div>
 
             <!-- Subcategory Dropdown (Only for Items & Gear) -->
@@ -231,43 +260,115 @@
           <div class="results-header">
             <span class="count-badge">
               {{ filteredEntries.length | number }} {{ currentLang === 'es' ? 'entradas' : 'entries' }}
-              <span *ngIf="displayedEntries.length < filteredEntries.length" class="showing-badge">
-                ({{ currentLang === 'es' ? 'mostrando' : 'showing' }} {{ displayedEntries.length | number }})
+              <span class="showing-badge">
+                — {{ currentLang === 'es' ? 'Página' : 'Page' }} {{ currentPage }} / {{ totalPages }}
               </span>
             </span>
           </div>
 
-          <!-- Codex Entries Grid (NO description inside card, clean & fully responsive) -->
-          <div class="codex-grid" *ngIf="filteredEntries.length > 0">
+          <!-- Codex Entries Grid (Supports Normal List & Compact Grid View) -->
+          <div class="codex-grid" [class.grid-mode]="viewMode === 'grid'" *ngIf="filteredEntries.length > 0">
             <div
               *ngFor="let entry of displayedEntries"
               class="codex-card codex-box"
+              [class.compact-card]="viewMode === 'grid'"
               (click)="openEntry(entry)">
-              <div class="card-top">
-                <div class="sprite-frame">
-                  <img [src]="entry.icon" (error)="onImageError($event)" class="entry-sprite" alt="" />
-                </div>
-                <div class="card-titles">
-                  <div class="tier-tag" *ngIf="entry.tier > 0">★ Tier {{ entry.tier }}</div>
-                  <h4 class="entry-name">{{ getDisplayName(entry) }}</h4>
-                  <span class="entry-type">{{ entry.type }}</span>
-                </div>
-              </div>
 
-              <div class="card-bottom" *ngIf="entry.stats || entry.rarity">
-                <span class="stat-pill" *ngIf="entry.rarity">{{ entry.rarity }}</span>
-                <span class="stat-pill" *ngIf="entry.stats">{{ entry.stats }}</span>
-                <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
-              </div>
+              <!-- NORMAL VIEW: Sprite, Tier, Name, Type, Stats, Arrow -->
+              <ng-container *ngIf="viewMode === 'list'">
+                <div class="card-top">
+                  <div class="sprite-frame">
+                    <img [src]="entry.icon" (error)="onImageError($event)" class="entry-sprite" alt="" />
+                  </div>
+                  <div class="card-titles">
+                    <div class="tier-tag" *ngIf="entry.tier > 0">★ Tier {{ entry.tier }}</div>
+                    <h4 class="entry-name">{{ getDisplayName(entry) }}</h4>
+                    <span class="entry-type">{{ entry.type }}</span>
+                  </div>
+                </div>
+
+                <div class="card-bottom" *ngIf="entry.stats || entry.rarity">
+                  <span class="stat-pill" *ngIf="entry.rarity">{{ entry.rarity }}</span>
+                  <span class="stat-pill" *ngIf="entry.stats">{{ entry.stats }}</span>
+                  <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+                </div>
+              </ng-container>
+
+              <!-- COMPACT GRID VIEW: Sprite, Categoría y Nombre hasta el ancho de la tarjeta -->
+              <ng-container *ngIf="viewMode === 'grid'">
+                <div class="compact-grid-card">
+                  <div class="compact-tier-badge" *ngIf="entry.tier > 0">T{{ entry.tier }}</div>
+                  <div class="compact-sprite-wrap">
+                    <img [src]="entry.icon" (error)="onImageError($event)" class="compact-sprite" alt="" />
+                  </div>
+                  <span class="compact-category">{{ entry.type || entry.category }}</span>
+                  <h4 class="compact-name" [title]="getDisplayName(entry)">{{ getDisplayName(entry) }}</h4>
+                </div>
+              </ng-container>
+
             </div>
           </div>
 
-          <!-- Load More Button -->
-          <div class="load-more-wrap" *ngIf="displayedEntries.length < filteredEntries.length">
-            <button type="button" class="load-more-btn" (click)="loadMore()">
-              {{ currentLang === 'es' ? 'Cargar más...' : 'Load more...' }}
-              ({{ (filteredEntries.length - displayedEntries.length) | number }} {{ currentLang === 'es' ? 'restantes' : 'remaining' }})
-            </button>
+          <!-- Pagination Controls (Páginas 1, 2, 3, 4...) -->
+          <div class="codex-pagination-bar" *ngIf="totalPages > 1">
+            <div class="pagination-controls">
+              <!-- Primera Página -->
+              <button
+                type="button"
+                class="pag-btn pag-nav-btn"
+                [disabled]="currentPage === 1"
+                (click)="goToPage(1)"
+                [title]="currentLang === 'es' ? 'Primera página' : 'First page'">
+                <ion-icon name="play-back-outline"></ion-icon>
+              </button>
+
+              <!-- Página Anterior -->
+              <button
+                type="button"
+                class="pag-btn pag-nav-btn"
+                [disabled]="currentPage === 1"
+                (click)="goToPage(currentPage - 1)"
+                [title]="currentLang === 'es' ? 'Página anterior' : 'Previous page'">
+                <ion-icon name="chevron-back-outline"></ion-icon>
+              </button>
+
+              <!-- Botones Numéricos de Página -->
+              <ng-container *ngFor="let p of getPageNumbers()">
+                <span *ngIf="p === '...'" class="pag-ellipsis">…</span>
+                <button
+                  *ngIf="p !== '...'"
+                  type="button"
+                  class="pag-btn pag-number-btn"
+                  [class.active]="currentPage === p"
+                  (click)="goToPage(p)">
+                  {{ p }}
+                </button>
+              </ng-container>
+
+              <!-- Página Siguiente -->
+              <button
+                type="button"
+                class="pag-btn pag-nav-btn"
+                [disabled]="currentPage === totalPages"
+                (click)="goToPage(currentPage + 1)"
+                [title]="currentLang === 'es' ? 'Página siguiente' : 'Next page'">
+                <ion-icon name="chevron-forward-outline"></ion-icon>
+              </button>
+
+              <!-- Última Página -->
+              <button
+                type="button"
+                class="pag-btn pag-nav-btn"
+                [disabled]="currentPage === totalPages"
+                (click)="goToPage(totalPages)"
+                [title]="currentLang === 'es' ? 'Última página' : 'Last page'">
+                <ion-icon name="play-forward-outline"></ion-icon>
+              </button>
+            </div>
+
+            <div class="pagination-summary">
+              <span>{{ currentLang === 'es' ? 'Página' : 'Page' }} <strong>{{ currentPage }}</strong> {{ currentLang === 'es' ? 'de' : 'of' }} <strong>{{ totalPages }}</strong></span>
+            </div>
           </div>
 
           <!-- Empty State por filtros de búsqueda -->

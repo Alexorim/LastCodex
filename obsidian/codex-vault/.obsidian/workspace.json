@@ -1,0 +1,229 @@
+{
+  "main": {
+    "id": "07afce616617518b",
+    "type": "split",
+    "children": [
+      {
+        "id": "4850c21e8b243c30",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "49ccbce848ccd837",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "00 - Nodo Central (MOC) - LastCodex.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "00 - Nodo Central (MOC) - LastCodex"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "3765a50539e87bfd",
+    "type": "split",
+    "children": [
+      {
+        "id": "b957bb757edbc249",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1784754082cac28f",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Explorador de archivos"
+            }
+          },
+          {
+            "id": "84dac2576e47ebba",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Buscar"
+            }
+          },
+          {
+            "id": "5dcfa43509b1a603",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-bookmark",
+              "title": "Marcadores"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "4eeaa040ad85752f",
+    "type": "split",
+    "children": [
+      {
+        "id": "fe8e88c3798c01aa",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "8cea0828dc949b64",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "00 - Nodo Central (MOC) - LastCodex.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Enlaces entrantes"
+            }
+          },
+          {
+            "id": "e4a04447e51ba115",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "00 - Nodo Central (MOC) - LastCodex.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Enlaces salientes"
+            }
+          },
+          {
+            "id": "3b3c1bdff7877f7f",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Etiquetas"
+            }
+          },
+          {
+            "id": "3c152b3dee2ae051",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "Todas las propiedades"
+            }
+          },
+          {
+            "id": "09e00a8a71829109",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "00 - Nodo Central (MOC) - LastCodex.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Esquema"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Abrir selector rápido": false,
+      "graph:Abrir vista gráfica": false,
+      "canvas:Crear nuevo lienzo": false,
+      "daily-notes:Abrir la nota de hoy": false,
+      "templates:Insertar plantilla": false,
+      "command-palette:Abrir paleta de comandos": false,
+      "bases:Crear nueva base": false
+    }
+  },
+  "active": "1784754082cac28f",
+  "lastOpenFiles": [
+    "01 - General/04 - Stack Tecnológico.md",
+    "00 - Nodo Central (MOC) - LastCodex.md",
+    "09 - Actualizaciones/00 - Registro de Actualizaciones (Changelog Maestro).md",
+    "09 - Actualizaciones/v1.3.0 - Renacimiento LastCodex, Subcategorías y APK Versionada.md",
+    "08 - Utilidades/Iconos y Sprites.md",
+    "08 - Utilidades/Traducciones y Mapeo de Nombres.md",
+    "08 - Utilidades/Forecast Canvas.md",
+    "09 - Actualizaciones/v1.0.0 - Lanzamiento Inicial Orna Guild Forecast y Multiplataforma.md",
+    "09 - Actualizaciones/Plantilla de Nueva Versión.md",
+    "06 - Plataformas/Plataforma Android y Capacitor.md",
+    "09 - Actualizaciones/v1.1.0 - Clases, Eventos, Canvas Offline y Soporte Android.md",
+    "09 - Actualizaciones/v1.2.0 - Códice Masivo Offline (5065 ítems) y Sincronización.md",
+    "09 - Actualizaciones",
+    "04 - Paginas/CodexPage - Explorador del Códice.md",
+    "04 - Paginas/CodexClassesPage - Clases y Habilidades.md",
+    "08 - Utilidades",
+    "07 - Scripts/Script Scraper del Codex.md",
+    "07 - Scripts/Script Generador de Íconos.md",
+    "07 - Scripts/Script Build APK.md",
+    "07 - Scripts",
+    "06 - Plataformas/Plataforma Web y PWA.md",
+    "06 - Plataformas/Plataforma Desktop y Electron.md",
+    "06 - Plataformas",
+    "05 - Modelos/Modelo Event.md",
+    "05 - Modelos/Modelo DayForecast y GuildStock.md",
+    "05 - Modelos/Modelo CodexEntry.md",
+    "05 - Modelos",
+    "04 - Paginas/SettingsPage - Configuración.md",
+    "04 - Paginas/EventsPage - Eventos en Vivo.md",
+    "04 - Paginas/SearchPage - Buscador de Materiales.md",
+    "04 - Paginas/CalendarPage - Calendario de Materiales.md",
+    "04 - Paginas",
+    "03 - Servicios",
+    "02 - Modulos",
+    "01 - General"
+  ]
+}

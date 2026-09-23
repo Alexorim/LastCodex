@@ -36,7 +36,12 @@ import {
   bagCheckOutline,
   constructOutline,
   ribbonOutline,
-  layersOutline
+  layersOutline,
+  gridOutline,
+  listOutline,
+  chevronBackOutline,
+  playBackOutline,
+  playForwardOutline
 } from 'ionicons/icons';
 import { SettingsService, Language } from '../../services/settings.service';
 import { CodexService, CodexEntry, CodexSubItem, SyncProgress, UpdateCheckResult } from '../../services/codex.service';
@@ -75,7 +80,9 @@ export class CodexPage implements OnInit, OnDestroy {
   selectedSubcategory = 'all';
   selectedTier: number | null = null;
   selectedEntry: CodexEntry | null = null;
-  displayLimit = 60;
+  viewMode: 'list' | 'grid' = 'list';
+  currentPage = 1;
+  pageSize = 60;
 
   bannerDismissed = false;
 
@@ -207,7 +214,12 @@ export class CodexPage implements OnInit, OnDestroy {
       bagCheckOutline,
       constructOutline,
       ribbonOutline,
-      layersOutline
+      layersOutline,
+      gridOutline,
+      listOutline,
+      chevronBackOutline,
+      playBackOutline,
+      playForwardOutline
     });
   }
 
@@ -236,6 +248,11 @@ export class CodexPage implements OnInit, OnDestroy {
         this.updateStatus = status;
       })
     );
+
+    const savedViewMode = localStorage.getItem('codex_view_mode');
+    if (savedViewMode === 'grid' || savedViewMode === 'list') {
+      this.viewMode = savedViewMode;
+    }
   }
 
   ngOnDestroy() {
@@ -316,22 +333,80 @@ export class CodexPage implements OnInit, OnDestroy {
     });
   }
 
+  get totalPages(): number {
+    return Math.ceil(this.filteredEntries.length / this.pageSize) || 1;
+  }
+
   get displayedEntries(): CodexEntry[] {
-    return this.filteredEntries.slice(0, this.displayLimit);
+    const total = this.totalPages;
+    if (this.currentPage > total) {
+      this.currentPage = total;
+    }
+    if (this.currentPage < 1) {
+      this.currentPage = 1;
+    }
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    return this.filteredEntries.slice(startIndex, startIndex + this.pageSize);
+  }
+
+  getPageNumbers(): (number | string)[] {
+    const total = this.totalPages;
+    const current = this.currentPage;
+
+    if (total <= 7) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    const pages: (number | string)[] = [];
+
+    if (current <= 4) {
+      pages.push(1, 2, 3, 4, 5, '...', total);
+    } else if (current >= total - 3) {
+      pages.push(1, '...', total - 4, total - 3, total - 2, total - 1, total);
+    } else {
+      pages.push(1, '...', current - 1, current, current + 1, '...', total);
+    }
+
+    return pages;
+  }
+
+  goToPage(page: number | string): void {
+    if (typeof page !== 'number') return;
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+    this.scrollToTop();
+  }
+
+  scrollToTop(): void {
+    const content = document.querySelector('ion-content.codex-content') as any;
+    if (content && typeof content.scrollToTop === 'function') {
+      content.scrollToTop(250);
+    }
+  }
+
+  toggleViewMode(): void {
+    this.viewMode = this.viewMode === 'list' ? 'grid' : 'list';
+    localStorage.setItem('codex_view_mode', this.viewMode);
+  }
+
+  onSearchChange(): void {
+    this.currentPage = 1;
   }
 
   selectCategory(catId: string): void {
     this.selectedCategory = catId;
     this.selectedSubcategory = 'all';
-    this.displayLimit = 60;
+    this.currentPage = 1;
     if (catId === 'items') {
       this.updateSubcatCounts();
     }
+    this.scrollToTop();
   }
 
   setSubcategory(subcatId: string): void {
     this.selectedSubcategory = subcatId;
-    this.displayLimit = 60;
+    this.currentPage = 1;
+    this.scrollToTop();
   }
 
   openClassesTree(event: MouseEvent): void {
@@ -342,18 +417,16 @@ export class CodexPage implements OnInit, OnDestroy {
   onTierChange(event: Event): void {
     const val = (event.target as HTMLSelectElement).value;
     this.selectedTier = val ? Number(val) : null;
-    this.displayLimit = 60;
+    this.currentPage = 1;
     this.updateSubcatCounts();
+    this.scrollToTop();
   }
 
   onSubcategoryChange(event: Event): void {
     const val = (event.target as HTMLSelectElement).value;
     this.selectedSubcategory = val || 'all';
-    this.displayLimit = 60;
-  }
-
-  loadMore(): void {
-    this.displayLimit += 60;
+    this.currentPage = 1;
+    this.scrollToTop();
   }
 
   openEntry(entry: CodexEntry): void {

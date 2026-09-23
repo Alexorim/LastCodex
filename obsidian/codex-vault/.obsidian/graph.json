@@ -1,0 +1,86 @@
+{
+  "collapse-filter": false,
+  "search": "",
+  "showTags": true,
+  "showAttachments": false,
+  "hideUnresolved": false,
+  "showOrphans": true,
+  "collapse-color-groups": false,
+  "colorGroups": [
+    {
+      "query": "tag:#hub",
+      "color": {
+        "a": 1,
+        "rgb": 16098059
+      }
+    },
+    {
+      "query": "tag:#actualizacion",
+      "color": {
+        "a": 1,
+        "rgb": 14752834
+      }
+    },
+    {
+      "query": "tag:#modulo",
+      "color": {
+        "a": 1,
+        "rgb": 440316
+      }
+    },
+    {
+      "query": "tag:#servicio",
+      "color": {
+        "a": 1,
+        "rgb": 11032055
+      }
+    },
+    {
+      "query": "tag:#pagina",
+      "color": {
+        "a": 1,
+        "rgb": 1096065
+      }
+    },
+    {
+      "query": "tag:#modelo",
+      "color": {
+        "a": 1,
+        "rgb": 16348006
+      }
+    },
+    {
+      "query": "tag:#plataforma",
+      "color": {
+        "a": 1,
+        "rgb": 3900150
+      }
+    },
+    {
+      "query": "tag:#script",
+      "color": {
+        "a": 1,
+        "rgb": 15680580
+      }
+    },
+    {
+      "query": "tag:#utilidad",
+      "color": {
+        "a": 1,
+        "rgb": 15485081
+      }
+    }
+  ],
+  "collapse-display": false,
+  "showArrow": true,
+  "textFadeMultiplier": 0,
+  "nodeSizeMultiplier": 1.25,
+  "lineSizeMultiplier": 1.2,
+  "collapse-forces": false,
+  "centerStrength": 0.52,
+  "repelStrength": 12,
+  "linkStrength": 1,
+  "linkDistance": 180,
+  "scale": 0.3628873693012107,
+  "close": true
+}
