@@ -103,6 +103,19 @@
         <span class="info-val">{{ lastSyncFormatted || (currentLang === 'es' ? 'Versión oficial integrada' : 'Official bundled version') }}</span>
       </div>
 
+      <!-- Additional content available banner -->
+      <div class="sync-feedback update-available" *ngIf="updateStatus?.hasUpdate && !syncProgress.running">
+        <ion-icon name="sparkles"></ion-icon>
+        <div class="update-text">
+          <strong>{{ currentLang === 'es' ? '¡Hay contenido adicional!' : 'Additional content available!' }}</strong>
+          <span>
+            {{ currentLang === 'es'
+              ? ('PlayOrna tiene ' + updateStatus.newCount + ' nuevas entradas registradas (' + updateStatus.liveCount + ' en total).')
+              : ('PlayOrna has ' + updateStatus.newCount + ' new entries recorded (' + updateStatus.liveCount + ' total).') }}
+          </span>
+        </div>
+      </div>
+
       <!-- Sync Progress Indicator -->
       <div class="sync-progress-box" *ngIf="syncProgress.running">
         <div class="progress-bar-wrap">
@@ -135,6 +148,18 @@
           <span>{{ syncProgress.running
             ? (currentLang === 'es' ? 'Sincronizando...' : 'Syncing...')
             : (currentLang === 'es' ? 'Sincronizar con PlayOrna Codex' : 'Sync with PlayOrna Codex') }}</span>
+        </button>
+
+        <button
+          type="button"
+          class="sync-btn check"
+          [disabled]="syncProgress.running || checkingUpdates"
+          (click)="checkUpdates()"
+          title="Comprobar si PlayOrna ha añadido nuevo contenido">
+          <ion-icon name="refresh-outline" [class.spinning]="checkingUpdates"></ion-icon>
+          <span>{{ checkingUpdates
+            ? (currentLang === 'es' ? 'Comprobando...' : 'Checking...')
+            : (currentLang === 'es' ? 'Buscar novedades' : 'Check updates') }}</span>
         </button>
 
         <button

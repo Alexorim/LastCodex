@@ -27,6 +27,17 @@ export interface SyncProgress {
   percent: number;
   currentCategory: string;
   statusText: string;
+  completedTasks?: number;
+  totalTasks?: number;
+  error?: string;
+}
+
+export interface UpdateCheckResult {
+  hasUpdate: boolean;
+  liveCount: number;
+  currentCount: number;
+  newCount: number;
+  lastChecked: string;
   error?: string;
 }
 
@@ -69,8 +80,16 @@ export class CodexService {
   });
   public syncProgress$: Observable<SyncProgress> = this.syncProgressSubject.asObservable();
 
+  private updateStatusSubject = new BehaviorSubject<UpdateCheckResult | null>(null);
+  public updateStatus$: Observable<UpdateCheckResult | null> = this.updateStatusSubject.asObservable();
+
   constructor() {
-    this.initDatabase();
+    this.initDatabase().then(() => {
+      // Check for live updates in background after startup
+      setTimeout(() => {
+        this.checkForUpdates().catch(() => {});
+      }, 2500);
+    });
   }
 
   get currentEntries(): CodexEntry[] {
@@ -83,6 +102,10 @@ export class CodexService {
 
   get isCustomData(): boolean {
     return this.isCustomDataSubject.value;
+  }
+
+  get currentUpdateStatus(): UpdateCheckResult | null {
+    return this.updateStatusSubject.value;
   }
 
   /**
@@ -113,8 +136,66 @@ export class CodexService {
   }
 
   /**
+   * Checks if PlayOrna has additional/new entries compared to the local database.
+   * Runs in ~1 second by querying page 1 of each category.
+   */
+  async checkForUpdates(): Promise<UpdateCheckResult> {
+    const currentCount = this.entriesSubject.value.length;
+    const nowIso = new Date().toISOString();
+
+    try {
+      const promises = CATEGORIES.map(async (cat) => {
+        const page1 = await this.fetchCodexPage(cat, 1, 'es', 4000);
+        return page1 && typeof page1.count === 'number' ? page1.count : 0;
+      });
+
+      const counts = await Promise.all(promises);
+      const liveTotal = counts.reduce((acc, c) => acc + c, 0);
+
+      if (liveTotal === 0) {
+        // Network unavailable or empty response
+        const fallbackResult: UpdateCheckResult = {
+          hasUpdate: false,
+          liveCount: currentCount,
+          currentCount,
+          newCount: 0,
+          lastChecked: nowIso,
+          error: 'No se pudo contactar con PlayOrna Codex (posiblemente offline)'
+        };
+        this.updateStatusSubject.next(fallbackResult);
+        return fallbackResult;
+      }
+
+      const hasUpdate = liveTotal > currentCount;
+      const newCount = hasUpdate ? liveTotal - currentCount : 0;
+
+      const result: UpdateCheckResult = {
+        hasUpdate,
+        liveCount: liveTotal,
+        currentCount,
+        newCount,
+        lastChecked: nowIso
+      };
+
+      this.updateStatusSubject.next(result);
+      return result;
+    } catch (err: any) {
+      const errorResult: UpdateCheckResult = {
+        hasUpdate: false,
+        liveCount: currentCount,
+        currentCount,
+        newCount: 0,
+        lastChecked: nowIso,
+        error: err.message
+      };
+      this.updateStatusSubject.next(errorResult);
+      return errorResult;
+    }
+  }
+
+  /**
    * Performs live synchronization with PlayOrna Codex.
-   * Can be triggered by the user in Settings.
+   * Concurrently processes pages and provides smooth, per-page progress updates.
    */
   async syncFromPlayOrna(): Promise<{ success: boolean; count: number; error?: string }> {
     if (this.syncProgressSubject.value.running) {
@@ -123,62 +204,98 @@ export class CodexService {
 
     this.syncProgressSubject.next({
       running: true,
-      percent: 5,
+      percent: 2,
       currentCategory: 'Iniciando',
       statusText: 'Conectando con PlayOrna Codex...'
     });
 
     try {
+      // 1. Fetch category metadata (page 1) to determine exact page counts
+      const categoryMetadata: { [cat: string]: number } = {};
+      const page1Tasks = CATEGORIES.map(async (cat) => {
+        const p1 = await this.fetchCodexPage(cat, 1, 'es', 6000);
+        return { cat, pages: p1 && p1.pages ? p1.pages : 1, p1Data: p1 };
+      });
+
+      const page1Results = await Promise.all(page1Tasks);
+
       const esEntriesMap = new Map<string, any>();
       const enEntriesMap = new Map<string, any>();
 
-      const totalCats = CATEGORIES.length;
+      // Build task queue for all remaining pages in ES and EN
+      interface PageTask {
+        cat: string;
+        page: number;
+        lang: 'es' | 'en';
+        totalPages: number;
+      }
 
-      for (let i = 0; i < totalCats; i++) {
-        const cat = CATEGORIES[i];
-        const basePercent = Math.round(5 + (i / totalCats) * 85);
+      const taskQueue: PageTask[] = [];
 
-        this.syncProgressSubject.next({
-          running: true,
-          percent: basePercent,
-          currentCategory: cat,
-          statusText: `Descargando categoría ${cat}...`
-        });
-
-        // 1. Fetch first page to get count & pages
-        const firstEs = await this.fetchCodexPage(cat, 1, 'es');
-        if (!firstEs || !firstEs.results) {
-          throw new Error(`No se pudo obtener datos para la categoría ${cat}`);
+      for (const res of page1Results) {
+        categoryMetadata[res.cat] = res.pages;
+        if (res.p1Data && res.p1Data.results) {
+          this.collectResults(esEntriesMap, res.cat, res.p1Data.results);
         }
 
-        const totalPages = firstEs.pages || 1;
-        this.collectResults(esEntriesMap, cat, firstEs.results);
-
-        // Fetch remaining ES pages
-        for (let p = 2; p <= totalPages; p++) {
-          const pageData = await this.fetchCodexPage(cat, p, 'es');
-          if (pageData && pageData.results) {
-            this.collectResults(esEntriesMap, cat, pageData.results);
-          }
+        // ES pages 2..pages
+        for (let p = 2; p <= res.pages; p++) {
+          taskQueue.push({ cat: res.cat, page: p, lang: 'es', totalPages: res.pages });
         }
 
-        // Fetch EN pages
-        for (let p = 1; p <= totalPages; p++) {
-          const pageData = await this.fetchCodexPage(cat, p, 'en');
-          if (pageData && pageData.results) {
-            this.collectResults(enEntriesMap, cat, pageData.results);
-          }
+        // EN pages 1..pages
+        for (let p = 1; p <= res.pages; p++) {
+          taskQueue.push({ cat: res.cat, page: p, lang: 'en', totalPages: res.pages });
         }
       }
 
+      const totalTasks = taskQueue.length;
+      let completedTasks = 0;
+
+      // 2. Worker pool with 4 concurrent connections
+      const CONCURRENCY = 4;
+      let taskIndex = 0;
+
+      const worker = async () => {
+        while (taskIndex < taskQueue.length) {
+          const currentTask = taskQueue[taskIndex++];
+          try {
+            const pageData = await this.fetchCodexPage(currentTask.cat, currentTask.page, currentTask.lang, 8000);
+            if (pageData && pageData.results) {
+              if (currentTask.lang === 'es') {
+                this.collectResults(esEntriesMap, currentTask.cat, pageData.results);
+              } else {
+                this.collectResults(enEntriesMap, currentTask.cat, pageData.results);
+              }
+            }
+          } catch (e) {
+            console.warn(`Error on page ${currentTask.cat} p=${currentTask.page} (${currentTask.lang}):`, e);
+          }
+
+          completedTasks++;
+          const progressPercent = Math.min(94, Math.round(5 + (completedTasks / totalTasks) * 89));
+
+          this.syncProgressSubject.next({
+            running: true,
+            percent: progressPercent,
+            currentCategory: currentTask.cat,
+            completedTasks,
+            totalTasks,
+            statusText: `Descargando ${currentTask.cat} (${currentTask.lang.toUpperCase()}) — pág. ${currentTask.page}/${currentTask.totalPages} [${completedTasks}/${totalTasks}]`
+          });
+        }
+      };
+
+      await Promise.all(Array.from({ length: CONCURRENCY }, () => worker()));
+
+      // 3. Compile and merge ES and EN datasets
       this.syncProgressSubject.next({
         running: true,
-        percent: 92,
+        percent: 96,
         currentCategory: 'Procesando',
-        statusText: 'Compilando y optimizando base de datos...'
+        statusText: 'Compilando y optimizando base de datos enriquecida...'
       });
 
-      // Merge ES and EN
       const finalEntries: CodexEntry[] = [];
       const allKeys = new Set([...esEntriesMap.keys(), ...enEntriesMap.keys()]);
 
@@ -223,6 +340,10 @@ export class CodexService {
         });
       }
 
+      if (finalEntries.length === 0) {
+        throw new Error('No se pudieron compilar las entradas del Códice.');
+      }
+
       finalEntries.sort((a, b) => {
         if (a.category !== b.category) return a.category.localeCompare(b.category);
         if (a.tier !== b.tier) return a.tier - b.tier;
@@ -236,16 +357,50 @@ export class CodexService {
       this.lastSyncSubject.next(now);
       this.isCustomDataSubject.next(true);
 
+      this.updateStatusSubject.next({
+        hasUpdate: false,
+        liveCount: finalEntries.length,
+        currentCount: finalEntries.length,
+        newCount: 0,
+        lastChecked: now
+      });
+
       this.syncProgressSubject.next({
         running: false,
         percent: 100,
         currentCategory: '',
-        statusText: `¡Sincronización completada! ${finalEntries.length} entradas actualizadas.`
+        statusText: `¡Sincronización completada! ${finalEntries.length.toLocaleString()} entradas actualizadas.`
       });
 
       return { success: true, count: finalEntries.length };
     } catch (err: any) {
       console.error('Error during codex synchronization:', err);
+
+      // Graceful fallback: Try to load from /assets/data/codex-items.json if available
+      try {
+        const fallbackResp = await fetch('assets/data/codex-items.json');
+        if (fallbackResp.ok) {
+          const fallbackData = await fallbackResp.json();
+          if (Array.isArray(fallbackData) && fallbackData.length > 0) {
+            const now = new Date().toISOString();
+            await this.saveToIndexedDB(fallbackData, now);
+            this.entriesSubject.next(fallbackData);
+            this.lastSyncSubject.next(now);
+            this.isCustomDataSubject.next(true);
+
+            this.syncProgressSubject.next({
+              running: false,
+              percent: 100,
+              currentCategory: '',
+              statusText: `¡Códice actualizado desde paquete local! ${fallbackData.length.toLocaleString()} entradas cargadas.`
+            });
+            return { success: true, count: fallbackData.length };
+          }
+        }
+      } catch {
+        // Fallback failed
+      }
+
       this.syncProgressSubject.next({
         running: false,
         percent: 0,
@@ -276,25 +431,36 @@ export class CodexService {
     }
   }
 
-  private async fetchCodexPage(category: string, page: number, lang: string): Promise<any> {
+  private async fetchCodexPage(category: string, page: number, lang: string, timeoutMs = 8000): Promise<any> {
     const url = `https://playorna.com/codex/${category}/?p=${page}&lang=${lang}`;
-    const resp = await fetch(url, {
-      headers: {
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+    try {
+      const resp = await fetch(url, {
+        signal: controller.signal,
+        headers: {
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+        }
+      });
+      clearTimeout(timeoutId);
+
+      if (!resp.ok) {
+        throw new Error(`HTTP ${resp.status} al consultar ${category}`);
       }
-    });
-    if (!resp.ok) {
-      throw new Error(`HTTP ${resp.status} al consultar ${category}`);
+      const html = await resp.text();
+      const startTag = '<script id="codex-bootstrap" type="application/json">';
+      const idx = html.indexOf(startTag);
+      if (idx === -1) {
+        throw new Error(`Respuesta no válida para ${category}`);
+      }
+      const jsonEnd = html.indexOf('</script>', idx);
+      const jsonStr = html.slice(idx + startTag.length, jsonEnd);
+      return JSON.parse(jsonStr);
+    } catch (e) {
+      clearTimeout(timeoutId);
+      throw e;
     }
-    const html = await resp.text();
-    const startTag = '<script id="codex-bootstrap" type="application/json">';
-    const idx = html.indexOf(startTag);
-    if (idx === -1) {
-      throw new Error(`Respuesta no válida para ${category}`);
-    }
-    const jsonEnd = html.indexOf('</script>', idx);
-    const jsonStr = html.slice(idx + startTag.length, jsonEnd);
-    return JSON.parse(jsonStr);
   }
 
   // --- IndexedDB Storage Helper ---

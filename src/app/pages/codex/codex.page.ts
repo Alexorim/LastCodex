@@ -11,6 +11,7 @@ import {
   filterOutline,
   openOutline,
   sparklesOutline,
+  sparkles,
   shieldOutline,
   skullOutline,
   pawOutline,
@@ -21,10 +22,13 @@ import {
   chevronForwardOutline,
   chevronDownOutline,
   closeCircleOutline,
-  informationCircleOutline
+  informationCircleOutline,
+  syncOutline,
+  cloudDownloadOutline,
+  alertCircleOutline
 } from 'ionicons/icons';
 import { SettingsService, Language } from '../../services/settings.service';
-import { CodexService, CodexEntry } from '../../services/codex.service';
+import { CodexService, CodexEntry, SyncProgress, UpdateCheckResult } from '../../services/codex.service';
 import { Subscription } from 'rxjs';
 
 export interface CodexCategory {
@@ -49,16 +53,25 @@ export class CodexPage implements OnInit, OnDestroy {
   private codexService = inject(CodexService);
   private router = inject(Router);
 
-  private langSub: Subscription | null = null;
-  private codexSub: Subscription | null = null;
+  private subs = new Subscription();
   currentLang: Language = 'es';
 
   searchQuery = '';
   selectedCategory = 'all';
-  selectedSubcategory: string | null = null;
   selectedTier: number | null = null;
   selectedEntry: CodexEntry | null = null;
   displayLimit = 60;
+
+  bannerDismissed = false;
+
+  syncProgress: SyncProgress = {
+    running: false,
+    percent: 0,
+    currentCategory: '',
+    statusText: ''
+  };
+
+  updateStatus: UpdateCheckResult | null = null;
 
   categories: CodexCategory[] = [
     {
@@ -154,6 +167,7 @@ export class CodexPage implements OnInit, OnDestroy {
       filterOutline,
       openOutline,
       sparklesOutline,
+      sparkles,
       shieldOutline,
       skullOutline,
       pawOutline,
@@ -164,23 +178,41 @@ export class CodexPage implements OnInit, OnDestroy {
       chevronForwardOutline,
       chevronDownOutline,
       closeCircleOutline,
-      informationCircleOutline
+      informationCircleOutline,
+      syncOutline,
+      cloudDownloadOutline,
+      alertCircleOutline
     });
   }
 
   ngOnInit() {
-    this.langSub = this.settingsService.lang$.subscribe(lang => {
-      this.currentLang = lang;
-    });
+    this.subs.add(
+      this.settingsService.lang$.subscribe(lang => {
+        this.currentLang = lang;
+      })
+    );
 
-    this.codexSub = this.codexService.entries$.subscribe(entries => {
-      this.codexDatabase = entries;
-    });
+    this.subs.add(
+      this.codexService.entries$.subscribe(entries => {
+        this.codexDatabase = entries;
+      })
+    );
+
+    this.subs.add(
+      this.codexService.syncProgress$.subscribe(prog => {
+        this.syncProgress = prog;
+      })
+    );
+
+    this.subs.add(
+      this.codexService.updateStatus$.subscribe(status => {
+        this.updateStatus = status;
+      })
+    );
   }
 
   ngOnDestroy() {
-    this.langSub?.unsubscribe();
-    this.codexSub?.unsubscribe();
+    this.subs.unsubscribe();
   }
 
   get filteredEntries(): CodexEntry[] {
@@ -213,7 +245,6 @@ export class CodexPage implements OnInit, OnDestroy {
 
   selectCategory(catId: string): void {
     this.selectedCategory = catId;
-    this.selectedSubcategory = null;
     this.displayLimit = 60;
   }
 
@@ -258,5 +289,13 @@ export class CodexPage implements OnInit, OnDestroy {
     if (this.currentLang === 'es' && entry.descriptionEs) return entry.descriptionEs;
     if (this.currentLang === 'en' && entry.descriptionEn) return entry.descriptionEn;
     return entry.description || '';
+  }
+
+  async syncCodex(): Promise<void> {
+    await this.codexService.syncFromPlayOrna();
+  }
+
+  dismissBanner(): void {
+    this.bannerDismissed = true;
   }
 }

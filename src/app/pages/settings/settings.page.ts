@@ -16,12 +16,13 @@ import {
   trashOutline,
   checkmarkCircleOutline,
   alertCircleOutline,
-  fileTrayFullOutline
+  fileTrayFullOutline,
+  sparkles
 } from 'ionicons/icons';
 import { Router } from '@angular/router';
 import { SettingsService, Language, ThemeMode } from '../../services/settings.service';
 import { TimerService } from '../../services/timer.service';
-import { CodexService, SyncProgress } from '../../services/codex.service';
+import { CodexService, SyncProgress, UpdateCheckResult } from '../../services/codex.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -48,12 +49,15 @@ export class SettingsPage implements OnInit, OnDestroy {
   totalCodexEntries = 0;
   lastSyncFormatted: string | null = null;
   isCustomData = false;
+  checkingUpdates = false;
+
   syncProgress: SyncProgress = {
     running: false,
     percent: 0,
     currentCategory: '',
     statusText: ''
   };
+  updateStatus: UpdateCheckResult | null = null;
   syncSuccessMessage: string | null = null;
   syncErrorMessage: string | null = null;
 
@@ -71,7 +75,8 @@ export class SettingsPage implements OnInit, OnDestroy {
       trashOutline,
       checkmarkCircleOutline,
       alertCircleOutline,
-      fileTrayFullOutline
+      fileTrayFullOutline,
+      sparkles
     });
   }
 
@@ -136,6 +141,12 @@ export class SettingsPage implements OnInit, OnDestroy {
         }
       })
     );
+
+    this.subs.add(
+      this.codexService.updateStatus$.subscribe(status => {
+        this.updateStatus = status;
+      })
+    );
   }
 
   ngOnDestroy() {
@@ -154,6 +165,22 @@ export class SettingsPage implements OnInit, OnDestroy {
   onThemeChange(theme: ThemeMode) {
     this.currentTheme = theme;
     this.settingsService.setTheme(theme);
+  }
+
+  async checkUpdates(): Promise<void> {
+    this.checkingUpdates = true;
+    this.syncSuccessMessage = null;
+    this.syncErrorMessage = null;
+    try {
+      const res = await this.codexService.checkForUpdates();
+      if (!res.hasUpdate && !res.error) {
+        this.syncSuccessMessage = this.currentLang === 'es'
+          ? `Tu Códice está al día (${res.currentCount.toLocaleString()} entradas). No hay contenido adicional pendiente.`
+          : `Your Codex is up to date (${res.currentCount.toLocaleString()} entries). No new content pending.`;
+      }
+    } finally {
+      this.checkingUpdates = false;
+    }
   }
 
   async syncCodex(): Promise<void> {
