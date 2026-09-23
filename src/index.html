@@ -26,6 +26,14 @@
         _w.apply(console, arguments);
       };
     })();
+
+    if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').catch(function (err) {
+          console.log('SW registration error:', err);
+        });
+      });
+    }
   </script>
 
   <!-- LastCodex Official Logo and Favicon -->

@@ -5,12 +5,7 @@ const config: CapacitorConfig = {
   appName: 'LastResources',
   webDir: 'www',
   server: {
-    androidScheme: 'https',
-    url: 'https://lastresources.vercel.app',
-    allowNavigation: [
-      'lastresources.vercel.app',
-      '*.vercel.app'
-    ]
+    androidScheme: 'https'
   },
   plugins: {
     StatusBar: {

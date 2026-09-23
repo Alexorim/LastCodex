@@ -38,7 +38,8 @@
               { "glob": "**/*.png", "input": "resources/bosses", "output": "assets/codex/bosses" },
               { "glob": "**/*.png", "input": "resources/monsters", "output": "assets/codex/monsters" },
               { "glob": "**/*.png", "input": "resources/buildings", "output": "assets/codex/buildings" },
-              { "glob": "**/*.png", "input": "resources/dungeons", "output": "assets/codex/dungeons" }
+              { "glob": "**/*.png", "input": "resources/dungeons", "output": "assets/codex/dungeons" },
+              { "glob": "sw.js", "input": "src", "output": "./" }
             ],
             "styles": ["src/global.scss", "src/theme/variables.scss"],
             "scripts": []
