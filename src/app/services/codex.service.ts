@@ -67,7 +67,7 @@ export interface UpdateCheckResult {
 }
 
 const DB_NAME = 'lastcodex_offline_db';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const STORE_NAME = 'codex_store';
 const KEY_ENTRIES = 'entries';
 const KEY_METADATA = 'metadata';
@@ -134,18 +134,36 @@ export class CodexService {
   }
 
   /**
-   * Initializes data: Loads from IndexedDB if synced, otherwise loads bundled codex-items.json
+   * Initializes data: Loads from IndexedDB if synced with enriched data,
+   * otherwise auto-migrates old un-enriched caches to the bundled enriched dataset with local sprites.
    */
   private async initDatabase(): Promise<void> {
+    const bundled = (defaultCodexData as unknown as CodexEntry[]) || [];
+
     try {
       const timeoutPromise = new Promise<{ entries: CodexEntry[]; lastSync: string } | null>((resolve) =>
         setTimeout(() => resolve(null), 1000)
       );
       const cached = await Promise.race([this.getFromIndexedDB(), timeoutPromise]);
+
       if (cached && cached.entries && cached.entries.length > 0) {
-        this.entriesSubject.next(cached.entries);
-        this.lastSyncSubject.next(cached.lastSync || null);
-        this.isCustomDataSubject.next(true);
+        // Verify that cached entries contain enriched itemStats and local sprites
+        const hasEnrichedStats = cached.entries.some((e) => e.itemStats && Object.keys(e.itemStats).length > 0);
+        const hasLocalSprites = cached.entries.some((e) => e.icon && e.icon.startsWith('assets/codex/'));
+
+        if (hasEnrichedStats && hasLocalSprites) {
+          this.entriesSubject.next(cached.entries);
+          this.lastSyncSubject.next(cached.lastSync || null);
+          this.isCustomDataSubject.next(true);
+          return;
+        }
+
+        // Old cache was missing enriched stats or local sprites; auto-migrate!
+        console.log('Migrating legacy cache to enriched dataset with local sprites...');
+        await this.saveToIndexedDB(bundled, new Date().toISOString());
+        this.entriesSubject.next(bundled);
+        this.lastSyncSubject.next(null);
+        this.isCustomDataSubject.next(false);
         return;
       }
     } catch (e) {

@@ -25,13 +25,19 @@ import {
   cloudDownloadOutline,
   closeOutline,
   bookOutline,
-  cloudOfflineOutline
+  cloudOfflineOutline,
+  skullOutline,
+  hammerOutline
 } from 'ionicons/icons';
 import { Capacitor } from '@capacitor/core';
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Share } from '@capacitor/share';
 import { toPng } from 'html-to-image';
 import { MaterialsService } from '../../services/materials.service';
 import { TimerService } from '../../services/timer.service';
 import { SettingsService, Language } from '../../services/settings.service';
+import { CodexService, CodexEntry } from '../../services/codex.service';
+import { BackButtonService } from '../../services/back-button.service';
 import { DayForecast } from '../../models/material.model';
 import { getMaterialIcon } from '../../utils/material-icon.util';
 import { getGuildIcon } from '../../utils/guild-icon.util';
@@ -49,6 +55,8 @@ export class HomePage implements OnInit, OnDestroy {
   private materialsService = inject(MaterialsService);
   private timerService = inject(TimerService);
   private settingsService = inject(SettingsService);
+  private codexService = inject(CodexService);
+  private backButtonService = inject(BackButtonService);
   private router = inject(Router);
 
   @ViewChild('exportTargetSingle') exportTargetSingle!: ElementRef<HTMLElement>;
@@ -57,6 +65,8 @@ export class HomePage implements OnInit, OnDestroy {
   private todaySub: Subscription | null = null;
   private tomorrowSub: Subscription | null = null;
   private langSub: Subscription | null = null;
+  private unregisterExportOverlay: (() => void) | null = null;
+  private unregisterMaterialOverlay: (() => void) | null = null;
 
   todayForecast: DayForecast | null = null;
   tomorrowForecast: DayForecast | null = null;
@@ -72,7 +82,8 @@ export class HomePage implements OnInit, OnDestroy {
   isExporting = false;
   exportFeedback: string | null = null;
 
-
+  // Material Detail Modal State
+  selectedMaterial: CodexEntry | null = null;
 
   constructor() {
     addIcons({
@@ -96,7 +107,9 @@ export class HomePage implements OnInit, OnDestroy {
       cloudDownloadOutline,
       closeOutline,
       bookOutline,
-      cloudOfflineOutline
+      cloudOfflineOutline,
+      skullOutline,
+      hammerOutline
     });
   }
 
@@ -145,6 +158,8 @@ export class HomePage implements OnInit, OnDestroy {
     this.todaySub?.unsubscribe();
     this.tomorrowSub?.unsubscribe();
     this.langSub?.unsubscribe();
+    if (this.unregisterExportOverlay) this.unregisterExportOverlay();
+    if (this.unregisterMaterialOverlay) this.unregisterMaterialOverlay();
   }
 
   goToEvents(): void {
@@ -159,11 +174,86 @@ export class HomePage implements OnInit, OnDestroy {
   openExportModal(): void {
     this.showExportModal = true;
     this.exportFeedback = null;
+    if (this.unregisterExportOverlay) this.unregisterExportOverlay();
+    this.unregisterExportOverlay = this.backButtonService.registerOverlay(() => {
+      if (this.showExportModal) {
+        this.closeExportModal();
+        return true;
+      }
+      return false;
+    });
   }
 
   closeExportModal(): void {
     this.showExportModal = false;
     this.exportFeedback = null;
+    if (this.unregisterExportOverlay) {
+      this.unregisterExportOverlay();
+      this.unregisterExportOverlay = null;
+    }
+  }
+
+  // Material Detail Modal Methods
+  openMaterialModal(rawName: string): void {
+    if (!rawName) return;
+    const clean = rawName.replace(/\(.*?\)/g, '').replace(/:.*$/g, '').trim();
+    const translatedEs = translateMaterialName(clean, 'es');
+    const translatedEn = translateMaterialName(clean, 'en');
+
+    const cleanLower = clean.toLowerCase();
+    const esLower = translatedEs.toLowerCase();
+    const enLower = translatedEn.toLowerCase();
+
+    const entries = this.codexService.currentEntries;
+    let found = entries.find(e =>
+      e.name.toLowerCase() === esLower ||
+      e.name.toLowerCase() === enLower ||
+      e.name.toLowerCase() === cleanLower ||
+      (e.nameEs && e.nameEs.toLowerCase() === esLower) ||
+      (e.nameEn && e.nameEn.toLowerCase() === enLower)
+    );
+
+    if (!found) {
+      found = entries.find(e =>
+        e.category === 'items' &&
+        (e.name.toLowerCase().includes(esLower) || (e.nameEn && e.nameEn.toLowerCase().includes(enLower)))
+      );
+    }
+
+    if (found) {
+      this.selectedMaterial = found;
+    } else {
+      this.selectedMaterial = {
+        id: `mat-${clean}`,
+        name: this.currentLang === 'es' ? translatedEs : translatedEn,
+        nameEs: translatedEs,
+        nameEn: translatedEn,
+        category: 'items',
+        tier: 1,
+        icon: this.getMatIcon(clean),
+        type: 'Items',
+        descriptionEs: 'Material de artesanía y mejora utilizado en herrerías y gremios.',
+        descriptionEn: 'Crafting and upgrade material used in blacksmiths and guilds.',
+        droppedBy: []
+      };
+    }
+
+    if (this.unregisterMaterialOverlay) this.unregisterMaterialOverlay();
+    this.unregisterMaterialOverlay = this.backButtonService.registerOverlay(() => {
+      if (this.selectedMaterial) {
+        this.closeMaterialModal();
+        return true;
+      }
+      return false;
+    });
+  }
+
+  closeMaterialModal(): void {
+    this.selectedMaterial = null;
+    if (this.unregisterMaterialOverlay) {
+      this.unregisterMaterialOverlay();
+      this.unregisterMaterialOverlay = null;
+    }
   }
 
   async exportImage(action: 'download' | 'share'): Promise<void> {
@@ -172,8 +262,7 @@ export class HomePage implements OnInit, OnDestroy {
     this.exportFeedback = this.currentLang === 'es' ? 'Generando imagen...' : 'Generating image...';
 
     try {
-      // Small pause to let DOM render
-      await new Promise(r => setTimeout(r, 200));
+      await new Promise(r => setTimeout(r, 250));
 
       const targetEl = this.exportMode === 'single'
         ? this.exportTargetSingle?.nativeElement
@@ -183,15 +272,62 @@ export class HomePage implements OnInit, OnDestroy {
         throw new Error('Element to capture not found');
       }
 
+      // Offline-safe toPng: skipFonts and cacheBust false avoids any offline network attempt
       const dataUrl = await toPng(targetEl, {
         quality: 0.96,
         pixelRatio: 2.2,
         backgroundColor: '#161514',
-        cacheBust: true
+        cacheBust: false,
+        skipFonts: true,
+        fontEmbedCSS: ''
       });
 
       const fileName = `LastResources-Stock-${this.exportMode === 'single' ? 'Hoy' : 'Hoy-y-Manana'}-${new Date().toISOString().slice(0, 10)}.png`;
 
+      // Native Android capacitor export handling
+      if (Capacitor.isNativePlatform()) {
+        try {
+          const base64Data = dataUrl.replace(/^data:image\/png;base64,/, '');
+
+          if (action === 'share') {
+            const saved = await Filesystem.writeFile({
+              path: fileName,
+              data: base64Data,
+              directory: Directory.Cache
+            });
+            await Share.share({
+              title: 'LastResources — Orna Guild Forecast',
+              url: saved.uri,
+              dialogTitle: this.currentLang === 'es' ? 'Compartir Pronóstico' : 'Share Guild Forecast'
+            });
+            this.exportFeedback = this.currentLang === 'es' ? '¡Compartido con éxito!' : 'Shared successfully!';
+            setTimeout(() => this.closeExportModal(), 1800);
+            return;
+          } else {
+            let savedFile;
+            try {
+              savedFile = await Filesystem.writeFile({
+                path: `Download/${fileName}`,
+                data: base64Data,
+                directory: Directory.ExternalStorage
+              });
+            } catch {
+              savedFile = await Filesystem.writeFile({
+                path: fileName,
+                data: base64Data,
+                directory: Directory.Documents
+              });
+            }
+            this.exportFeedback = this.currentLang === 'es' ? '¡Imagen guardada en el dispositivo!' : 'Image saved to device!';
+            setTimeout(() => this.closeExportModal(), 2000);
+            return;
+          }
+        } catch (nativeErr) {
+          console.warn('Native filesystem/share error, falling back to web:', nativeErr);
+        }
+      }
+
+      // Web / fallback handling
       if (action === 'download') {
         const link = document.createElement('a');
         link.download = fileName;
@@ -200,7 +336,6 @@ export class HomePage implements OnInit, OnDestroy {
         this.exportFeedback = this.currentLang === 'es' ? '¡Imagen descargada con éxito!' : 'Image downloaded successfully!';
         setTimeout(() => this.closeExportModal(), 1800);
       } else {
-        // Share via Web Share API or WhatsApp
         const res = await fetch(dataUrl);
         const blob = await res.blob();
         const file = new File([blob], fileName, { type: 'image/png' });
@@ -214,7 +349,6 @@ export class HomePage implements OnInit, OnDestroy {
           this.exportFeedback = this.currentLang === 'es' ? '¡Compartido con éxito!' : 'Shared successfully!';
           setTimeout(() => this.closeExportModal(), 1800);
         } else {
-          // Fallback: download and prompt WhatsApp
           const link = document.createElement('a');
           link.download = fileName;
           link.href = dataUrl;

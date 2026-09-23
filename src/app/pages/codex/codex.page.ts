@@ -40,6 +40,7 @@ import {
 } from 'ionicons/icons';
 import { SettingsService, Language } from '../../services/settings.service';
 import { CodexService, CodexEntry, CodexSubItem, SyncProgress, UpdateCheckResult } from '../../services/codex.service';
+import { BackButtonService } from '../../services/back-button.service';
 import { Subscription } from 'rxjs';
 
 export interface CodexCategory {
@@ -62,9 +63,11 @@ export interface CodexCategory {
 export class CodexPage implements OnInit, OnDestroy {
   private settingsService = inject(SettingsService);
   private codexService = inject(CodexService);
+  private backButtonService = inject(BackButtonService);
   private router = inject(Router);
 
   private subs = new Subscription();
+  private unregisterBackOverlay: (() => void) | null = null;
   currentLang: Language = 'es';
 
   searchQuery = '';
@@ -235,6 +238,10 @@ export class CodexPage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subs.unsubscribe();
+    if (this.unregisterBackOverlay) {
+      this.unregisterBackOverlay();
+      this.unregisterBackOverlay = null;
+    }
   }
 
   get filteredEntries(): CodexEntry[] {
@@ -287,10 +294,24 @@ export class CodexPage implements OnInit, OnDestroy {
 
   openEntry(entry: CodexEntry): void {
     this.selectedEntry = entry;
+    if (this.unregisterBackOverlay) {
+      this.unregisterBackOverlay();
+    }
+    this.unregisterBackOverlay = this.backButtonService.registerOverlay(() => {
+      if (this.selectedEntry) {
+        this.closeEntry();
+        return true;
+      }
+      return false;
+    });
   }
 
   closeEntry(): void {
     this.selectedEntry = null;
+    if (this.unregisterBackOverlay) {
+      this.unregisterBackOverlay();
+      this.unregisterBackOverlay = null;
+    }
   }
 
   goToHome(): void {
@@ -298,7 +319,17 @@ export class CodexPage implements OnInit, OnDestroy {
   }
 
   onImageError(event: any): void {
-    event.target.style.display = 'none';
+    const target = event.target as HTMLImageElement;
+    if (target && target.src && target.src.includes('assets/codex/')) {
+      const match = target.src.match(/assets\/codex\/(.+)$/);
+      if (match && match[1]) {
+        target.src = `https://playorna.com/static/img/${match[1]}`;
+        return;
+      }
+    }
+    if (target) {
+      target.style.display = 'none';
+    }
   }
 
   getDisplayName(entry: CodexEntry): string {

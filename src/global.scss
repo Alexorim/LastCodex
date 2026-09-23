@@ -206,3 +206,18 @@ html.theme-amoled {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--codex-gold);
 }
+
+/* Double-back exit toast */
+.codex-exit-toast {
+  --background: #1f1e1d;
+  --color: var(--codex-gold-bright, #f0a500);
+  --border-color: var(--codex-gold, #bda545);
+  --border-width: 1px;
+  --border-style: solid;
+  --border-radius: 8px;
+  --box-shadow: 0 4px 18px rgba(0, 0, 0, 0.65);
+  font-family: var(--codex-font-heading);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: center;
+}

@@ -122,7 +122,7 @@
 
           <!-- Materiales a la derecha con imagen pixel-art a la izquierda -->
           <div class="guild-right">
-            <span *ngFor="let mat of g.materials" class="material-pill">
+            <span *ngFor="let mat of g.materials" class="material-pill clickable" (click)="openMaterialModal(mat)" [title]="getMatName(mat)">
               <img [src]="getMatIcon(mat)" (error)="onImageError($event)" class="mat-icon" alt="" />
               <span class="mat-name">{{ getMatName(mat) }}</span>
             </span>
@@ -161,7 +161,7 @@
 
           <!-- Materiales a la derecha con imagen pixel-art a la izquierda -->
           <div class="guild-right">
-            <span *ngFor="let mat of g.materials" class="material-pill pill-tomorrow">
+            <span *ngFor="let mat of g.materials" class="material-pill pill-tomorrow clickable" (click)="openMaterialModal(mat)" [title]="getMatName(mat)">
               <img [src]="getMatIcon(mat)" (error)="onImageError($event)" class="mat-icon" alt="" />
               <span class="mat-name">{{ getMatName(mat) }}</span>
             </span>
@@ -292,6 +292,81 @@
           (click)="exportImage('share')">
           <ion-icon name="logo-whatsapp"></ion-icon>
           <span>{{ currentLang === 'es' ? 'WhatsApp / Compartir' : 'WhatsApp / Share' }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- OVERLAY DE DETALLE DEL MATERIAL Y MONSTRUOS QUE LO SUELTAN   -->
+<!-- ============================================================ -->
+<div class="material-modal-backdrop" *ngIf="selectedMaterial" (click)="closeMaterialModal()">
+  <div class="material-modal-card codex-box" (click)="$event.stopPropagation()">
+    <button type="button" class="modal-close-btn" (click)="closeMaterialModal()" title="Cerrar">
+      <ion-icon name="close-circle-outline"></ion-icon>
+    </button>
+
+    <!-- Material Hero Header -->
+    <div class="material-hero-header">
+      <div class="mat-sprite-frame">
+        <img [src]="getMatIcon(selectedMaterial.name)" (error)="onImageError($event)" class="modal-mat-sprite" alt="" />
+      </div>
+      <h3 class="modal-mat-title">
+        {{ currentLang === 'es' ? (selectedMaterial.nameEs || selectedMaterial.name) : (selectedMaterial.nameEn || selectedMaterial.name) }}
+      </h3>
+      <div class="modal-mat-tags">
+        <span class="modal-tier-tag" *ngIf="selectedMaterial.tier > 0">★ Tier {{ selectedMaterial.tier }}</span>
+        <span class="modal-rarity-tag" *ngIf="selectedMaterial.rarity">{{ selectedMaterial.rarity }}</span>
+        <span class="modal-type-tag">{{ currentLang === 'es' ? 'Material de Mejora' : 'Upgrade Material' }}</span>
+      </div>
+    </div>
+
+    <div class="material-modal-body">
+      <!-- Descripción Oficial -->
+      <div class="material-desc-box">
+        <p class="material-desc">
+          {{ currentLang === 'es' ? (selectedMaterial.descriptionEs || selectedMaterial.description) : (selectedMaterial.descriptionEn || selectedMaterial.description) }}
+        </p>
+      </div>
+
+      <!-- Sección: ¿Quién dropea este material? -->
+      <div class="material-drops-section">
+        <h5 class="drops-heading">
+          <ion-icon name="skull-outline"></ion-icon>
+          <span>{{ currentLang === 'es' ? 'Monstruos y Jefes que lo sueltan' : 'Dropped by (Monsters & Bosses)' }}</span>
+          <span class="count-badge" *ngIf="selectedMaterial.droppedBy && selectedMaterial.droppedBy.length > 0">
+            ({{ selectedMaterial.droppedBy.length }})
+          </span>
+        </h5>
+
+        <!-- Lista de enemigos -->
+        <div class="dropped-by-grid" *ngIf="selectedMaterial.droppedBy && selectedMaterial.droppedBy.length > 0">
+          <div *ngFor="let source of selectedMaterial.droppedBy" class="source-card">
+            <img [src]="source.sprite" (error)="onImageError($event)" class="source-sprite" alt="" />
+            <div class="source-info">
+              <span class="source-name">{{ source.name }}</span>
+              <span class="source-tier" *ngIf="source.tier">★ Tier {{ source.tier }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Si no hay drop directo registrado de monstruos -->
+        <div class="no-drops-notice" *ngIf="!selectedMaterial.droppedBy || selectedMaterial.droppedBy.length === 0">
+          <ion-icon name="information-circle-outline"></ion-icon>
+          <span>
+            {{ currentLang === 'es'
+              ? 'Este material se obtiene habitualmente en tiendas de gremio, cofres de mazmorra o desmantelando equipamiento en la herrería.'
+              : 'This material is commonly obtained from guild shops, dungeon chests, or dismantling equipment at the blacksmith.' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Action Button: Explorar en el Códice -->
+      <div class="material-actions-row">
+        <button type="button" class="view-codex-btn" (click)="closeMaterialModal(); goToCodex()">
+          <ion-icon name="book-outline"></ion-icon>
+          <span>{{ currentLang === 'es' ? 'Explorar en el Códice' : 'Explore in Codex' }}</span>
         </button>
       </div>
     </div>
