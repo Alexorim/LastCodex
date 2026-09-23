@@ -330,21 +330,23 @@
       margin-bottom: 8px;
 
       .sprite-frame {
-        width: 40px;
-        height: 40px;
-        background: #141312;
-        border: 1px solid rgba(189, 165, 69, 0.4);
-        border-radius: 6px;
+        width: 52px;
+        height: 52px;
+        background: transparent;
+        border: none;
+        box-shadow: none;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
 
         .entry-sprite {
-          width: 30px;
-          height: 30px;
+          width: 48px;
+          height: 48px;
           object-fit: contain;
           image-rendering: pixelated;
+          filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.65));
+          transition: transform 0.18s ease;
         }
       }
 
@@ -524,9 +526,17 @@
         align-items: center;
 
         .modal-frame {
-          width: 48px;
-          height: 48px;
-          border-color: var(--codex-gold);
+          width: 60px;
+          height: 60px;
+          background: transparent;
+          border: none;
+          box-shadow: none;
+
+          .entry-sprite {
+            width: 56px;
+            height: 56px;
+            filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.7));
+          }
         }
 
         h3 {
