@@ -225,7 +225,10 @@ export class HomePage implements OnInit, OnDestroy {
     }
 
     if (found) {
-      this.selectedMaterial = found;
+      this.selectedMaterial = {
+        ...found,
+        icon: found.icon || getMaterialIcon(clean)
+      };
     } else {
       this.selectedMaterial = {
         id: `mat-${clean}`,
@@ -233,8 +236,9 @@ export class HomePage implements OnInit, OnDestroy {
         nameEs: translatedEs,
         nameEn: translatedEn,
         category: 'items',
+        subcategory: 'material',
         tier: 1,
-        icon: this.getMatIcon(clean),
+        icon: getMaterialIcon(clean),
         type: 'Items',
         descriptionEs: 'Material de artesanía y mejora utilizado en herrerías y gremios.',
         descriptionEn: 'Crafting and upgrade material used in blacksmiths and guilds.',
@@ -395,6 +399,16 @@ export class HomePage implements OnInit, OnDestroy {
     return getMaterialIcon(name);
   }
 
+  getModalMatIcon(mat: CodexEntry | null): string {
+    if (!mat) return '';
+    if (mat.icon) return mat.icon;
+    if (mat.nameEn) {
+      const icon = getMaterialIcon(mat.nameEn);
+      if (icon) return icon;
+    }
+    return getMaterialIcon(mat.name);
+  }
+
   getMatName(name: string): string {
     return translateMaterialName(name, this.currentLang);
   }
@@ -408,7 +422,26 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   onImageError(event: any): void {
-    event.target.style.display = 'none';
+    const target = event.target as HTMLImageElement;
+    if (target && target.src) {
+      if (target.src.includes('assets/materials/')) {
+        const file = target.src.split('assets/materials/').pop();
+        if (file && !target.dataset['fallbackTried']) {
+          target.dataset['fallbackTried'] = '1';
+          target.src = `assets/codex/materials/${file}`;
+          return;
+        }
+      }
+      if (target.src.includes('assets/codex/')) {
+        const match = target.src.match(/assets\/codex\/(.+)$/);
+        if (match && match[1] && !target.dataset['remoteTried']) {
+          target.dataset['remoteTried'] = '1';
+          target.src = `https://playorna.com/static/img/${match[1]}`;
+          return;
+        }
+      }
+      target.style.display = 'none';
+    }
   }
 
   getGuildColor(name: string): string {

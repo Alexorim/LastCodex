@@ -311,7 +311,7 @@
     <!-- Material Hero Header -->
     <div class="material-hero-header">
       <div class="mat-sprite-frame">
-        <img [src]="getMatIcon(selectedMaterial.name)" (error)="onImageError($event)" class="modal-mat-sprite" alt="" />
+        <img [src]="getModalMatIcon(selectedMaterial)" (error)="onImageError($event)" class="modal-mat-sprite" alt="" />
       </div>
       <h3 class="modal-mat-title">
         {{ currentLang === 'es' ? (selectedMaterial.nameEs || selectedMaterial.name) : (selectedMaterial.nameEn || selectedMaterial.name) }}

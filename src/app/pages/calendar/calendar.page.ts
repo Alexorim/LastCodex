@@ -68,7 +68,26 @@ export class CalendarPage implements OnInit, OnDestroy {
   }
 
   onImageError(event: any): void {
-    event.target.style.display = 'none';
+    const target = event.target as HTMLImageElement;
+    if (target && target.src) {
+      if (target.src.includes('assets/materials/')) {
+        const file = target.src.split('assets/materials/').pop();
+        if (file && !target.dataset['fallbackTried']) {
+          target.dataset['fallbackTried'] = '1';
+          target.src = `assets/codex/materials/${file}`;
+          return;
+        }
+      }
+      if (target.src.includes('assets/codex/')) {
+        const match = target.src.match(/assets\/codex\/(.+)$/);
+        if (match && match[1] && !target.dataset['remoteTried']) {
+          target.dataset['remoteTried'] = '1';
+          target.src = `https://playorna.com/static/img/${match[1]}`;
+          return;
+        }
+      }
+      target.style.display = 'none';
+    }
   }
 
   toggleMaterial(matName: string) {
