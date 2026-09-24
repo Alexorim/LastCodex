@@ -84,26 +84,29 @@ ion-card:hover, .codex-card:hover, .codex-box:hover {
   }
 }
 
-/* Fan Disclaimer Footer */
+/* Fan Disclaimer Footer - Compact & Elegant */
 .codex-footer {
-  margin-top: 2rem;
-  padding: 1.5rem 1rem 5rem 1rem;
+  margin-top: 1.25rem;
+  padding: 0.6rem 0.75rem calc(0.9rem + env(safe-area-inset-bottom, 0px)) 0.75rem;
   text-align: center;
   border-top: 1px solid var(--codex-line);
 
   .disclaimer-text {
-    font-size: 0.75rem;
+    font-size: 0.62rem;
     color: var(--codex-text-muted);
-    line-height: 1.5;
-    max-width: 500px;
+    line-height: 1.35;
+    max-width: 440px;
     margin: 0 auto;
+    opacity: 0.85;
   }
 
   .brand-credit {
     font-family: var(--codex-font-heading);
-    font-size: 0.8rem;
+    font-size: 0.72rem;
+    font-weight: 700;
     color: var(--codex-gold);
-    margin-bottom: 0.35rem;
+    letter-spacing: 0.06em;
+    margin-bottom: 2px;
   }
 }
 
@@ -605,6 +608,486 @@ html.theme-light {
   }
 }
 
+/* ==========================================================================
+   SAKURA THEME MODE (Cherry Blossom Aesthetic)
+   Palette:
+   - #EAD1D7 (Petal Pink)
+   - #EEAAC0 (Blossom Pink)
+   - #D2DFEC (Pastel Sky Blue)
+   - #878793 (Slate Grey)
+   - #FBB0C4 (Sakura Accent Pink)
+   - #965357 (Cherry Wood / Deep Rosewood)
+   ========================================================================== */
+body.theme-sakura,
+html.theme-sakura {
+  --ion-background-color: #fbf5f7 !important;
+  --codex-box-bg: #ffffff !important;
+  --codex-pill-bg: #f8ecf0 !important;
+  --codex-line: rgba(150, 83, 87, 0.22) !important;
+  --codex-line-hover: #eeaac0 !important;
+  --codex-gold: #965357 !important;
+  --codex-gold-bright: #965357 !important;
+  --codex-text-light: #352125 !important;
+  --codex-text-muted: #878793 !important;
+  --ion-text-color: #352125 !important;
+  --ion-toolbar-background: #fff8fa !important;
+  --ion-tab-bar-background: #fff8fa !important;
+  --ion-card-background: #ffffff !important;
+  --ion-item-background: #ffffff !important;
+
+  background-color: #fbf5f7 !important;
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(251, 176, 196, 0.18) 0%, transparent 60%),
+    linear-gradient(180deg, #fff7f9 0%, #faedf1 100%) !important;
+  color: #352125 !important;
+
+  ion-header, .codex-header {
+    border-bottom-color: rgba(238, 170, 192, 0.45) !important;
+  }
+
+  ion-toolbar, .codex-toolbar, .search-toolbar, .countdown-toolbar {
+    --background: #fff8fa !important;
+    background: #fff8fa !important;
+    color: #352125 !important;
+  }
+
+  .header-countdown-block {
+    background: #ffffff !important;
+    border-color: rgba(238, 170, 192, 0.45) !important;
+    box-shadow: 0 2px 10px rgba(150, 83, 87, 0.08) !important;
+  }
+
+  .countdown-digits, .countdown-unit-label {
+    color: #965357 !important;
+  }
+
+  .codex-box, ion-card, .settings-card, .result-card {
+    background-color: #ffffff !important;
+    border-color: rgba(238, 170, 192, 0.45) !important;
+    box-shadow: 0 4px 14px rgba(150, 83, 87, 0.08) !important;
+    color: #352125 !important;
+  }
+
+  .codex-card {
+    background-color: #ffffff !important;
+    border-color: rgba(238, 170, 192, 0.45) !important;
+    box-shadow: 0 3px 12px rgba(150, 83, 87, 0.07) !important;
+    color: #352125 !important;
+
+    &:hover {
+      border-color: #fbb0c4 !important;
+      box-shadow: 0 6px 18px rgba(251, 176, 196, 0.3) !important;
+    }
+
+    .entry-name, .compact-name {
+      color: #352125 !important;
+    }
+    .entry-type, .compact-category {
+      color: #965357 !important;
+    }
+  }
+
+  .codex-searchbar, .codex-searchbar-transparent {
+    --background: #ffffff !important;
+    --color: #352125 !important;
+    --placeholder-color: #878793 !important;
+    --icon-color: #965357 !important;
+    border-color: rgba(238, 170, 192, 0.45) !important;
+  }
+
+  .material-pill {
+    background: #f8ecf0 !important;
+    border-color: rgba(238, 170, 192, 0.4) !important;
+    color: #352125 !important;
+    box-shadow: 0 1px 4px rgba(150, 83, 87, 0.06) !important;
+
+    &:hover {
+      background: #f2dde4 !important;
+      border-color: #fbb0c4 !important;
+    }
+  }
+
+  .mat-icon-frame {
+    background: #ead1d7 !important;
+    border-color: rgba(238, 170, 192, 0.4) !important;
+  }
+
+  .suggestions-list {
+    background: #ffffff !important;
+    border-color: rgba(238, 170, 192, 0.5) !important;
+    box-shadow: 0 6px 20px rgba(150, 83, 87, 0.12) !important;
+  }
+
+  .toggle-btn {
+    background: #ffffff !important;
+    border-color: rgba(238, 170, 192, 0.4) !important;
+    color: #878793 !important;
+
+    &.active {
+      background: rgba(251, 176, 196, 0.22) !important;
+      border-color: #965357 !important;
+      color: #965357 !important;
+      box-shadow: 0 0 10px rgba(251, 176, 196, 0.35) !important;
+    }
+  }
+
+  .codex-semicircular-bar {
+    --background: rgba(255, 248, 250, 0.96) !important;
+    background: rgba(255, 248, 250, 0.96) !important;
+    border-top: 1.5px solid rgba(238, 170, 192, 0.6) !important;
+    border-left: 1px solid rgba(238, 170, 192, 0.3) !important;
+    border-right: 1px solid rgba(238, 170, 192, 0.3) !important;
+    box-shadow: 0 -4px 22px rgba(150, 83, 87, 0.12) !important;
+
+    ion-tab-button {
+      --color: #878793 !important;
+      --color-selected: #965357 !important;
+      color: #878793 !important;
+
+      &.tab-selected {
+        color: #965357 !important;
+
+        ion-icon {
+          filter: drop-shadow(0 0 8px rgba(251, 176, 196, 0.75)) !important;
+        }
+
+        ion-label {
+          color: #965357 !important;
+          font-weight: 700 !important;
+        }
+      }
+    }
+  }
+
+  .calendar-banner {
+    background: #fff8fa !important;
+    border-color: rgba(238, 170, 192, 0.4) !important;
+  }
+
+  .guild-expand-panel {
+    background: #fff4f7 !important;
+    border-color: rgba(238, 170, 192, 0.35) !important;
+  }
+
+  .codex-content {
+    --background: #fbf5f7 !important;
+    background: #fbf5f7 !important;
+    color: #352125 !important;
+  }
+
+  .brand-search-btn {
+    background: #ffffff !important;
+    border-color: rgba(238, 170, 192, 0.5) !important;
+    box-shadow: 0 2px 8px rgba(150, 83, 87, 0.12) !important;
+  }
+
+  .desktop-view-segmented-wrap {
+    background: #faedf1 !important;
+    border-color: rgba(238, 170, 192, 0.4) !important;
+
+    .desktop-seg-btn {
+      color: #878793 !important;
+
+      &:hover {
+        color: #352125 !important;
+        background: rgba(255, 255, 255, 0.6) !important;
+      }
+
+      &.active {
+        background: #ffffff !important;
+        color: #965357 !important;
+        border-color: #965357 !important;
+        box-shadow: 0 1px 4px rgba(150, 83, 87, 0.15) !important;
+      }
+    }
+  }
+
+  .view-mode-sidebar-btn {
+    background: rgba(251, 176, 196, 0.22) !important;
+    border-color: #fbb0c4 !important;
+
+    .cat-nav-label {
+      color: #965357 !important;
+    }
+  }
+
+  .custom-select-box {
+    background: #ffffff !important;
+    border-color: rgba(238, 170, 192, 0.45) !important;
+
+    .codex-native-select {
+      color: #352125 !important;
+
+      option {
+        background: #ffffff !important;
+        color: #352125 !important;
+      }
+    }
+  }
+
+  .category-nav-item {
+    background: #ffffff !important;
+    border: 1px solid rgba(238, 170, 192, 0.4) !important;
+    box-shadow: 0 1px 5px rgba(150, 83, 87, 0.05) !important;
+
+    .cat-nav-label {
+      color: #352125 !important;
+    }
+
+    &:hover {
+      background: #fdf2f5 !important;
+      border-color: #fbb0c4 !important;
+    }
+
+    &.active {
+      background: rgba(251, 176, 196, 0.25) !important;
+      border-color: #965357 !important;
+
+      .cat-nav-label {
+        color: #965357 !important;
+        font-weight: 700 !important;
+      }
+    }
+  }
+
+  .tier-tag, .compact-tier-badge {
+    background: #965357 !important;
+    color: #ffffff !important;
+    border-color: #965357 !important;
+  }
+
+  .stat-chip {
+    background: #ffffff !important;
+    border-color: rgba(238, 170, 192, 0.45) !important;
+
+    .stat-name {
+      color: #878793 !important;
+    }
+    .stat-number {
+      color: #965357 !important;
+    }
+  }
+
+  .sub-item-card {
+    background: #ffffff !important;
+    border-color: rgba(238, 170, 192, 0.35) !important;
+
+    &:hover {
+      border-color: #fbb0c4 !important;
+      background: #fff4f7 !important;
+    }
+
+    .sub-item-name {
+      color: #352125 !important;
+    }
+    .sub-item-tier {
+      color: #965357 !important;
+    }
+  }
+
+  .subcat-chip {
+    background: #ffffff !important;
+    border-color: rgba(238, 170, 192, 0.4) !important;
+    color: #352125 !important;
+
+    &.active {
+      background: #965357 !important;
+      color: #ffffff !important;
+      border-color: #965357 !important;
+
+      .chip-badge {
+        background: #ffffff !important;
+        color: #965357 !important;
+      }
+    }
+  }
+
+  .codex-footer {
+    border-top-color: rgba(238, 170, 192, 0.35) !important;
+
+    .brand-credit {
+      color: #965357 !important;
+    }
+    .disclaimer-text {
+      color: #878793 !important;
+    }
+  }
+
+  /* Modal in Sakura Theme - AERO GLASS Showcase */
+  .modal-backdrop {
+    background: rgba(53, 33, 37, 0.65) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+
+  .modal-card {
+    background: #ffffff !important;
+    border: 1.5px solid rgba(238, 170, 192, 0.6) !important;
+    box-shadow: 0 16px 48px rgba(150, 83, 87, 0.22) !important;
+
+    .modal-close-btn {
+      color: #878793 !important;
+      background: rgba(238, 170, 192, 0.25) !important;
+      border-color: rgba(238, 170, 192, 0.45) !important;
+
+      &:hover {
+        color: #965357 !important;
+        background: rgba(251, 176, 196, 0.4) !important;
+        border-color: #965357 !important;
+      }
+    }
+
+    /* Aero Glass Hero Showcase in Sakura Theme */
+    .modal-hero-showcase {
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.9) 0%,
+          rgba(255, 247, 249, 0.68) 42%,
+          rgba(250, 237, 241, 0.5) 43%,
+          rgba(234, 209, 215, 0.55) 100%
+        ),
+        radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.95) 0%, rgba(251, 176, 196, 0.25) 60%, transparent 100%) !important;
+      backdrop-filter: blur(24px) saturate(190%) !important;
+      -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+      border-bottom: 1.5px solid rgba(238, 170, 192, 0.5) !important;
+      box-shadow:
+        inset 0 1px 2px rgba(255, 255, 255, 0.98),
+        inset 0 -1px 0 rgba(238, 170, 192, 0.2),
+        0 6px 20px rgba(150, 83, 87, 0.1) !important;
+
+      &::before {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.75) 0%,
+          rgba(255, 255, 255, 0.25) 100%
+        ) !important;
+      }
+
+      .modal-sprite-wrap {
+        background: transparent !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border: none !important;
+        box-shadow: none !important;
+
+        .modal-entry-sprite {
+          filter: drop-shadow(0 6px 14px rgba(150, 83, 87, 0.35)) drop-shadow(0 1px 3px rgba(0, 0, 0, 0.12)) !important;
+        }
+      }
+
+      .modal-entry-title {
+        color: #965357 !important;
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8) !important;
+      }
+
+      .modal-badges-row {
+        .modal-tier-tag {
+          background: #965357 !important;
+          color: #ffffff !important;
+        }
+
+        .modal-type-tag {
+          background: #d2dfec !important;
+          color: #352125 !important;
+          border-color: rgba(135, 135, 147, 0.3) !important;
+        }
+      }
+    }
+
+    .modal-body {
+      background: #ffffff !important;
+
+      .modal-desc-box {
+        background: #fff8fa !important;
+        border-color: rgba(238, 170, 192, 0.35) !important;
+
+        .desc-tier-header {
+          color: #965357 !important;
+          border-bottom-color: rgba(238, 170, 192, 0.3) !important;
+        }
+
+        .modal-desc {
+          color: #352125 !important;
+        }
+      }
+
+      .spec-card {
+        background: #fff8fa !important;
+        border-color: rgba(238, 170, 192, 0.3) !important;
+
+        .spec-label {
+          color: #878793 !important;
+        }
+        .spec-val {
+          color: #352125 !important;
+          &.highlight {
+            color: #965357 !important;
+          }
+        }
+      }
+
+      .section-title {
+        color: #965357 !important;
+        border-bottom-color: rgba(238, 170, 192, 0.3) !important;
+      }
+
+      .stat-chip {
+        background: #fff8fa !important;
+        border: 1px solid rgba(238, 170, 192, 0.35) !important;
+
+        .stat-name {
+          color: #878793 !important;
+        }
+        .stat-number {
+          color: #965357 !important;
+        }
+      }
+
+      .effects-list .effect-item {
+        background: #fff8fa !important;
+        border: 1px solid rgba(238, 170, 192, 0.3) !important;
+        color: #352125 !important;
+      }
+
+      .sub-item-card {
+        background: #fff8fa !important;
+        border: 1px solid rgba(238, 170, 192, 0.3) !important;
+
+        .sub-item-name {
+          color: #352125 !important;
+        }
+        .sub-item-meta {
+          color: #965357 !important;
+        }
+        .sub-item-tier {
+          color: #965357 !important;
+        }
+
+        &:hover {
+          background: #fdf2f5 !important;
+          border-color: #fbb0c4 !important;
+        }
+      }
+
+      .official-link-btn {
+        background: rgba(251, 176, 196, 0.22) !important;
+        border-color: #965357 !important;
+        color: #965357 !important;
+
+        &:hover {
+          background: #965357 !important;
+          color: #ffffff !important;
+        }
+      }
+    }
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #faedf1;
+  }
+}
+
 /* Custom Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
@@ -642,8 +1125,10 @@ html.theme-light {
 /* ============================================================ */
 /* OVERLAY MODAL / BOTTOM NAVIGATION BAR INTERACTION            */
 /* Ensures bottom navigation bar never overlaps or covers modal */
+/* or when user reaches bottom at footer                        */
 /* ============================================================ */
 body.modal-open ion-tab-bar,
+body.footer-visible ion-tab-bar,
 body:has(.modal-backdrop) ion-tab-bar,
 body:has(.export-modal-backdrop) ion-tab-bar,
 body:has(.events-modal-backdrop) ion-tab-bar,

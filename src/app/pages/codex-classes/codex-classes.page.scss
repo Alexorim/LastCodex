@@ -317,21 +317,25 @@
 
 .codex-footer {
   text-align: center;
-  padding: 24px 16px 70px 16px;
+  padding: 8px 10px calc(12px + env(safe-area-inset-bottom, 0px));
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  margin-top: 24px;
+  margin-top: 12px;
 
   .brand-credit {
     font-family: var(--codex-font-heading, serif);
     color: var(--codex-gold, #bda545);
-    font-size: 1.05rem;
+    font-size: 0.72rem;
     font-weight: bold;
-    margin-bottom: 4px;
+    letter-spacing: 0.06em;
+    margin-bottom: 2px;
   }
 
   .disclaimer-text {
     color: var(--codex-text-muted, #8a847c);
-    font-size: 0.72rem;
-    margin: 0;
+    font-size: 0.62rem;
+    max-width: 420px;
+    margin: 0 auto;
+    line-height: 1.35;
+    opacity: 0.85;
   }
 }

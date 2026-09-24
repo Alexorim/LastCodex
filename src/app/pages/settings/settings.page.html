@@ -75,6 +75,14 @@
           <span class="theme-dot dot-light"></span>
           <span>{{ currentLang === 'es' ? 'Claro / Pergamino' : 'Light Theme' }}</span>
         </button>
+        <button
+          type="button"
+          class="toggle-btn"
+          [class.active]="currentTheme === 'sakura'"
+          (click)="onThemeChange('sakura')">
+          <span class="theme-dot dot-sakura"></span>
+          <span>Sakura</span>
+        </button>
       </div>
     </div>
 

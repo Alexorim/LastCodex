@@ -34,7 +34,7 @@ export const AVAILABLE_LANGUAGES: LanguageOption[] = [
 ];
 
 export type Language = string;
-export type ThemeMode = 'codex-dark' | 'amoled' | 'light';
+export type ThemeMode = 'codex-dark' | 'amoled' | 'light' | 'sakura';
 
 @Injectable({
   providedIn: 'root'
@@ -86,9 +86,10 @@ export class SettingsService {
 
   private applyTheme(theme: ThemeMode): void {
     if (typeof document !== 'undefined') {
-      document.body.classList.remove('theme-codex-dark', 'theme-amoled', 'theme-light');
+      const themes = ['theme-codex-dark', 'theme-amoled', 'theme-light', 'theme-sakura'];
+      document.body.classList.remove(...themes);
       document.body.classList.add(`theme-${theme}`);
-      document.documentElement.classList.remove('theme-codex-dark', 'theme-amoled', 'theme-light');
+      document.documentElement.classList.remove(...themes);
       document.documentElement.classList.add(`theme-${theme}`);
     }
   }
