@@ -244,27 +244,6 @@
         </p>
       </div>
 
-      <!-- Obsidian Vault Download Button -->
-      <div class="apk-download-box" style="margin-top: 14px;">
-        <a [href]="vaultDownloadUrl" [download]="vaultFileName" target="_system" (click)="downloadVault($event)" class="apk-download-btn">
-          <div class="apk-btn-left">
-            <div class="apk-icon-circle" style="background: rgba(163, 53, 238, 0.15); border-color: rgba(163, 53, 238, 0.4); color: #d88aff;">
-              <ion-icon name="library-outline"></ion-icon>
-            </div>
-            <div class="apk-text-group">
-              <span class="apk-title">{{ currentLang === 'es' ? 'Exportar Baúl de Obsidian' : 'Export Obsidian Vault' }}</span>
-              <span class="apk-subtitle">{{ vaultFileName }} (Bóveda Completa)</span>
-            </div>
-          </div>
-          <ion-icon name="cloud-download-outline" class="apk-external-icon"></ion-icon>
-        </a>
-        <p class="apk-download-help">
-          {{ currentLang === 'es'
-            ? 'Descarga la bóveda completa de Obsidian (ZIP) con notas, arquitecturas y grafo para abrir directamente en la app móvil de Obsidian.'
-            : 'Download the complete Obsidian vault (ZIP) with notes, architecture docs, and graph to open directly in the Obsidian Mobile app.' }}
-        </p>
-      </div>
-
       <div class="external-links">
         <a href="https://playorna.com/codex/" target="_blank" rel="noopener noreferrer" class="codex-link">
           Official Orna Codex ↗

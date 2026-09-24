@@ -976,10 +976,13 @@
       }
     }
 
-    /* Big Sprite Hero Showcase */
+    /* Big Sprite Hero Showcase - AERO GLASS */
     .modal-hero-showcase {
-      background: linear-gradient(180deg, #242220 0%, #1f1d1b 100%);
-      border-bottom: 1px solid var(--codex-line);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.2), 0 4px 20px rgba(0, 0, 0, 0.3);
       padding: 24px 16px 16px;
       text-align: center;
       display: flex;
@@ -1776,8 +1779,111 @@
   }
 
   .modal-backdrop {
-    background: rgba(30, 25, 20, 0.72) !important;
-    backdrop-filter: blur(6px) !important;
+    background: rgba(30, 25, 20, 0.68) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+
+  .modal-card {
+    background: #ffffff !important;
+    border: 1.5px solid rgba(189, 165, 69, 0.4) !important;
+    box-shadow: 0 16px 48px rgba(70, 50, 20, 0.25) !important;
+
+    .modal-close-btn {
+      color: #6a5540 !important;
+      &:hover { color: #856108 !important; }
+    }
+
+    .modal-hero-showcase {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.78) 0%, rgba(246, 240, 230, 0.52) 100%) !important;
+      backdrop-filter: blur(20px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+      border-bottom: 1px solid rgba(189, 165, 69, 0.32) !important;
+      box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.95), 0 4px 20px rgba(140, 100, 30, 0.08) !important;
+
+      .modal-sprite-wrap {
+        background: rgba(255, 255, 255, 0.55) !important;
+        backdrop-filter: blur(14px) !important;
+        -webkit-backdrop-filter: blur(14px) !important;
+        border: 1.5px solid rgba(189, 165, 69, 0.45) !important;
+        box-shadow: 0 8px 24px rgba(180, 140, 40, 0.15), inset 0 0 12px rgba(255, 255, 255, 0.9) !important;
+      }
+
+      .modal-entry-title {
+        color: #7a5508 !important;
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8) !important;
+      }
+
+      .modal-badges-row {
+        .modal-tier-tag {
+          background: #bda545 !important;
+          color: #ffffff !important;
+        }
+
+        .modal-type-tag {
+          background: rgba(189, 165, 69, 0.18) !important;
+          color: #6a4f10 !important;
+          border-color: rgba(189, 165, 69, 0.35) !important;
+        }
+      }
+    }
+
+    .modal-body {
+      background: #ffffff !important;
+
+      .modal-desc-box {
+        background: #fdfbf7 !important;
+        border: 1px solid rgba(160, 130, 40, 0.28) !important;
+        .desc-tier-header { color: #856108 !important; }
+        .modal-desc { color: #24211e !important; }
+      }
+
+      .spec-card {
+        background: #fdfbf7 !important;
+        border: 1px solid rgba(160, 130, 40, 0.25) !important;
+        .spec-label { color: #7a6e60 !important; }
+        .spec-val { color: #24211e !important; &.highlight { color: #856108 !important; } }
+      }
+
+      .section-title {
+        color: #856108 !important;
+      }
+
+      .stat-chip {
+        background: #fdfbf7 !important;
+        border: 1px solid rgba(160, 130, 40, 0.25) !important;
+        .stat-name { color: #6a5e50 !important; }
+        .stat-number { color: #1e1b18 !important; }
+      }
+
+      .effects-list .effect-item {
+        background: #fdfbf7 !important;
+        border: 1px solid rgba(160, 130, 40, 0.2) !important;
+        color: #24211e !important;
+      }
+
+      .sub-item-card {
+        background: #fdfbf7 !important;
+        border: 1px solid rgba(160, 130, 40, 0.25) !important;
+        .sub-item-name { color: #24211e !important; }
+        .sub-item-meta { color: #856108 !important; }
+        .sub-item-tier { color: #946e09 !important; }
+        &:hover {
+          background: #f4ecdf !important;
+          border-color: #bda545 !important;
+        }
+      }
+
+      .official-link-btn {
+        background: rgba(189, 165, 69, 0.18) !important;
+        border-color: #bda545 !important;
+        color: #856108 !important;
+        &:hover {
+          background: #bda545 !important;
+          color: #ffffff !important;
+        }
+      }
+    }
   }
 }
 
