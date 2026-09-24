@@ -257,6 +257,7 @@ export class CodexPage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subs.unsubscribe();
+    document.body.classList.remove('modal-open');
     if (this.unregisterBackOverlay) {
       this.unregisterBackOverlay();
       this.unregisterBackOverlay = null;
@@ -435,6 +436,7 @@ export class CodexPage implements OnInit, OnDestroy {
 
   openEntry(entry: CodexEntry): void {
     this.selectedEntry = entry;
+    document.body.classList.add('modal-open');
     if (this.unregisterBackOverlay) {
       this.unregisterBackOverlay();
     }
@@ -449,10 +451,18 @@ export class CodexPage implements OnInit, OnDestroy {
 
   closeEntry(): void {
     this.selectedEntry = null;
+    document.body.classList.remove('modal-open');
     if (this.unregisterBackOverlay) {
       this.unregisterBackOverlay();
       this.unregisterBackOverlay = null;
     }
+  }
+
+  ionViewWillLeave(): void {
+    if (this.selectedEntry) {
+      this.closeEntry();
+    }
+    document.body.classList.remove('modal-open');
   }
 
   goToHome(): void {
@@ -523,6 +533,7 @@ export class CodexPage implements OnInit, OnDestroy {
     );
     if (target) {
       this.selectedEntry = target;
+      document.body.classList.add('modal-open');
     } else if (subItem.url) {
       window.open(`https://playorna.com${subItem.url}`, '_blank');
     }
