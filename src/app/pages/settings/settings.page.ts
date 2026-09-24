@@ -21,7 +21,8 @@ import {
   openOutline,
   closeOutline,
   chevronForwardOutline,
-  searchOutline
+  searchOutline,
+  libraryOutline
 } from 'ionicons/icons';
 import { Router } from '@angular/router';
 import { SettingsService, Language, ThemeMode, AVAILABLE_LANGUAGES, LanguageOption } from '../../services/settings.service';
@@ -53,6 +54,8 @@ export class SettingsPage implements OnInit, OnDestroy {
   appVersion = `v${this.versionNumber}`;
   apkFileName = `lastcodex_${this.versionNumber}.apk`;
   apkDownloadUrl = `assets/${this.apkFileName}`;
+  vaultFileName = 'LastCodex-Vault.zip';
+  vaultDownloadUrl = 'assets/LastCodex-Vault.zip';
 
   // Multi-language support (22 Orna languages)
   availableLanguages = AVAILABLE_LANGUAGES;
@@ -95,7 +98,8 @@ export class SettingsPage implements OnInit, OnDestroy {
       openOutline,
       closeOutline,
       chevronForwardOutline,
-      searchOutline
+      searchOutline,
+      libraryOutline
     });
   }
 
@@ -269,6 +273,18 @@ export class SettingsPage implements OnInit, OnDestroy {
     const link = document.createElement('a');
     link.href = `assets/${this.apkFileName}`;
     link.download = this.apkFileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  downloadVault(event?: Event): void {
+    if (event) {
+      event.preventDefault();
+    }
+    const link = document.createElement('a');
+    link.href = this.vaultDownloadUrl;
+    link.download = this.vaultFileName;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
