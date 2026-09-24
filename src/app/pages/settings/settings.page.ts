@@ -50,10 +50,11 @@ export class SettingsPage implements OnInit, OnDestroy {
   deviceTimezone = '';
   localResetTime = '';
 
-  versionNumber = '1.4.1';
+  versionNumber = '1.4.2';
   appVersion = `v${this.versionNumber}`;
   apkFileName = `lastcodex_${this.versionNumber}.apk`;
   apkDownloadUrl = `assets/${this.apkFileName}`;
+  githubApkUrl = `https://github.com/Alexorim/LastCodex/raw/main/src/assets/lastcodex_1.4.2.apk`;
 
   // Multi-language support (22 Orna languages)
   availableLanguages = AVAILABLE_LANGUAGES;
@@ -265,14 +266,25 @@ export class SettingsPage implements OnInit, OnDestroy {
   }
 
   downloadApk(event?: Event): void {
-    if (event) {
-      event.preventDefault();
+    const isCapacitor = typeof (window as any).Capacitor !== 'undefined' &&
+      typeof (window as any).Capacitor.isNativePlatform === 'function' &&
+      (window as any).Capacitor.isNativePlatform();
+
+    const directRemoteUrl = `https://github.com/Alexorim/LastCodex/raw/main/src/assets/${this.apkFileName}`;
+    const directLocalUrl = `assets/${this.apkFileName}`;
+
+    if (isCapacitor) {
+      if (event) event.preventDefault();
+      // On native Capacitor, open the direct link in the system browser so Android download manager handles the APK
+      window.open(directRemoteUrl, '_system');
+      return;
     }
-    const link = document.createElement('a');
-    link.href = `assets/${this.apkFileName}`;
-    link.download = this.apkFileName;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+
+    // On browser / web:
+    // If event is missing, trigger via window.open
+    if (!event) {
+      window.open(directLocalUrl, '_blank');
+    }
+    // If event is present from <a>, allow browser's native download to proceed without preventDefault
   }
 }

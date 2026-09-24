@@ -63,7 +63,7 @@ for (const dir of targetDirs) {
   }
 
   // Copy the fresh APK with aliases so all links work
-  const aliases = [expectedApkName, 'LastCodex.apk', 'lastcodex.apk', 'lastcodex_1.3.0.apk'];
+  const aliases = [expectedApkName, 'LastCodex.apk', 'lastcodex.apk', 'lastcodex_1.4.1.apk', 'lastcodex_1.3.0.apk'];
   for (const alias of aliases) {
     const destPath = path.join(dir, alias);
     fs.copyFileSync(apkSource, destPath);

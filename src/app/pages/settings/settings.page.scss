@@ -659,4 +659,296 @@
   }
 }
 
+/* ============================================================ */
+/* LIGHT THEME SETTINGS OVERRIDES                               */
+/* ============================================================ */
+:host-context(body.theme-light),
+:host-context(html.theme-light) {
+  .settings-card {
+    background: #ffffff !important;
+    border-color: rgba(160, 130, 40, 0.28) !important;
+    box-shadow: 0 4px 14px rgba(80, 60, 20, 0.08) !important;
+
+    .card-header h3,
+    .card-header .card-icon {
+      color: #856108 !important;
+    }
+    .card-desc {
+      color: #6e655c !important;
+    }
+  }
+
+  .language-picker-trigger {
+    background: #fdfbf7 !important;
+    border: 1px solid rgba(160, 130, 40, 0.3) !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+
+    &:hover {
+      background: #f5efe6 !important;
+      border-color: #bda545 !important;
+    }
+
+    .lang-trigger-info {
+      .lang-trigger-name {
+        color: #856108 !important;
+      }
+      .lang-trigger-subname {
+        color: #6e655c !important;
+      }
+    }
+
+    .lang-trigger-right {
+      color: #856108 !important;
+    }
+  }
+
+  .toggle-btn {
+    background: #fdfbf7 !important;
+    border-color: rgba(160, 130, 40, 0.3) !important;
+    color: #554d45 !important;
+
+    &.active {
+      background: rgba(189, 165, 69, 0.18) !important;
+      border-color: #9d7c20 !important;
+      color: #856108 !important;
+    }
+  }
+
+  .apk-download-box {
+    border-top-color: rgba(160, 130, 40, 0.25) !important;
+
+    .apk-download-btn {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(246, 240, 230, 0.95) 100%) !important;
+      border: 1.5px solid #bda545 !important;
+      box-shadow: 0 4px 14px rgba(80, 60, 20, 0.1) !important;
+
+      &:hover {
+        background: linear-gradient(135deg, #ffffff 0%, #f5efe6 100%) !important;
+        border-color: #856108 !important;
+      }
+
+      .apk-icon-circle {
+        background: rgba(189, 165, 69, 0.18) !important;
+        border-color: #bda545 !important;
+        color: #856108 !important;
+      }
+
+      .apk-title {
+        color: #856108 !important;
+      }
+      .apk-subtitle {
+        color: #6e655c !important;
+      }
+      .apk-external-icon {
+        color: #856108 !important;
+      }
+    }
+
+    .apk-download-help {
+      color: #6e655c !important;
+    }
+  }
+
+  .sync-actions .sync-btn {
+    &.check {
+      background: #fdfbf7 !important;
+      border-color: rgba(160, 130, 40, 0.3) !important;
+      color: #3e352b !important;
+    }
+    &.secondary {
+      background: #fff5f5 !important;
+      border-color: rgba(211, 47, 47, 0.35) !important;
+      color: #d32f2f !important;
+    }
+  }
+
+  .external-links .codex-link {
+    background: #fdfbf7 !important;
+    border-color: rgba(160, 130, 40, 0.3) !important;
+    color: #856108 !important;
+    &:hover {
+      background: #f5efe6 !important;
+      border-color: #bda545 !important;
+    }
+  }
+
+  .codex-lang-modal {
+    --background: #ffffff !important;
+    .modal-toolbar, .modal-search-toolbar {
+      --background: #faf7f2 !important;
+      color: #856108 !important;
+      border-bottom-color: rgba(160, 130, 40, 0.25) !important;
+    }
+    .modal-searchbar {
+      --background: #ffffff !important;
+      --color: #24211e !important;
+      --placeholder-color: #6e655c !important;
+      --icon-color: #856108 !important;
+    }
+    .modal-content {
+      --background: #ffffff !important;
+    }
+    .lang-list-item {
+      background: #fdfbf7 !important;
+      border-color: rgba(160, 130, 40, 0.25) !important;
+      .lang-name { color: #24211e !important; }
+      .lang-sub { color: #6e655c !important; }
+      &.selected {
+        background: rgba(189, 165, 69, 0.15) !important;
+        border-color: #bda545 !important;
+        .lang-name { color: #856108 !important; }
+      }
+    }
+  }
+}
+
+/* ============================================================ */
+/* SAKURA THEME SETTINGS OVERRIDES                              */
+/* ============================================================ */
+:host-context(body.theme-sakura),
+:host-context(html.theme-sakura) {
+  .settings-card {
+    background: #ffffff !important;
+    border-color: rgba(238, 170, 192, 0.45) !important;
+    box-shadow: 0 4px 14px rgba(150, 83, 87, 0.08) !important;
+
+    .card-header h3,
+    .card-header .card-icon {
+      color: #965357 !important;
+    }
+    .card-desc {
+      color: #878793 !important;
+    }
+  }
+
+  .language-picker-trigger {
+    background: #fff8fa !important;
+    border: 1px solid rgba(238, 170, 192, 0.45) !important;
+    box-shadow: 0 2px 8px rgba(150, 83, 87, 0.06) !important;
+
+    &:hover {
+      background: #fdf2f5 !important;
+      border-color: #fbb0c4 !important;
+    }
+
+    .lang-trigger-info {
+      .lang-trigger-name {
+        color: #965357 !important;
+      }
+      .lang-trigger-subname {
+        color: #878793 !important;
+      }
+    }
+
+    .lang-trigger-right {
+      color: #965357 !important;
+    }
+  }
+
+  .toggle-btn {
+    background: #ffffff !important;
+    border-color: rgba(238, 170, 192, 0.4) !important;
+    color: #878793 !important;
+
+    &.active {
+      background: rgba(251, 176, 196, 0.22) !important;
+      border-color: #965357 !important;
+      color: #965357 !important;
+    }
+  }
+
+  .apk-download-box {
+    border-top-color: rgba(238, 170, 192, 0.35) !important;
+
+    .apk-download-btn {
+      background: linear-gradient(135deg, #ffffff 0%, #fff0f4 100%) !important;
+      border: 1.5px solid #eeaac0 !important;
+      box-shadow: 0 4px 14px rgba(150, 83, 87, 0.1) !important;
+
+      &:hover {
+        background: linear-gradient(135deg, #ffffff 0%, #fde8ef 100%) !important;
+        border-color: #965357 !important;
+        box-shadow: 0 6px 18px rgba(251, 176, 196, 0.3) !important;
+      }
+
+      .apk-icon-circle {
+        background: rgba(251, 176, 196, 0.25) !important;
+        border-color: #eeaac0 !important;
+        color: #965357 !important;
+      }
+
+      .apk-title {
+        color: #965357 !important;
+      }
+      .apk-subtitle {
+        color: #878793 !important;
+      }
+      .apk-external-icon {
+        color: #965357 !important;
+      }
+    }
+
+    .apk-download-help {
+      color: #878793 !important;
+    }
+  }
+
+  .sync-actions .sync-btn {
+    &.primary {
+      background: linear-gradient(135deg, rgba(251, 176, 196, 0.3) 0%, rgba(238, 170, 192, 0.15) 100%) !important;
+      border-color: #965357 !important;
+      color: #965357 !important;
+    }
+    &.check {
+      background: #fff8fa !important;
+      border-color: rgba(238, 170, 192, 0.4) !important;
+      color: #352125 !important;
+    }
+    &.secondary {
+      background: #fff5f5 !important;
+      border-color: rgba(211, 47, 47, 0.35) !important;
+      color: #d32f2f !important;
+    }
+  }
+
+  .external-links .codex-link {
+    background: #fff8fa !important;
+    border-color: rgba(238, 170, 192, 0.4) !important;
+    color: #965357 !important;
+    &:hover {
+      background: #fdf2f5 !important;
+      border-color: #fbb0c4 !important;
+    }
+  }
+
+  .codex-lang-modal {
+    --background: #ffffff !important;
+    .modal-toolbar, .modal-search-toolbar {
+      --background: #fff8fa !important;
+      color: #965357 !important;
+      border-bottom-color: rgba(238, 170, 192, 0.4) !important;
+    }
+    .modal-searchbar {
+      --background: #ffffff !important;
+      --color: #352125 !important;
+      --placeholder-color: #878793 !important;
+      --icon-color: #965357 !important;
+    }
+    .modal-content {
+      --background: #ffffff !important;
+    }
+    .lang-list-item {
+      background: #fff8fa !important;
+      border-color: rgba(238, 170, 192, 0.4) !important;
+      .lang-name { color: #352125 !important; }
+      .lang-sub { color: #878793 !important; }
+      &.selected {
+        background: rgba(251, 176, 196, 0.22) !important;
+        border-color: #965357 !important;
+        .lang-name { color: #965357 !important; }
+      }
+    }
+  }
+}
+
 
