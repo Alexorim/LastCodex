@@ -313,6 +313,12 @@ class LastCodexMapViewer {
 
   updateWorldTransform() {
     this.mapStage.style.transform = `translate3d(${this.panX}px, ${this.panY}px, 0) scale(${this.scale})`;
+
+    // Al alejar el mapa (this.scale < 1), aumentamos el tamaño de los marcadores para que crezcan y no se vean pequeños
+    const markerScale = Math.min(6.5, Math.max(0.75, Math.pow(1 / this.scale, 1.15)));
+    if (this.markersLayer) {
+      this.markersLayer.style.setProperty('--marker-scale', markerScale.toFixed(3));
+    }
   }
 
   onWorldMouseDown(e) {
@@ -474,6 +480,8 @@ class LastCodexMapViewer {
 
       this.markersLayer.appendChild(pin);
     });
+
+    this.updateWorldTransform();
   }
 
   getIconHTML(item) {
@@ -596,6 +604,12 @@ class LastCodexMapViewer {
 
   updateCityTransform() {
     this.cityStage.style.transform = `translate3d(${this.cityPanX}px, ${this.cityPanY}px, 0) scale(${this.cityScale})`;
+
+    // Al alejar el plano de la ciudad, aumentamos el tamaño de los edificios
+    const bldScale = Math.min(5.0, Math.max(0.8, Math.pow(1 / this.cityScale, 1.1)));
+    if (this.cityMarkersLayer) {
+      this.cityMarkersLayer.style.setProperty('--bld-scale', bldScale.toFixed(3));
+    }
   }
 
   renderCityBuildings(buildings) {
@@ -627,6 +641,8 @@ class LastCodexMapViewer {
 
       this.cityMarkersLayer.appendChild(pin);
     });
+
+    this.updateCityTransform();
   }
 
   selectCityBuilding(bld) {
