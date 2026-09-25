@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lastresources-v1.3.0';
+const CACHE_NAME = 'lastresources-v1.4.3';
 
 const PRECACHE_URLS = [
   './',
