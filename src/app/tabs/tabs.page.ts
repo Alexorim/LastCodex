@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { addIcons } from 'ionicons';
-import { home, homeOutline, search, searchOutline, calendar, calendarOutline, book, bookOutline, settings, settingsOutline } from 'ionicons/icons';
+import { home, homeOutline, search, searchOutline, calendar, calendarOutline, map, mapOutline, book, bookOutline, settings, settingsOutline } from 'ionicons/icons';
 import { SettingsService, Language } from '../services/settings.service';
 
 @Component({
@@ -15,6 +16,7 @@ import { SettingsService, Language } from '../services/settings.service';
 export class TabsPage implements OnInit, OnDestroy {
   private settingsService = inject(SettingsService);
   private router = inject(Router);
+  private alertController = inject(AlertController);
   currentLang: Language = 'es';
 
   private isFooterVisible = false;
@@ -29,11 +31,42 @@ export class TabsPage implements OnInit, OnDestroy {
       searchOutline,
       calendar,
       calendarOutline,
+      map,
+      mapOutline,
       book,
       bookOutline,
       settings,
       settingsOutline
     });
+  }
+
+  async openMapWarning(event: Event): Promise<void> {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const isEs = this.currentLang === 'es';
+    const alert = await this.alertController.create({
+      header: isEs ? 'Mapa de Aethric' : 'Aethric Map',
+      subHeader: isEs ? 'Fase de prueba' : 'Testing phase',
+      message: isEs
+        ? 'El mapa está en fase de prueba y puede tener problemas de rendimiento.'
+        : 'The map is in testing phase and may have performance issues.',
+      backdropDismiss: true,
+      buttons: [
+        {
+          text: isEs ? 'Cancelar' : 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: isEs ? 'Aceptar' : 'Accept',
+          handler: () => {
+            this.router.navigate(['/map']);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
   ngOnInit() {

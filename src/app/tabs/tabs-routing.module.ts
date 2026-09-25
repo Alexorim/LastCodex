@@ -32,6 +32,10 @@ const routes: Routes = [
         loadComponent: () => import('../pages/events/events.page').then(m => m.EventsPage)
       },
       {
+        path: 'map',
+        loadComponent: () => import('../pages/map/map.page').then(m => m.MapPage)
+      },
+      {
         path: 'settings',
         loadComponent: () => import('../pages/settings/settings.page').then(m => m.SettingsPage)
       },

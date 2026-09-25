@@ -85,3 +85,7 @@ Thumbs.db
 *.apk
 !src/assets/*.apk
 *.jks
+
+# Heavy Map Assets (synced locally via bat)
+src/assets/map/
+obsidian/
