@@ -231,30 +231,120 @@
         </div>
       </div>
 
-      <!-- APK Download Button -->
+      <!-- App Updates & APK Section -->
       <div class="apk-download-box">
-        <a [href]="apkDownloadUrl" [download]="apkFileName" target="_blank" (click)="downloadApk($event)" class="apk-download-btn">
-          <div class="apk-btn-left">
-            <div class="apk-icon-circle">
-              <ion-icon name="cloud-download-outline"></ion-icon>
+        <!-- 1. ESTADO INICIAL: Botón 'Buscar Actualizaciones' -->
+        <div *ngIf="appUpdateStatus === 'idle' && !isCheckingAppUpdate" class="update-action-container">
+          <button type="button" class="apk-download-btn update-check-btn" (click)="checkAppUpdates()">
+            <div class="apk-btn-left">
+              <div class="apk-icon-circle">
+                <ion-icon name="refresh-outline"></ion-icon>
+              </div>
+              <div class="apk-text-group">
+                <span class="apk-title">{{ currentLang === 'es' ? 'Buscar Actualizaciones' : 'Check for Updates' }}</span>
+                <span class="apk-subtitle">{{ currentLang === 'es' ? 'Versión instalada: ' + appVersion : 'Installed version: ' + appVersion }}</span>
+              </div>
             </div>
-            <div class="apk-text-group">
-              <span class="apk-title">{{ currentLang === 'es' ? 'Descargar Última APK' : 'Download Latest APK' }}</span>
-              <span class="apk-subtitle">{{ apkFileName }} ({{ appVersion }})</span>
+            <ion-icon name="search-outline" class="apk-external-icon"></ion-icon>
+          </button>
+          <p class="apk-download-help">
+            {{ currentLang === 'es'
+              ? 'Comprueba si existe una versión más reciente de la aplicación en el servidor.'
+              : 'Check if a newer version of the application is available on the server.' }}
+          </p>
+        </div>
+
+        <!-- 2. ESTADO BUSCANDO: Indicador animado -->
+        <div *ngIf="isCheckingAppUpdate" class="update-action-container">
+          <div class="apk-download-btn checking-state">
+            <div class="apk-btn-left">
+              <div class="apk-icon-circle spinning-circle">
+                <ion-icon name="sync-outline" class="spinning"></ion-icon>
+              </div>
+              <div class="apk-text-group">
+                <span class="apk-title">{{ currentLang === 'es' ? 'Buscando actualizaciones...' : 'Checking for updates...' }}</span>
+                <span class="apk-subtitle">{{ currentLang === 'es' ? 'Consultando versión en el repositorio...' : 'Checking version in repository...' }}</span>
+              </div>
             </div>
           </div>
-          <ion-icon name="download-outline" class="apk-external-icon"></ion-icon>
-        </a>
-        <div class="apk-direct-links" style="margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap;">
-          <a [href]="githubApkUrl" target="_blank" rel="noopener noreferrer" class="apk-mirror-link" style="font-size: 0.76rem; color: var(--codex-gold); text-decoration: underline;">
-            {{ currentLang === 'es' ? 'Descarga directa desde GitHub (Mirror)' : 'Direct GitHub Download (Mirror)' }} ↗
-          </a>
         </div>
-        <p class="apk-download-help">
-          {{ currentLang === 'es'
-            ? 'Descarga el instalador oficial más reciente para Android compilado y actualizado.'
-            : 'Download the latest compiled and updated official Android APK installer.' }}
-        </p>
+
+        <!-- 3. TIENES LA ÚLTIMA VERSIÓN -->
+        <div *ngIf="appUpdateStatus === 'up-to-date' && !isCheckingAppUpdate" class="update-status-card up-to-date-box">
+          <div class="status-main-row">
+            <div class="status-icon-circle success">
+              <ion-icon name="checkmark-circle-outline"></ion-icon>
+            </div>
+            <div class="status-text-group">
+              <span class="status-title">{{ currentLang === 'es' ? 'Tienes la última versión' : 'You have the latest version' }}</span>
+              <span class="status-desc">{{ currentLang === 'es' ? 'Tu aplicación está completamente al día (' + appVersion + ').' : 'Your app is up to date (' + appVersion + ').' }}</span>
+            </div>
+            <button type="button" class="btn-recheck" (click)="checkAppUpdates()" [title]="currentLang === 'es' ? 'Volver a comprobar' : 'Check again'">
+              <ion-icon name="refresh-outline"></ion-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4. HAY UNA NUEVA ACTUALIZACIÓN + DESCARGA DE APK -->
+        <div *ngIf="appUpdateStatus === 'has-update' && !isCheckingAppUpdate" class="update-status-card has-update-box">
+          <div class="status-main-row">
+            <div class="status-icon-circle alert">
+              <ion-icon name="sparkles"></ion-icon>
+            </div>
+            <div class="status-text-group">
+              <span class="status-title alert-gold">{{ currentLang === 'es' ? '¡Hay una nueva actualización!' : 'New Update Available!' }}</span>
+              <span class="status-desc">
+                {{ currentLang === 'es'
+                  ? 'Nueva versión disponible: v' + latestRemoteVersion + ' (Actual: ' + appVersion + ')'
+                  : 'New version available: v' + latestRemoteVersion + ' (Current: ' + appVersion + ')' }}
+              </span>
+            </div>
+            <button type="button" class="btn-recheck" (click)="checkAppUpdates()" [title]="currentLang === 'es' ? 'Volver a comprobar' : 'Check again'">
+              <ion-icon name="refresh-outline"></ion-icon>
+            </button>
+          </div>
+
+          <div class="update-action-block">
+            <a [href]="apkDownloadUrl" [download]="apkFileName" target="_blank" (click)="downloadApk($event)" class="apk-download-btn download-highlight">
+              <div class="apk-btn-left">
+                <div class="apk-icon-circle download-icon">
+                  <ion-icon name="cloud-download-outline"></ion-icon>
+                </div>
+                <div class="apk-text-group">
+                  <span class="apk-title">{{ currentLang === 'es' ? 'Descargar Última APK' : 'Download Latest APK' }}</span>
+                  <span class="apk-subtitle">{{ apkFileName }} (v{{ latestRemoteVersion }})</span>
+                </div>
+              </div>
+              <ion-icon name="download-outline" class="apk-external-icon"></ion-icon>
+            </a>
+            <div class="apk-direct-links">
+              <a [href]="githubApkUrl" target="_blank" rel="noopener noreferrer" class="apk-mirror-link">
+                {{ currentLang === 'es' ? 'Descarga directa desde GitHub (Mirror)' : 'Direct GitHub Download (Mirror)' }} ↗
+              </a>
+            </div>
+            <p class="apk-download-help">
+              {{ currentLang === 'es'
+                ? 'Descarga e instala el nuevo archivo APK para actualizar tu dispositivo.'
+                : 'Download and install the new APK file to update your device.' }}
+            </p>
+          </div>
+        </div>
+
+        <!-- 5. ESTADO ERROR -->
+        <div *ngIf="appUpdateStatus === 'error' && !isCheckingAppUpdate" class="update-status-card error-box">
+          <div class="status-main-row">
+            <div class="status-icon-circle error">
+              <ion-icon name="alert-circle-outline"></ion-icon>
+            </div>
+            <div class="status-text-group">
+              <span class="status-title error-text">{{ currentLang === 'es' ? 'Error al buscar actualización' : 'Update Check Error' }}</span>
+              <span class="status-desc">{{ appUpdateError }}</span>
+            </div>
+            <button type="button" class="btn-recheck" (click)="checkAppUpdates()" [title]="currentLang === 'es' ? 'Reintentar' : 'Retry'">
+              <ion-icon name="refresh-outline"></ion-icon>
+            </button>
+          </div>
+        </div>
       </div>
 
       <div class="external-links">

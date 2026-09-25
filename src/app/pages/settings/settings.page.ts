@@ -22,7 +22,8 @@ import {
   closeOutline,
   chevronForwardOutline,
   searchOutline,
-  libraryOutline
+  libraryOutline,
+  downloadOutline
 } from 'ionicons/icons';
 import { Router } from '@angular/router';
 import { SettingsService, Language, ThemeMode, AVAILABLE_LANGUAGES, LanguageOption } from '../../services/settings.service';
@@ -78,6 +79,12 @@ export class SettingsPage implements OnInit, OnDestroy {
   syncSuccessMessage: string | null = null;
   syncErrorMessage: string | null = null;
 
+  // App updates state
+  isCheckingAppUpdate = false;
+  appUpdateStatus: 'idle' | 'up-to-date' | 'has-update' | 'error' = 'idle';
+  latestRemoteVersion = '';
+  appUpdateError = '';
+
   constructor() {
     addIcons({
       settings,
@@ -98,7 +105,8 @@ export class SettingsPage implements OnInit, OnDestroy {
       closeOutline,
       chevronForwardOutline,
       searchOutline,
-      libraryOutline
+      libraryOutline,
+      downloadOutline
     });
   }
 
@@ -262,6 +270,111 @@ export class SettingsPage implements OnInit, OnDestroy {
         ? 'Base de datos restaurada a la versión preinstalada de fábrica.'
         : 'Database reset to bundled factory version.';
       this.syncErrorMessage = null;
+    }
+  }
+
+  compareVersions(v1: string, v2: string): number {
+    const parse = (v: string) => (v || '').replace(/^[^\d]*/, '').split('.').map(p => parseInt(p, 10) || 0);
+    const p1 = parse(v1);
+    const p2 = parse(v2);
+    const len = Math.max(p1.length, p2.length);
+    for (let i = 0; i < len; i++) {
+      const num1 = p1[i] ?? 0;
+      const num2 = p2[i] ?? 0;
+      if (num1 > num2) return 1;
+      if (num1 < num2) return -1;
+    }
+    return 0;
+  }
+
+  async checkAppUpdates(): Promise<void> {
+    this.isCheckingAppUpdate = true;
+    this.appUpdateError = '';
+    const cacheBuster = Date.now();
+    try {
+      let remoteVersion = '';
+      let downloadUrl = this.githubApkUrl;
+
+      // 1. Probar primero versión remota en raw github version.json
+      try {
+        const resp = await fetch(
+          `https://raw.githubusercontent.com/Alexorim/LastCodex/main/src/assets/version.json?t=${cacheBuster}`,
+          { cache: 'no-store' }
+        );
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data && data.version) {
+            remoteVersion = data.version;
+            if (data.downloadUrl) {
+              downloadUrl = data.downloadUrl;
+            }
+          }
+        }
+      } catch {
+        // Continuar al siguiente fallback
+      }
+
+      // 2. Probar package.json en raw github
+      if (!remoteVersion) {
+        try {
+          const resp = await fetch(
+            `https://raw.githubusercontent.com/Alexorim/LastCodex/main/package.json?t=${cacheBuster}`,
+            { cache: 'no-store' }
+          );
+          if (resp.ok) {
+            const data = await resp.json();
+            if (data && data.version) {
+              remoteVersion = data.version;
+            }
+          }
+        } catch {
+          // Continuar al siguiente fallback
+        }
+      }
+
+      // 3. Fallback a assets/version.json local/bundled
+      if (!remoteVersion) {
+        try {
+          const resp = await fetch(`assets/version.json?t=${cacheBuster}`);
+          if (resp.ok) {
+            const data = await resp.json();
+            if (data && data.version) {
+              remoteVersion = data.version;
+              if (data.downloadUrl) {
+                downloadUrl = data.downloadUrl;
+              }
+            }
+          }
+        } catch {
+          // Sin más fallbacks
+        }
+      }
+
+      if (!remoteVersion) {
+        throw new Error(
+          this.currentLang === 'es'
+            ? 'No se pudo verificar la versión en el servidor.'
+            : 'Could not verify version on the server.'
+        );
+      }
+
+      this.latestRemoteVersion = remoteVersion;
+      this.apkDownloadUrl = downloadUrl;
+
+      if (this.compareVersions(remoteVersion, this.versionNumber) > 0) {
+        this.appUpdateStatus = 'has-update';
+      } else {
+        this.appUpdateStatus = 'up-to-date';
+      }
+    } catch (err: any) {
+      this.appUpdateStatus = 'error';
+      this.appUpdateError = err?.message || (
+        this.currentLang === 'es'
+          ? 'Error de conexión al buscar actualizaciones.'
+          : 'Connection error while checking for updates.'
+      );
+    } finally {
+      this.isCheckingAppUpdate = false;
     }
   }
 
