@@ -8,44 +8,6 @@
 </head>
 <body>
   <div id="viewerApp">
-    <!-- Header flotante con buscador y filtros -->
-    <header class="viewer-header">
-      <div class="header-top-row">
-        <div class="brand-badge">
-          <span class="brand-icon">🗺️</span>
-          <span class="brand-title rpg-font">Hero of Aethric</span>
-        </div>
-        <div class="search-box-wrap">
-          <span class="search-icon">🔍</span>
-          <input type="text" id="searchInput" class="search-input" placeholder="Buscar lugar, tier o servicio..." />
-        </div>
-      </div>
-
-      <!-- Filtros rápidos por Tier y Categoría -->
-      <div class="filter-chips-row">
-        <button type="button" class="chip-btn tier-chip active" data-tier="all">Todos Tiers</button>
-        <button type="button" class="chip-btn tier-chip" data-tier="★">★1</button>
-        <button type="button" class="chip-btn tier-chip" data-tier="★★">★2</button>
-        <button type="button" class="chip-btn tier-chip" data-tier="★★★">★3</button>
-        <button type="button" class="chip-btn tier-chip" data-tier="★★★★">★4</button>
-        <button type="button" class="chip-btn tier-chip" data-tier="★5">★5</button>
-        <button type="button" class="chip-btn tier-chip" data-tier="★6">★6</button>
-        <button type="button" class="chip-btn tier-chip" data-tier="★7">★7</button>
-        <button type="button" class="chip-btn tier-chip" data-tier="★8">★8</button>
-        <button type="button" class="chip-btn tier-chip" data-tier="★9">★9</button>
-        <button type="button" class="chip-btn tier-chip" data-tier="★10">★10</button>
-
-        <!-- Filtros por tipo -->
-        <button type="button" class="chip-btn type-chip active" data-type="all">Todos Tipos</button>
-        <button type="button" class="chip-btn type-chip" data-type="city">🏰 Ciudades</button>
-        <button type="button" class="chip-btn type-chip" data-type="teleport">🌀 Portales</button>
-        <button type="button" class="chip-btn type-chip" data-type="dungeon">💀 Dungeons</button>
-        <button type="button" class="chip-btn type-chip" data-type="celestial_tower">🗼 Torres</button>
-        <button type="button" class="chip-btn type-chip" data-type="arena">⚔️ Arenas</button>
-        <button type="button" class="chip-btn type-chip" data-type="monument">🗿 Monumentos</button>
-      </div>
-    </header>
-
     <!-- Visor de Mapamundi -->
     <main id="mapViewport" class="map-viewport">
       <div id="mapStage" class="map-stage">
