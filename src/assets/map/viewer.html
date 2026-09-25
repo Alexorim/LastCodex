@@ -16,11 +16,68 @@
       </div>
     </main>
 
-    <!-- Controles de Zoom HUD flotantes -->
+    <!-- Controles de Zoom y Filtros HUD flotantes -->
     <div class="zoom-hud">
+      <button type="button" id="btnFilterToggle" class="hud-btn" title="Filtros de Marcadores">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+        </svg>
+      </button>
       <button type="button" id="btnZoomIn" class="hud-btn" title="Acercar">＋</button>
       <button type="button" id="btnZoomOut" class="hud-btn" title="Alejar">－</button>
       <button type="button" id="btnZoomReset" class="hud-btn" title="Centrar mapa">⛶</button>
+    </div>
+
+    <!-- Menú Popover de Filtros con Checkboxes -->
+    <div id="filterMenu" class="filter-popover hidden">
+      <div class="filter-popover-header">
+        <span class="rpg-font">Filtros de Marcadores</span>
+        <button type="button" id="btnCloseFilterMenu" class="filter-close-btn" title="Cerrar">✕</button>
+      </div>
+
+      <div class="filter-checkbox-list">
+        <label class="filter-checkbox-item">
+          <input type="checkbox" id="filterTowns" data-type="city" checked />
+          <span class="custom-chk"></span>
+          <span class="filter-icon">🏰</span>
+          <span class="filter-text">Ciudades / Towns</span>
+        </label>
+        <label class="filter-checkbox-item">
+          <input type="checkbox" id="filterWaypoints" data-type="teleport" checked />
+          <span class="custom-chk"></span>
+          <span class="filter-icon">🌀</span>
+          <span class="filter-text">Waypoints / Portales</span>
+        </label>
+        <label class="filter-checkbox-item">
+          <input type="checkbox" id="filterDungeons" data-type="dungeon" checked />
+          <span class="custom-chk"></span>
+          <span class="filter-icon">💀</span>
+          <span class="filter-text">Dungeons</span>
+        </label>
+        <label class="filter-checkbox-item">
+          <input type="checkbox" id="filterTowers" data-type="celestial_tower" checked />
+          <span class="custom-chk"></span>
+          <span class="filter-icon">🗼</span>
+          <span class="filter-text">Torres Celestiales</span>
+        </label>
+        <label class="filter-checkbox-item">
+          <input type="checkbox" id="filterArenas" data-type="arena" checked />
+          <span class="custom-chk"></span>
+          <span class="filter-icon">⚔️</span>
+          <span class="filter-text">Arenas de Combate</span>
+        </label>
+        <label class="filter-checkbox-item">
+          <input type="checkbox" id="filterMonuments" data-type="monument" checked />
+          <span class="custom-chk"></span>
+          <span class="filter-icon">🗿</span>
+          <span class="filter-text">Monumentos</span>
+        </label>
+      </div>
+
+      <div class="filter-popover-actions">
+        <button type="button" id="btnFilterSelectAll" class="btn-filter-quick">Todos</button>
+        <button type="button" id="btnFilterDeselectAll" class="btn-filter-quick">Ninguno</button>
+      </div>
     </div>
 
     <!-- Drawer Inferior de Detalles (Ficha de Marcador / Edificio) -->

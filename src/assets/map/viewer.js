@@ -40,6 +40,7 @@ class LastCodexMapViewer {
     this.searchQuery = "";
     this.selectedTier = "all";
     this.selectedType = "all";
+    this.hiddenTypes = new Set();
 
     // World Map Pan & Zoom
     this.scale = 1;
@@ -82,7 +83,14 @@ class LastCodexMapViewer {
     this.worldMapImg = document.getElementById('worldMapImg');
     this.markersLayer = document.getElementById('markersLayer');
 
-    // Zoom HUD
+    // Zoom & Filter HUD
+    this.btnFilterToggle = document.getElementById('btnFilterToggle');
+    this.filterMenu = document.getElementById('filterMenu');
+    this.btnCloseFilterMenu = document.getElementById('btnCloseFilterMenu');
+    this.filterCheckboxes = document.querySelectorAll('.filter-checkbox-item input[type="checkbox"]');
+    this.btnFilterSelectAll = document.getElementById('btnFilterSelectAll');
+    this.btnFilterDeselectAll = document.getElementById('btnFilterDeselectAll');
+
     this.btnZoomIn = document.getElementById('btnZoomIn');
     this.btnZoomOut = document.getElementById('btnZoomOut');
     this.btnZoomReset = document.getElementById('btnZoomReset');
@@ -140,6 +148,61 @@ class LastCodexMapViewer {
         this.renderWorldMarkers();
       });
     });
+
+    // Filter Popover Events
+    if (this.btnFilterToggle && this.filterMenu) {
+      this.btnFilterToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.filterMenu.classList.toggle('hidden');
+      });
+    }
+
+    if (this.btnCloseFilterMenu && this.filterMenu) {
+      this.btnCloseFilterMenu.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.filterMenu.classList.add('hidden');
+      });
+    }
+
+    // Close filter popover if clicking outside
+    window.addEventListener('click', (e) => {
+      if (this.filterMenu && !this.filterMenu.classList.contains('hidden')) {
+        if (!this.filterMenu.contains(e.target) && e.target !== this.btnFilterToggle && !this.btnFilterToggle.contains(e.target)) {
+          this.filterMenu.classList.add('hidden');
+        }
+      }
+    });
+
+    // Filter Checkboxes (Towns, Waypoints, Dungeons, Torres, Arenas, Monumentos)
+    this.filterCheckboxes.forEach(chk => {
+      chk.addEventListener('change', () => {
+        const type = chk.dataset.type;
+        if (chk.checked) {
+          this.hiddenTypes.delete(type);
+        } else {
+          this.hiddenTypes.add(type);
+        }
+        this.renderWorldMarkers();
+      });
+    });
+
+    if (this.btnFilterSelectAll) {
+      this.btnFilterSelectAll.addEventListener('click', () => {
+        this.hiddenTypes.clear();
+        this.filterCheckboxes.forEach(chk => { chk.checked = true; });
+        this.renderWorldMarkers();
+      });
+    }
+
+    if (this.btnFilterDeselectAll) {
+      this.btnFilterDeselectAll.addEventListener('click', () => {
+        this.filterCheckboxes.forEach(chk => {
+          chk.checked = false;
+          this.hiddenTypes.add(chk.dataset.type);
+        });
+        this.renderWorldMarkers();
+      });
+    }
 
     // Zoom Buttons
     if (this.btnZoomIn) this.btnZoomIn.addEventListener('click', () => this.zoomWorld(1.3));
@@ -421,6 +484,11 @@ class LastCodexMapViewer {
       if (item.parentId) {
         const parent = this.items.find(p => p.id === item.parentId);
         if (parent && parent.type === 'city') return false;
+      }
+
+      // Filter by Checkbox Categories (Towns, Waypoints, Dungeons, Torres, Arenas, Monumentos)
+      if (this.hiddenTypes.has(item.type)) {
+        return false;
       }
 
       // Filter by Tier
