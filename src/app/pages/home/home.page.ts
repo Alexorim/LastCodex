@@ -27,7 +27,9 @@ import {
   bookOutline,
   cloudOfflineOutline,
   skullOutline,
-  hammerOutline
+  hammerOutline,
+  gridOutline,
+  listOutline
 } from 'ionicons/icons';
 import { Capacitor } from '@capacitor/core';
 import { Filesystem, Directory } from '@capacitor/filesystem';
@@ -110,7 +112,9 @@ export class HomePage implements OnInit, OnDestroy {
       bookOutline,
       cloudOfflineOutline,
       skullOutline,
-      hammerOutline
+      hammerOutline,
+      gridOutline,
+      listOutline
     });
   }
 
@@ -122,7 +126,14 @@ export class HomePage implements OnInit, OnDestroy {
     return this.materialsService.lastUpdated;
   }
 
+  materialsViewMode: 'list' | 'grid' = 'list';
+
   ngOnInit() {
+    const savedMode = localStorage.getItem('materials_view_mode') as 'list' | 'grid';
+    if (savedMode === 'grid' || savedMode === 'list') {
+      this.materialsViewMode = savedMode;
+    }
+
     const isNative = Capacitor.isNativePlatform();
     const isDismissed = sessionStorage.getItem('orna_update_banner_dismissed') === 'true';
     if (!isNative && !isDismissed) {
@@ -169,6 +180,32 @@ export class HomePage implements OnInit, OnDestroy {
 
   goToCodex(): void {
     this.router.navigate(['/codex']);
+  }
+
+  exploreInCodex(mat: CodexEntry | null): void {
+    const cleanName = mat ? (mat.nameEn || mat.name || '') : '';
+    const cat = mat?.category || 'items';
+    this.closeMaterialModal();
+    this.router.navigate(['/codex'], {
+      queryParams: {
+        item: cleanName,
+        cat: cat
+      }
+    });
+  }
+
+  toggleMaterialsView(): void {
+    this.materialsViewMode = this.materialsViewMode === 'list' ? 'grid' : 'list';
+    localStorage.setItem('materials_view_mode', this.materialsViewMode);
+  }
+
+  ionViewWillLeave(): void {
+    this.closeMaterialModal();
+    this.closeExportModal();
+    if (typeof document !== 'undefined') {
+      document.body.classList.remove('modal-open');
+      document.body.classList.remove('footer-visible');
+    }
   }
 
   // Export Modal Methods

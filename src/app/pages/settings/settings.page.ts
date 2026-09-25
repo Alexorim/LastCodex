@@ -52,9 +52,9 @@ export class SettingsPage implements OnInit, OnDestroy {
 
   versionNumber = '1.4.2';
   appVersion = `v${this.versionNumber}`;
-  apkFileName = `lastcodex_${this.versionNumber}.apk`;
+  apkFileName = 'lastcodex_stable.apk';
   apkDownloadUrl = `assets/${this.apkFileName}`;
-  githubApkUrl = `https://github.com/Alexorim/LastCodex/raw/main/src/assets/lastcodex_1.4.2.apk`;
+  githubApkUrl = `https://github.com/Alexorim/LastCodex/raw/main/src/assets/lastcodex_stable.apk`;
 
   // Multi-language support (22 Orna languages)
   availableLanguages = AVAILABLE_LANGUAGES;

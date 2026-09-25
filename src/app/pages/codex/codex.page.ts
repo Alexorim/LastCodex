@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { IonicModule } from '@ionic/angular/lazy';
 import { addIcons } from 'ionicons';
 import {
@@ -70,9 +70,11 @@ export class CodexPage implements OnInit, OnDestroy {
   private codexService = inject(CodexService);
   private backButtonService = inject(BackButtonService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   private subs = new Subscription();
   private unregisterBackOverlay: (() => void) | null = null;
+  private pendingSearchItem: string | null = null;
   currentLang: Language = 'es';
 
   searchQuery = '';
@@ -239,6 +241,9 @@ export class CodexPage implements OnInit, OnDestroy {
       this.codexService.entries$.subscribe(entries => {
         this.codexDatabase = entries;
         this.updateSubcatCounts();
+        if (this.pendingSearchItem) {
+          this.findAndOpenEntry(this.pendingSearchItem);
+        }
       })
     );
 
@@ -253,6 +258,47 @@ export class CodexPage implements OnInit, OnDestroy {
         this.updateStatus = status;
       })
     );
+
+    this.subs.add(
+      this.route.queryParams.subscribe(params => {
+        const itemParam = params['item'] || params['search'] || params['entry'];
+        if (itemParam) {
+          this.searchQuery = itemParam;
+          if (params['cat']) {
+            this.selectedCategory = params['cat'];
+          }
+          this.selectedSubcategory = 'all';
+          this.currentPage = 1;
+          this.findAndOpenEntry(itemParam);
+        }
+      })
+    );
+  }
+
+  findAndOpenEntry(nameOrQuery: string): void {
+    if (!nameOrQuery) return;
+    if (!this.codexDatabase || this.codexDatabase.length === 0) {
+      this.pendingSearchItem = nameOrQuery;
+      return;
+    }
+    const clean = nameOrQuery.toLowerCase().trim();
+    let found = this.codexDatabase.find(e =>
+      e.name.toLowerCase() === clean ||
+      (e.nameEs && e.nameEs.toLowerCase() === clean) ||
+      (e.nameEn && e.nameEn.toLowerCase() === clean) ||
+      e.id.toLowerCase() === clean
+    );
+    if (!found) {
+      found = this.codexDatabase.find(e =>
+        e.name.toLowerCase().includes(clean) ||
+        (e.nameEs && e.nameEs.toLowerCase().includes(clean)) ||
+        (e.nameEn && e.nameEn.toLowerCase().includes(clean))
+      );
+    }
+    if (found) {
+      this.openEntry(found);
+      this.pendingSearchItem = null;
+    }
   }
 
   ngOnDestroy() {

@@ -46,7 +46,7 @@ android {
     }
     applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName = "lastcodex_${variant.versionName}.apk"
+            outputFileName = "lastcodex_stable.apk"
         }
     }
 }

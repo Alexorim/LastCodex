@@ -74,9 +74,9 @@
           : 'Your previously installed app is outdated and redirected you here. Download and install the new official version for the native full-screen experience and automatic live updates.' }}
       </p>
       <div class="banner-actions">
-        <a href="assets/lastcodex_1.4.2.apk" download="lastcodex_1.4.2.apk" target="_blank" class="download-apk-btn">
+        <a href="assets/lastcodex_stable.apk" download="lastcodex_stable.apk" target="_blank" class="download-apk-btn">
           <ion-icon name="download-outline"></ion-icon>
-          <span>{{ currentLang === 'es' ? 'Descargar e Instalar Nuevo APK (v1.4.2)' : 'Download & Install New APK (v1.4.2)' }}</span>
+          <span>{{ currentLang === 'es' ? 'Descargar e Instalar APK Estable' : 'Download & Install Stable APK' }}</span>
         </a>
       </div>
     </div>
@@ -95,8 +95,16 @@
           <span class="date-text">{{ todayForecast.dateTitle }}</span>
         </div>
 
-        <!-- Export button on the right inside box-header -->
+        <!-- Actions on the right inside box-header -->
         <div class="box-header-actions">
+          <button
+            type="button"
+            class="view-toggle-btn"
+            (click)="toggleMaterialsView()"
+            [title]="materialsViewMode === 'list' ? (currentLang === 'es' ? 'Cambiar vista: gremios en fila (máx 2) y materiales en columnas' : 'Switch view: 2 guilds per row, materials in columns') : (currentLang === 'es' ? 'Cambiar a vista en lista horizontal' : 'Switch to list view')">
+            <ion-icon [name]="materialsViewMode === 'grid' ? 'list-outline' : 'grid-outline'"></ion-icon>
+            <span>{{ materialsViewMode === 'grid' ? (currentLang === 'es' ? 'Lista' : 'List') : (currentLang === 'es' ? 'Columnas' : 'Grid') }}</span>
+          </button>
           <button type="button" class="export-box-btn" (click)="openExportModal()" title="Exportar tabla en imagen PNG">
             <ion-icon name="download-outline"></ion-icon>
             <span>{{ currentLang === 'es' ? 'Exportar' : 'Export' }}</span>
@@ -106,8 +114,8 @@
 
       <p class="box-subtitle">{{ currentLang === 'es' ? 'Stock activo por gremio' : 'Active material stock per guild' }}</p>
 
-      <div class="guilds-table">
-        <div *ngFor="let g of todayForecast.guilds" class="guild-row">
+      <div class="guilds-table" [class.grid-view]="materialsViewMode === 'grid'">
+        <div *ngFor="let g of todayForecast.guilds" class="guild-row" [class.guild-card-grid]="materialsViewMode === 'grid'">
           <!-- Gremio a la izquierda con su imagen oficial -->
           <div class="guild-left">
             <img
@@ -141,12 +149,23 @@
           </span>
           <span class="date-text">{{ tomorrowForecast.dateTitle }}</span>
         </div>
+
+        <div class="box-header-actions">
+          <button
+            type="button"
+            class="view-toggle-btn"
+            (click)="toggleMaterialsView()"
+            [title]="materialsViewMode === 'list' ? (currentLang === 'es' ? 'Cambiar vista: gremios en fila (máx 2) y materiales en columnas' : 'Switch view: 2 guilds per row, materials in columns') : (currentLang === 'es' ? 'Cambiar a vista en lista horizontal' : 'Switch to list view')">
+            <ion-icon [name]="materialsViewMode === 'grid' ? 'list-outline' : 'grid-outline'"></ion-icon>
+            <span>{{ materialsViewMode === 'grid' ? (currentLang === 'es' ? 'Lista' : 'List') : (currentLang === 'es' ? 'Columnas' : 'Grid') }}</span>
+          </button>
+        </div>
       </div>
 
       <p class="box-subtitle">{{ currentLang === 'es' ? 'Próximo stock por gremio' : 'Upcoming stock per guild' }}</p>
 
-      <div class="guilds-table">
-        <div *ngFor="let g of tomorrowForecast.guilds" class="guild-row">
+      <div class="guilds-table" [class.grid-view]="materialsViewMode === 'grid'">
+        <div *ngFor="let g of tomorrowForecast.guilds" class="guild-row" [class.guild-card-grid]="materialsViewMode === 'grid'">
           <!-- Gremio a la izquierda con su imagen oficial -->
           <div class="guild-left">
             <img
@@ -365,7 +384,7 @@
 
       <!-- Action Button: Explorar en el Códice -->
       <div class="material-actions-row">
-        <button type="button" class="view-codex-btn" (click)="closeMaterialModal(); goToCodex()">
+        <button type="button" class="view-codex-btn" (click)="exploreInCodex(selectedMaterial)">
           <ion-icon name="book-outline"></ion-icon>
           <span>{{ currentLang === 'es' ? 'Explorar en el Códice' : 'Explore in Codex' }}</span>
         </button>

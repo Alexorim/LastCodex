@@ -749,7 +749,8 @@
     }
   }
 
-  .sync-actions .sync-btn {
+  .sync-actions-row .sync-btn,
+  .sync-btn {
     &.check {
       background: #fdfbf7 !important;
       border-color: rgba(160, 130, 40, 0.3) !important;
@@ -893,21 +894,38 @@
     }
   }
 
-  .sync-actions .sync-btn {
+  .sync-actions-row .sync-btn,
+  .sync-btn {
     &.primary {
       background: linear-gradient(135deg, rgba(251, 176, 196, 0.3) 0%, rgba(238, 170, 192, 0.15) 100%) !important;
       border-color: #965357 !important;
       color: #965357 !important;
+
+      &:hover:not(:disabled) {
+        background: rgba(251, 176, 196, 0.45) !important;
+        box-shadow: 0 0 12px rgba(251, 176, 196, 0.4) !important;
+      }
     }
     &.check {
-      background: #fff8fa !important;
-      border-color: rgba(238, 170, 192, 0.4) !important;
+      background: #ffffff !important;
+      border-color: rgba(238, 170, 192, 0.5) !important;
       color: #352125 !important;
+      box-shadow: 0 2px 6px rgba(150, 83, 87, 0.06) !important;
+
+      &:hover:not(:disabled) {
+        background: #fdf2f5 !important;
+        border-color: #965357 !important;
+        color: #965357 !important;
+      }
     }
     &.secondary {
-      background: #fff5f5 !important;
-      border-color: rgba(211, 47, 47, 0.35) !important;
+      background: #ffffff !important;
+      border-color: rgba(211, 47, 47, 0.4) !important;
       color: #d32f2f !important;
+
+      &:hover:not(:disabled) {
+        background: #fff5f5 !important;
+      }
     }
   }
 

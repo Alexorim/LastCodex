@@ -284,6 +284,38 @@
         transform: scale(0.96);
       }
     }
+
+    .view-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(189, 165, 69, 0.12);
+      border: 1px solid var(--codex-line);
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-family: var(--codex-font-body);
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: var(--codex-text-light);
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      ion-icon {
+        font-size: 0.95rem;
+        color: var(--codex-gold);
+      }
+
+      &:hover {
+        background: rgba(189, 165, 69, 0.25);
+        border-color: var(--codex-gold);
+        color: var(--codex-gold-bright);
+        box-shadow: 0 0 10px rgba(189, 165, 69, 0.25);
+      }
+
+      &:active {
+        transform: scale(0.96);
+      }
+    }
   }
 
   .box-subtitle {
@@ -297,6 +329,97 @@
 .guilds-table {
   display: flex;
   flex-direction: column;
+
+  &.grid-view {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px;
+    padding: 10px 14px 14px;
+
+    @media (max-width: 480px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 8px;
+      padding: 8px 10px 12px;
+    }
+
+    .guild-row.guild-card-grid {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: stretch !important;
+      background: rgba(26, 25, 24, 0.7);
+      border: 1px solid var(--codex-line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin: 0;
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: var(--codex-gold);
+        background: rgba(35, 33, 30, 0.85);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+      }
+
+      .guild-left {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        padding-bottom: 8px;
+        margin-bottom: 8px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .guild-icon-badge {
+          width: 24px;
+          height: 24px;
+          flex-shrink: 0;
+        }
+
+        .guild-name {
+          font-family: var(--codex-font-heading);
+          font-size: 0.82rem;
+          font-weight: 700;
+          color: var(--codex-gold);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+
+      .guild-right {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 6px;
+        align-items: stretch;
+
+        .material-pill {
+          width: 100%;
+          box-sizing: border-box;
+          margin: 0;
+          padding: 5px 8px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+
+          .mat-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+          }
+
+          .mat-name {
+            font-size: 0.78rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+      }
+    }
+  }
 
   .guild-row {
     display: flex;
@@ -1419,7 +1542,7 @@
     align-items: flex-end;
   }
 
-  .guilds-table {
+  .guilds-table:not(.grid-view) {
     .guild-row {
       flex-direction: column;
       align-items: flex-start;
@@ -1818,3 +1941,419 @@
     }
   }
 }
+
+/* ============================================================ */
+/* SAKURA THEME OVERRIDES FOR HOME PAGE                         */
+/* ============================================================ */
+:host-context(body.theme-sakura),
+:host-context(html.theme-sakura) {
+  .view-toggle-btn {
+    background: rgba(251, 176, 196, 0.22) !important;
+    border-color: rgba(238, 170, 192, 0.5) !important;
+    color: #965357 !important;
+
+    ion-icon {
+      color: #965357 !important;
+    }
+
+    &:hover {
+      background: rgba(251, 176, 196, 0.4) !important;
+      border-color: #965357 !important;
+      color: #965357 !important;
+      box-shadow: 0 0 10px rgba(251, 176, 196, 0.35) !important;
+    }
+  }
+
+  .export-box-btn {
+    background: rgba(251, 176, 196, 0.22) !important;
+    border-color: rgba(238, 170, 192, 0.5) !important;
+    color: #965357 !important;
+
+    ion-icon {
+      color: #965357 !important;
+    }
+
+    &:hover {
+      background: rgba(251, 176, 196, 0.4) !important;
+      border-color: #965357 !important;
+      box-shadow: 0 0 10px rgba(251, 176, 196, 0.35) !important;
+    }
+  }
+
+  .guilds-table.grid-view {
+    .guild-row.guild-card-grid {
+      background: #ffffff !important;
+      border: 1px solid rgba(238, 170, 192, 0.45) !important;
+      box-shadow: 0 2px 8px rgba(150, 83, 87, 0.06) !important;
+
+      &:hover {
+        border-color: #fbb0c4 !important;
+        box-shadow: 0 4px 14px rgba(251, 176, 196, 0.25) !important;
+      }
+
+      .guild-left {
+        border-bottom-color: rgba(238, 170, 192, 0.3) !important;
+
+        .guild-name {
+          color: #965357 !important;
+        }
+      }
+
+      .guild-right {
+        .material-pill {
+          background: #f8ecf0 !important;
+          border-color: rgba(238, 170, 192, 0.4) !important;
+          color: #352125 !important;
+
+          &:hover {
+            background: #f2dde4 !important;
+            border-color: #fbb0c4 !important;
+          }
+        }
+      }
+    }
+  }
+
+  .material-modal-backdrop {
+    background: rgba(53, 33, 37, 0.65) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+
+    .material-modal-card {
+      background: #ffffff !important;
+      border: 1.5px solid rgba(238, 170, 192, 0.6) !important;
+      box-shadow: 0 16px 48px rgba(150, 83, 87, 0.22) !important;
+      border-radius: 16px !important;
+
+      .modal-close-btn {
+        color: #878793 !important;
+        background: rgba(238, 170, 192, 0.25) !important;
+        border: 1px solid rgba(238, 170, 192, 0.45) !important;
+        border-radius: 50% !important;
+
+        &:hover {
+          color: #965357 !important;
+          background: rgba(251, 176, 196, 0.4) !important;
+          border-color: #965357 !important;
+        }
+      }
+
+      .material-hero-header {
+        background:
+          linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.9) 0%,
+            rgba(255, 247, 249, 0.68) 42%,
+            rgba(250, 237, 241, 0.5) 43%,
+            rgba(234, 209, 215, 0.55) 100%
+          ),
+          radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.95) 0%, rgba(251, 176, 196, 0.25) 60%, transparent 100%) !important;
+        backdrop-filter: blur(24px) saturate(190%) !important;
+        -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+        border-bottom: 1.5px solid rgba(238, 170, 192, 0.5) !important;
+        box-shadow:
+          inset 0 1px 2px rgba(255, 255, 255, 0.98),
+          inset 0 -1px 0 rgba(238, 170, 192, 0.2),
+          0 6px 20px rgba(150, 83, 87, 0.1) !important;
+
+        .modal-mat-title {
+          color: #965357 !important;
+          text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8) !important;
+        }
+
+        .modal-mat-tags {
+          .modal-tier-tag {
+            background: #965357 !important;
+            color: #ffffff !important;
+          }
+
+          .modal-rarity-tag {
+            background: rgba(251, 176, 196, 0.35) !important;
+            color: #965357 !important;
+            border: 1px solid rgba(150, 83, 87, 0.25) !important;
+          }
+
+          .modal-type-tag {
+            background: #d2dfec !important;
+            color: #352125 !important;
+            border-color: rgba(135, 135, 147, 0.3) !important;
+          }
+        }
+      }
+
+      .material-modal-body {
+        background: #ffffff !important;
+
+        .material-desc-box {
+          background: #fff8fa !important;
+          border-color: rgba(238, 170, 192, 0.35) !important;
+
+          .material-desc {
+            color: #352125 !important;
+          }
+        }
+
+        .material-drops-section {
+          .drops-heading {
+            color: #965357 !important;
+            border-bottom-color: rgba(238, 170, 192, 0.3) !important;
+
+            .count-badge {
+              color: #878793 !important;
+            }
+          }
+
+          .dropped-by-grid {
+            .source-card {
+              background: #fff8fa !important;
+              border-color: rgba(238, 170, 192, 0.35) !important;
+
+              .source-name {
+                color: #352125 !important;
+              }
+              .source-tier {
+                color: #965357 !important;
+              }
+            }
+          }
+
+          .no-drops-notice {
+            background: #fff8fa !important;
+            border-color: rgba(238, 170, 192, 0.35) !important;
+            color: #878793 !important;
+
+            ion-icon {
+              color: #965357 !important;
+            }
+          }
+        }
+
+        .material-actions-row {
+          .view-codex-btn {
+            background: rgba(251, 176, 196, 0.25) !important;
+            border: 1.5px solid #965357 !important;
+            color: #965357 !important;
+            font-weight: 700 !important;
+
+            &:hover {
+              background: #965357 !important;
+              color: #ffffff !important;
+              box-shadow: 0 4px 14px rgba(150, 83, 87, 0.25) !important;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .export-modal-backdrop {
+    background: rgba(53, 33, 37, 0.65) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+
+    .export-modal-card {
+      background: #ffffff !important;
+      border: 1.5px solid rgba(238, 170, 192, 0.6) !important;
+      box-shadow: 0 16px 48px rgba(150, 83, 87, 0.22) !important;
+
+      .modal-card-header {
+        border-bottom-color: rgba(238, 170, 192, 0.4) !important;
+
+        .modal-icon,
+        h3 {
+          color: #965357 !important;
+        }
+
+        .modal-sub {
+          color: #878793 !important;
+        }
+
+        .modal-close {
+          color: #878793 !important;
+          &:hover {
+            color: #965357 !important;
+          }
+        }
+      }
+
+      .export-option-tile {
+        background: #fff8fa !important;
+        border-color: rgba(238, 170, 192, 0.4) !important;
+
+        &:hover {
+          background: #fdf2f5 !important;
+          border-color: #fbb0c4 !important;
+        }
+
+        &.selected {
+          border-color: #965357 !important;
+          background: rgba(251, 176, 196, 0.2) !important;
+        }
+
+        .tile-title {
+          color: #352125 !important;
+        }
+
+        .tile-desc {
+          color: #878793 !important;
+        }
+      }
+    }
+  }
+}
+
+/* ============================================================ */
+/* LIGHT THEME OVERRIDES FOR HOME PAGE                          */
+/* ============================================================ */
+:host-context(body.theme-light),
+:host-context(html.theme-light) {
+  .view-toggle-btn {
+    background: #ffffff !important;
+    border-color: rgba(160, 130, 40, 0.3) !important;
+    color: #856108 !important;
+
+    ion-icon {
+      color: #856108 !important;
+    }
+
+    &:hover {
+      background: #fdfbf7 !important;
+      border-color: #bda545 !important;
+    }
+  }
+
+  .export-box-btn {
+    background: #ffffff !important;
+    border-color: rgba(160, 130, 40, 0.3) !important;
+    color: #856108 !important;
+
+    ion-icon {
+      color: #856108 !important;
+    }
+
+    &:hover {
+      background: #fdfbf7 !important;
+      border-color: #bda545 !important;
+    }
+  }
+
+  .guilds-table.grid-view {
+    .guild-row.guild-card-grid {
+      background: #ffffff !important;
+      border: 1px solid rgba(160, 130, 40, 0.28) !important;
+      box-shadow: 0 2px 8px rgba(80, 60, 20, 0.06) !important;
+
+      &:hover {
+        border-color: #bda545 !important;
+      }
+
+      .guild-left {
+        border-bottom-color: rgba(160, 130, 40, 0.2) !important;
+
+        .guild-name {
+          color: #856108 !important;
+        }
+      }
+    }
+  }
+
+  .material-modal-backdrop {
+    background: rgba(30, 25, 20, 0.68) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+
+    .material-modal-card {
+      background: #ffffff !important;
+      border: 1.5px solid rgba(189, 165, 69, 0.4) !important;
+      box-shadow: 0 16px 48px rgba(70, 50, 20, 0.25) !important;
+      border-radius: 16px !important;
+
+      .modal-close-btn {
+        color: #6a5540 !important;
+        &:hover {
+          color: #856108 !important;
+        }
+      }
+
+      .material-hero-header {
+        background:
+          linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.88) 0%,
+            rgba(255, 255, 255, 0.6) 42%,
+            rgba(255, 255, 255, 0.4) 43%,
+            rgba(242, 236, 222, 0.65) 100%
+          ),
+          radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.95) 0%, rgba(212, 175, 55, 0.15) 65%, transparent 100%) !important;
+        border-bottom: 1px solid rgba(189, 165, 69, 0.35) !important;
+
+        .modal-mat-title {
+          color: #7a5508 !important;
+        }
+
+        .modal-mat-tags {
+          .modal-tier-tag {
+            background: #bda545 !important;
+            color: #ffffff !important;
+          }
+          .modal-rarity-tag {
+            background: rgba(189, 165, 69, 0.18) !important;
+            color: #6a4f10 !important;
+          }
+          .modal-type-tag {
+            background: rgba(189, 165, 69, 0.12) !important;
+            color: #6a4f10 !important;
+          }
+        }
+      }
+
+      .material-modal-body {
+        background: #ffffff !important;
+
+        .material-desc-box {
+          background: #fdfbf7 !important;
+          border-color: rgba(160, 130, 40, 0.28) !important;
+          .material-desc {
+            color: #24211e !important;
+          }
+        }
+
+        .material-drops-section {
+          .drops-heading {
+            color: #856108 !important;
+            border-bottom-color: rgba(160, 130, 40, 0.22) !important;
+          }
+
+          .dropped-by-grid .source-card {
+            background: #fdfbf7 !important;
+            border-color: rgba(160, 130, 40, 0.25) !important;
+            .source-name {
+              color: #24211e !important;
+            }
+            .source-tier {
+              color: #856108 !important;
+            }
+          }
+
+          .no-drops-notice {
+            background: #fdfbf7 !important;
+            border-color: rgba(160, 130, 40, 0.2) !important;
+            color: #6e655c !important;
+          }
+        }
+
+        .material-actions-row .view-codex-btn {
+          background: rgba(189, 165, 69, 0.18) !important;
+          border-color: #bda545 !important;
+          color: #856108 !important;
+
+          &:hover {
+            background: #bda545 !important;
+            color: #ffffff !important;
+          }
+        }
+      }
+    }
+  }
+}
+

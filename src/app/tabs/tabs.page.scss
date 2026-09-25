@@ -58,9 +58,3 @@
   }
 }
 
-:host-context(body.footer-visible) .codex-semicircular-bar {
-  opacity: 0 !important;
-  pointer-events: none !important;
-  transform: translateY(120%) !important;
-  visibility: hidden !important;
-}

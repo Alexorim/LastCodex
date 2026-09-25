@@ -433,16 +433,20 @@ html.theme-light {
   }
 
   /* Modal in Light Theme - AERO GLASS Showcase */
-  .modal-backdrop {
+  .modal-backdrop,
+  .material-modal-backdrop {
     background: rgba(30, 25, 20, 0.68) !important;
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
   }
 
-  .modal-card {
+  .modal-card,
+  .material-modal-card {
     background: #ffffff !important;
     border: 1.5px solid rgba(189, 165, 69, 0.4) !important;
     box-shadow: 0 16px 48px rgba(70, 50, 20, 0.25) !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
 
     .modal-close-btn {
       color: #6a5540 !important;
@@ -452,7 +456,8 @@ html.theme-light {
     }
 
     /* Aero Glass Hero Showcase in Light Theme */
-    .modal-hero-showcase {
+    .modal-hero-showcase,
+    .material-hero-header {
       background:
         linear-gradient(
           180deg,
@@ -913,22 +918,123 @@ html.theme-sakura {
     }
   }
 
+  .sync-btn.check {
+    background: #ffffff !important;
+    border: 1.5px solid rgba(238, 170, 192, 0.5) !important;
+    color: #352125 !important;
+    box-shadow: 0 2px 6px rgba(150, 83, 87, 0.06) !important;
+
+    &:hover:not(:disabled) {
+      background: #fdf2f5 !important;
+      border-color: #965357 !important;
+      color: #965357 !important;
+    }
+  }
+
+  .sync-btn.secondary {
+    background: #ffffff !important;
+    border: 1.5px solid rgba(211, 47, 47, 0.4) !important;
+    color: #d32f2f !important;
+
+    &:hover:not(:disabled) {
+      background: #fff5f5 !important;
+    }
+  }
+
+  /* Language Modal in Sakura Theme */
+  .codex-lang-modal {
+    --background: #ffffff !important;
+
+    .modal-toolbar,
+    .modal-search-toolbar {
+      --background: #fff8fa !important;
+      background: #fff8fa !important;
+      color: #965357 !important;
+      border-bottom: 1px solid rgba(238, 170, 192, 0.4) !important;
+
+      ion-title {
+        color: #965357 !important;
+        font-family: var(--codex-font-heading) !important;
+      }
+
+      ion-button {
+        --color: #965357 !important;
+        color: #965357 !important;
+      }
+    }
+
+    .modal-searchbar {
+      --background: #ffffff !important;
+      --color: #352125 !important;
+      --placeholder-color: #878793 !important;
+      --icon-color: #965357 !important;
+      --clear-button-color: #965357 !important;
+    }
+
+    .modal-content {
+      --background: #fbf5f7 !important;
+      background: #fbf5f7 !important;
+    }
+
+    .languages-list {
+      .lang-list-item {
+        background: #ffffff !important;
+        border: 1px solid rgba(238, 170, 192, 0.45) !important;
+        box-shadow: 0 2px 6px rgba(150, 83, 87, 0.05) !important;
+
+        .lang-name {
+          color: #352125 !important;
+        }
+
+        .lang-sub {
+          color: #878793 !important;
+        }
+
+        &:hover {
+          background: #fdf2f5 !important;
+          border-color: #fbb0c4 !important;
+          transform: translateY(-1px);
+        }
+
+        &.selected {
+          background: rgba(251, 176, 196, 0.25) !important;
+          border-color: #965357 !important;
+          box-shadow: 0 0 10px rgba(251, 176, 196, 0.4) !important;
+
+          .lang-name {
+            color: #965357 !important;
+            font-weight: 700 !important;
+          }
+
+          .lang-check-icon {
+            color: #965357 !important;
+          }
+        }
+      }
+    }
+  }
+
   /* Modal in Sakura Theme - AERO GLASS Showcase */
-  .modal-backdrop {
+  .modal-backdrop,
+  .material-modal-backdrop {
     background: rgba(53, 33, 37, 0.65) !important;
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
   }
 
-  .modal-card {
+  .modal-card,
+  .material-modal-card {
     background: #ffffff !important;
     border: 1.5px solid rgba(238, 170, 192, 0.6) !important;
     box-shadow: 0 16px 48px rgba(150, 83, 87, 0.22) !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
 
     .modal-close-btn {
       color: #878793 !important;
       background: rgba(238, 170, 192, 0.25) !important;
-      border-color: rgba(238, 170, 192, 0.45) !important;
+      border: 1px solid rgba(238, 170, 192, 0.45) !important;
+      border-radius: 50% !important;
 
       &:hover {
         color: #965357 !important;
@@ -938,7 +1044,8 @@ html.theme-sakura {
     }
 
     /* Aero Glass Hero Showcase in Sakura Theme */
-    .modal-hero-showcase {
+    .modal-hero-showcase,
+    .material-hero-header {
       background:
         linear-gradient(
           180deg,
@@ -964,27 +1071,37 @@ html.theme-sakura {
         ) !important;
       }
 
-      .modal-sprite-wrap {
+      .modal-sprite-wrap,
+      .mat-sprite-frame {
         background: transparent !important;
         backdrop-filter: none !important;
         -webkit-backdrop-filter: none !important;
         border: none !important;
         box-shadow: none !important;
 
-        .modal-entry-sprite {
+        .modal-entry-sprite,
+        .modal-mat-sprite {
           filter: drop-shadow(0 6px 14px rgba(150, 83, 87, 0.35)) drop-shadow(0 1px 3px rgba(0, 0, 0, 0.12)) !important;
         }
       }
 
-      .modal-entry-title {
+      .modal-entry-title,
+      .modal-mat-title {
         color: #965357 !important;
         text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8) !important;
       }
 
-      .modal-badges-row {
+      .modal-badges-row,
+      .modal-mat-tags {
         .modal-tier-tag {
           background: #965357 !important;
           color: #ffffff !important;
+        }
+
+        .modal-rarity-tag {
+          background: rgba(251, 176, 196, 0.35) !important;
+          color: #965357 !important;
+          border: 1px solid rgba(150, 83, 87, 0.25) !important;
         }
 
         .modal-type-tag {
@@ -995,10 +1112,12 @@ html.theme-sakura {
       }
     }
 
-    .modal-body {
+    .modal-body,
+    .material-modal-body {
       background: #ffffff !important;
 
-      .modal-desc-box {
+      .modal-desc-box,
+      .material-desc-box {
         background: #fff8fa !important;
         border-color: rgba(238, 170, 192, 0.35) !important;
 
@@ -1007,8 +1126,59 @@ html.theme-sakura {
           border-bottom-color: rgba(238, 170, 192, 0.3) !important;
         }
 
-        .modal-desc {
+        .modal-desc,
+        .material-desc {
           color: #352125 !important;
+        }
+      }
+
+      .material-drops-section {
+        .drops-heading {
+          color: #965357 !important;
+          border-bottom-color: rgba(238, 170, 192, 0.3) !important;
+
+          .count-badge {
+            color: #878793 !important;
+          }
+        }
+
+        .dropped-by-grid {
+          .source-card {
+            background: #fff8fa !important;
+            border-color: rgba(238, 170, 192, 0.35) !important;
+
+            .source-name {
+              color: #352125 !important;
+            }
+            .source-tier {
+              color: #965357 !important;
+            }
+          }
+        }
+
+        .no-drops-notice {
+          background: #fff8fa !important;
+          border-color: rgba(238, 170, 192, 0.35) !important;
+          color: #878793 !important;
+
+          ion-icon {
+            color: #965357 !important;
+          }
+        }
+      }
+
+      .material-actions-row {
+        .view-codex-btn {
+          background: rgba(251, 176, 196, 0.22) !important;
+          border: 1.5px solid #965357 !important;
+          color: #965357 !important;
+          font-weight: 700 !important;
+
+          &:hover {
+            background: #965357 !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 14px rgba(150, 83, 87, 0.25) !important;
+          }
         }
       }
 
@@ -1123,24 +1293,24 @@ html.theme-sakura {
 }
 
 /* ============================================================ */
-/* OVERLAY MODAL / BOTTOM NAVIGATION BAR INTERACTION            */
-/* Ensures bottom navigation bar never overlaps or covers modal */
-/* or when user reaches bottom at footer                        */
+/* OVERLAY MODAL Z-INDEX & PERSISTENT BOTTOM NAVIGATION BAR     */
+/* Modals are elevated overlays (z-index: 10000) so they don't  */
+/* cause the bottom navigation bar to vanish when interacting.  */
 /* ============================================================ */
-body.modal-open ion-tab-bar,
-body.footer-visible ion-tab-bar,
-body:has(.modal-backdrop) ion-tab-bar,
-body:has(.export-modal-backdrop) ion-tab-bar,
-body:has(.events-modal-backdrop) ion-tab-bar,
-body:has(.material-modal-backdrop) ion-tab-bar,
-ion-tabs:has(.modal-backdrop) ion-tab-bar,
-ion-tabs:has(.export-modal-backdrop) ion-tab-bar,
-ion-tabs:has(.events-modal-backdrop) ion-tab-bar,
-ion-tabs:has(.material-modal-backdrop) ion-tab-bar {
-  opacity: 0 !important;
-  pointer-events: none !important;
-  transform: translateY(120%) !important;
-  visibility: hidden !important;
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, visibility 0.2s !important;
+.modal-backdrop,
+.material-modal-backdrop,
+.export-modal-backdrop,
+.events-modal-backdrop {
+  z-index: 10000 !important;
 }
+
+/* ============================================================ */
+/* MOBILE NOTCH / SAFE AREA SUPPORT (env(safe-area-inset-top))  */
+/* Prevents header & searchbars from hiding behind phone cutout */
+/* ============================================================ */
+ion-header ion-toolbar:first-of-type,
+.codex-toolbar {
+  padding-top: max(env(safe-area-inset-top, 0px), 8px);
+}
+
 

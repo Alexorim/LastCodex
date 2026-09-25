@@ -34,7 +34,7 @@ execSync(gradlewCmd, { cwd: androidDir, stdio: 'inherit' });
 
 // 5. Manage output APK files
 console.log(`[5/5] Managing APK artifacts...`);
-const expectedApkName = `lastcodex_${version}.apk`;
+const expectedApkName = 'lastcodex_stable.apk';
 const apkSource = path.join(rootDir, 'android', 'app', 'build', 'outputs', 'apk', 'debug', expectedApkName);
 
 if (!fs.existsSync(apkSource)) {
@@ -44,7 +44,8 @@ if (!fs.existsSync(apkSource)) {
 
 const targetDirs = [
   path.join(rootDir, 'src', 'assets'),
-  path.join(rootDir, 'www', 'assets')
+  path.join(rootDir, 'www', 'assets'),
+  path.join(rootDir, 'release')
 ];
 
 for (const dir of targetDirs) {
@@ -52,23 +53,17 @@ for (const dir of targetDirs) {
     fs.mkdirSync(dir, { recursive: true });
   }
 
-  // Remove all older .apk files in the target directory
-  const files = fs.readdirSync(dir);
-  for (const file of files) {
-    if (file.toLowerCase().endsWith('.apk')) {
-      const filePath = path.join(dir, file);
-      fs.unlinkSync(filePath);
-      console.log(`Deleted old APK: ${filePath}`);
-    }
-  }
+  // Copy the stable APK
+  const destPath = path.join(dir, expectedApkName);
+  fs.copyFileSync(apkSource, destPath);
+  console.log(`Copied APK: ${expectedApkName} to ${destPath}`);
 
-  // Copy the fresh APK with aliases so all links work
-  const aliases = [expectedApkName, 'LastCodex.apk', 'lastcodex.apk', 'lastcodex_1.4.1.apk', 'lastcodex_1.3.0.apk'];
+  // Keep compatibility aliases
+  const aliases = [`lastcodex_${version}.apk`, 'LastCodex.apk'];
   for (const alias of aliases) {
-    const destPath = path.join(dir, alias);
-    fs.copyFileSync(apkSource, destPath);
-    console.log(`Copied APK alias: ${alias} to ${destPath}`);
+    const aliasPath = path.join(dir, alias);
+    fs.copyFileSync(apkSource, aliasPath);
   }
 }
 
-console.log(`\nSUCCESS: LastCodex v${version} APK ready as "${expectedApkName}"!\n`);
+console.log(`\nSUCCESS: LastCodex stable APK ready as "${expectedApkName}"!\n`);
