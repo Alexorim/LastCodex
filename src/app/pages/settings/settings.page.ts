@@ -1,7 +1,8 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular/lazy';
+import { AlertController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
   settings,
@@ -23,7 +24,8 @@ import {
   chevronForwardOutline,
   searchOutline,
   libraryOutline,
-  downloadOutline
+  downloadOutline,
+  mapOutline
 } from 'ionicons/icons';
 import { Router } from '@angular/router';
 import { SettingsService, Language, ThemeMode, AVAILABLE_LANGUAGES, LanguageOption } from '../../services/settings.service';
@@ -43,6 +45,8 @@ export class SettingsPage implements OnInit, OnDestroy {
   private timerService = inject(TimerService);
   private codexService = inject(CodexService);
   private router = inject(Router);
+  private alertController = inject(AlertController);
+  private cdr = inject(ChangeDetectorRef);
 
   private subs = new Subscription();
 
@@ -106,7 +110,8 @@ export class SettingsPage implements OnInit, OnDestroy {
       chevronForwardOutline,
       searchOutline,
       libraryOutline,
-      downloadOutline
+      downloadOutline,
+      mapOutline
     });
   }
 
@@ -287,66 +292,89 @@ export class SettingsPage implements OnInit, OnDestroy {
     return 0;
   }
 
+  private async fetchWithTimeout(url: string, timeoutMs = 4000): Promise<any> {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const resp = await fetch(url, {
+        signal: controller.signal,
+        headers: { 'Accept': 'application/json' }
+      });
+      clearTimeout(timer);
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      return await resp.json();
+    } catch (e) {
+      clearTimeout(timer);
+      throw e;
+    }
+  }
+
   async checkAppUpdates(): Promise<void> {
+    if (this.isCheckingAppUpdate) return;
     this.isCheckingAppUpdate = true;
     this.appUpdateError = '';
-    const cacheBuster = Date.now();
-    try {
-      let remoteVersion = '';
-      let downloadUrl = this.githubApkUrl;
+    this.cdr.detectChanges();
 
-      // 1. Probar primero versión remota en raw github version.json
+    const cacheBuster = Date.now();
+    let remoteVersion = '';
+    let downloadUrl = this.githubApkUrl;
+
+    try {
+      // 1. Probar vía jsDelivr CDN (Ultra rápido, global, sin bloqueo de operadoras)
       try {
-        const resp = await fetch(
-          `https://raw.githubusercontent.com/Alexorim/LastCodex/main/src/assets/version.json?t=${cacheBuster}`,
-          { cache: 'no-store' }
+        const data = await this.fetchWithTimeout(
+          `https://cdn.jsdelivr.net/gh/Alexorim/LastCodex@main/src/assets/version.json?t=${cacheBuster}`,
+          3500
         );
-        if (resp.ok) {
-          const data = await resp.json();
+        if (data && data.version) {
+          remoteVersion = data.version;
+          if (data.downloadUrl) downloadUrl = data.downloadUrl;
+        }
+      } catch (e) {
+        console.warn('Fallback 1 (jsDelivr) failed:', e);
+      }
+
+      // 2. Probar raw.githubusercontent.com version.json
+      if (!remoteVersion) {
+        try {
+          const data = await this.fetchWithTimeout(
+            `https://raw.githubusercontent.com/Alexorim/LastCodex/main/src/assets/version.json?t=${cacheBuster}`,
+            3500
+          );
           if (data && data.version) {
             remoteVersion = data.version;
-            if (data.downloadUrl) {
-              downloadUrl = data.downloadUrl;
-            }
+            if (data.downloadUrl) downloadUrl = data.downloadUrl;
           }
+        } catch (e) {
+          console.warn('Fallback 2 (Raw version.json) failed:', e);
         }
-      } catch {
-        // Continuar al siguiente fallback
       }
 
-      // 2. Probar package.json en raw github
+      // 3. Probar raw.githubusercontent.com package.json
       if (!remoteVersion) {
         try {
-          const resp = await fetch(
+          const data = await this.fetchWithTimeout(
             `https://raw.githubusercontent.com/Alexorim/LastCodex/main/package.json?t=${cacheBuster}`,
-            { cache: 'no-store' }
+            3500
           );
-          if (resp.ok) {
-            const data = await resp.json();
-            if (data && data.version) {
-              remoteVersion = data.version;
-            }
+          if (data && data.version) {
+            remoteVersion = data.version;
           }
-        } catch {
-          // Continuar al siguiente fallback
+        } catch (e) {
+          console.warn('Fallback 3 (package.json) failed:', e);
         }
       }
 
-      // 3. Fallback a assets/version.json local/bundled
+      // 4. Fallback a assets/version.json local de la app
       if (!remoteVersion) {
         try {
-          const resp = await fetch(`assets/version.json?t=${cacheBuster}`);
-          if (resp.ok) {
-            const data = await resp.json();
-            if (data && data.version) {
-              remoteVersion = data.version;
-              if (data.downloadUrl) {
-                downloadUrl = data.downloadUrl;
-              }
-            }
+          const data = await this.fetchWithTimeout(`assets/version.json?t=${cacheBuster}`, 2500);
+          if (data && data.version) {
+            remoteVersion = data.version;
+            if (data.downloadUrl) downloadUrl = data.downloadUrl;
           }
-        } catch {
-          // Sin más fallbacks
+        } catch (e) {
+          console.warn('Fallback 4 (assets/version.json) failed:', e);
         }
       }
 
@@ -375,7 +403,33 @@ export class SettingsPage implements OnInit, OnDestroy {
       );
     } finally {
       this.isCheckingAppUpdate = false;
+      this.cdr.detectChanges();
     }
+  }
+
+  async openMap(): Promise<void> {
+    const isEs = this.currentLang === 'es';
+    const alert = await this.alertController.create({
+      header: isEs ? 'Mapa de Aethric' : 'Aethric Map',
+      subHeader: isEs ? 'Fase de prueba' : 'Testing phase',
+      message: isEs
+        ? 'El mapa interactivo está en fase de prueba y puede tener requerimientos adicionales de rendimiento.'
+        : 'The interactive map is in testing phase and may have performance requirements.',
+      backdropDismiss: true,
+      buttons: [
+        {
+          text: isEs ? 'Cancelar' : 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: isEs ? 'Aceptar' : 'Accept',
+          handler: () => {
+            this.router.navigate(['/map']);
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 
   downloadApk(event?: Event): void {

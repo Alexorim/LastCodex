@@ -468,6 +468,83 @@
       color: var(--codex-text-muted);
       line-height: 1.3;
     }
+
+    .map-access-section {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px dashed rgba(189, 165, 69, 0.25);
+
+      .settings-map-btn {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 14px;
+        background: #1c1b1a;
+        border: 1px solid var(--codex-line);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-align: left;
+        color: inherit;
+        font-family: inherit;
+
+        &:hover {
+          border-color: var(--codex-gold);
+          background: rgba(189, 165, 69, 0.08);
+          transform: translateY(-1px);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+
+        .settings-map-btn-left {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .settings-map-icon-circle {
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          background: rgba(189, 165, 69, 0.15);
+          border: 1px solid rgba(189, 165, 69, 0.4);
+          color: var(--codex-gold-bright, #f0a500);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.25rem;
+          flex-shrink: 0;
+        }
+
+        .settings-map-text-group {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+
+          .settings-map-title {
+            font-family: var(--codex-font-heading);
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--codex-gold-bright, #f0a500);
+          }
+
+          .settings-map-subtitle {
+            font-size: 0.74rem;
+            color: var(--codex-text-muted);
+          }
+        }
+
+        .settings-map-chevron {
+          font-size: 1rem;
+          color: var(--codex-gold);
+          opacity: 0.7;
+        }
+      }
+    }
   }
 
   .external-links {
@@ -951,8 +1028,36 @@
       }
     }
 
-    .apk-download-help {
-      color: #6e655c !important;
+    .map-access-section {
+      border-top-color: rgba(160, 130, 40, 0.25) !important;
+
+      .settings-map-btn {
+        background: #fdfbf7 !important;
+        border-color: rgba(160, 130, 40, 0.3) !important;
+
+        &:hover {
+          background: #f5efe6 !important;
+          border-color: #856108 !important;
+        }
+
+        .settings-map-icon-circle {
+          background: rgba(189, 165, 69, 0.18) !important;
+          border-color: #bda545 !important;
+          color: #856108 !important;
+        }
+
+        .settings-map-title {
+          color: #856108 !important;
+        }
+
+        .settings-map-subtitle {
+          color: #6e655c !important;
+        }
+
+        .settings-map-chevron {
+          color: #856108 !important;
+        }
+      }
     }
   }
 
@@ -1129,8 +1234,36 @@
       }
     }
 
-    .apk-download-help {
-      color: #878793 !important;
+    .map-access-section {
+      border-top-color: rgba(238, 170, 192, 0.35) !important;
+
+      .settings-map-btn {
+        background: #ffffff !important;
+        border-color: rgba(238, 170, 192, 0.45) !important;
+
+        &:hover {
+          background: #fff0f4 !important;
+          border-color: #965357 !important;
+        }
+
+        .settings-map-icon-circle {
+          background: rgba(251, 176, 196, 0.25) !important;
+          border-color: #eeaac0 !important;
+          color: #965357 !important;
+        }
+
+        .settings-map-title {
+          color: #965357 !important;
+        }
+
+        .settings-map-subtitle {
+          color: #878793 !important;
+        }
+
+        .settings-map-chevron {
+          color: #965357 !important;
+        }
+      }
     }
   }
 

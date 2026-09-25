@@ -283,6 +283,27 @@
               <ion-icon name="refresh-outline"></ion-icon>
             </button>
           </div>
+
+          <!-- Permite descargar el instalador APK aunque ya esté al día -->
+          <div class="update-action-block" style="padding-top: 10px; margin-top: 8px; border-top: 1px dashed rgba(76, 217, 100, 0.3);">
+            <a [href]="apkDownloadUrl" [download]="apkFileName" target="_blank" (click)="downloadApk($event)" class="apk-download-btn" style="padding: 10px 12px;">
+              <div class="apk-btn-left">
+                <div class="apk-icon-circle" style="width: 32px; height: 32px; font-size: 1.1rem;">
+                  <ion-icon name="cloud-download-outline"></ion-icon>
+                </div>
+                <div class="apk-text-group">
+                  <span class="apk-title" style="font-size: 0.86rem;">{{ currentLang === 'es' ? 'Descargar APK (' + appVersion + ')' : 'Download APK (' + appVersion + ')' }}</span>
+                  <span class="apk-subtitle">{{ apkFileName }}</span>
+                </div>
+              </div>
+              <ion-icon name="download-outline" class="apk-external-icon"></ion-icon>
+            </a>
+            <div class="apk-direct-links">
+              <a [href]="githubApkUrl" target="_blank" rel="noopener noreferrer" class="apk-mirror-link">
+                {{ currentLang === 'es' ? 'Descarga directa desde GitHub (Mirror)' : 'Direct GitHub Download (Mirror)' }} ↗
+              </a>
+            </div>
+          </div>
         </div>
 
         <!-- 4. HAY UNA NUEVA ACTUALIZACIÓN + DESCARGA DE APK -->
@@ -344,6 +365,29 @@
               <ion-icon name="refresh-outline"></ion-icon>
             </button>
           </div>
+          <div class="update-action-block" style="padding-top: 8px; margin-top: 8px; border-top: 1px dashed rgba(255, 69, 58, 0.3);">
+            <div class="apk-direct-links">
+              <a [href]="githubApkUrl" target="_blank" rel="noopener noreferrer" class="apk-mirror-link">
+                {{ currentLang === 'es' ? 'Descarga manual desde GitHub (Mirror)' : 'Manual Download from GitHub (Mirror)' }} ↗
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Acceso al Mapa de Aethric (Refundido en Ajustes) -->
+        <div class="map-access-section">
+          <button type="button" class="settings-map-btn" (click)="openMap()">
+            <div class="settings-map-btn-left">
+              <div class="settings-map-icon-circle">
+                <ion-icon name="map-outline"></ion-icon>
+              </div>
+              <div class="settings-map-text-group">
+                <span class="settings-map-title">{{ currentLang === 'es' ? 'Mapa de Aethric' : 'Aethric Map' }}</span>
+                <span class="settings-map-subtitle">{{ currentLang === 'es' ? 'Explorar el mapa interactivo y ciudades' : 'Explore interactive world map & cities' }}</span>
+              </div>
+            </div>
+            <ion-icon name="chevron-forward-outline" class="settings-map-chevron"></ion-icon>
+          </button>
         </div>
       </div>
 
