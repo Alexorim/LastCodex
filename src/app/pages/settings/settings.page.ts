@@ -51,7 +51,7 @@ export class SettingsPage implements OnInit, OnDestroy {
   deviceTimezone = '';
   localResetTime = '';
 
-  versionNumber = '1.4.3';
+  versionNumber = '1.4.4';
   appVersion = `v${this.versionNumber}`;
   apkFileName = 'lastcodex_stable.apk';
   apkDownloadUrl = `assets/${this.apkFileName}`;

@@ -1,6 +1,6 @@
 {
   "name": "LastResources",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "author": "Orna Community",
   "homepage": "https://ionicframework.com/",
   "main": "electron-main.js",
