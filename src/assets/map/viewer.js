@@ -153,7 +153,12 @@ class LastCodexMapViewer {
     if (this.btnFilterToggle && this.filterMenu) {
       this.btnFilterToggle.addEventListener('click', (e) => {
         e.stopPropagation();
-        this.filterMenu.classList.toggle('hidden');
+        const isHidden = this.filterMenu.classList.toggle('hidden');
+        if (!isHidden) {
+          this.btnFilterToggle.classList.add('active');
+        } else {
+          this.btnFilterToggle.classList.remove('active');
+        }
       });
     }
 
@@ -161,6 +166,17 @@ class LastCodexMapViewer {
       this.btnCloseFilterMenu.addEventListener('click', (e) => {
         e.stopPropagation();
         this.filterMenu.classList.add('hidden');
+        if (this.btnFilterToggle) this.btnFilterToggle.classList.remove('active');
+      });
+    }
+
+    // Stop clicks/touches inside filterMenu from propagating to the map viewport
+    if (this.filterMenu) {
+      this.filterMenu.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+      });
+      this.filterMenu.addEventListener('click', (e) => {
+        e.stopPropagation();
       });
     }
 
@@ -169,6 +185,7 @@ class LastCodexMapViewer {
       if (this.filterMenu && !this.filterMenu.classList.contains('hidden')) {
         if (!this.filterMenu.contains(e.target) && e.target !== this.btnFilterToggle && !this.btnFilterToggle.contains(e.target)) {
           this.filterMenu.classList.add('hidden');
+          if (this.btnFilterToggle) this.btnFilterToggle.classList.remove('active');
         }
       }
     });

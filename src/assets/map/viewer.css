@@ -288,17 +288,23 @@ body, html {
 .zoom-hud {
   position: absolute;
   right: 16px;
-  bottom: calc(var(--safe-bottom) + 80px);
-  z-index: 110;
+  bottom: calc(var(--safe-bottom) + 90px);
+  z-index: 120;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
+.hud-filter-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
 .hud-btn {
   width: 42px;
   height: 42px;
-  background: rgba(22, 27, 34, 0.9);
+  background: rgba(22, 27, 34, 0.92);
   border: 1px solid var(--border-gold);
   border-radius: 50%;
   color: var(--text-main);
@@ -309,7 +315,7 @@ body, html {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(8px);
   cursor: pointer;
-  transition: transform 0.15s, background 0.15s;
+  transition: transform 0.15s, background 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s;
 }
 
 .hud-btn:active {
@@ -317,29 +323,67 @@ body, html {
   background: rgba(31, 39, 51, 0.95);
 }
 
-/* Filter Popover Menu */
+.hud-btn.active {
+  background: rgba(245, 158, 11, 0.25);
+  border-color: #fbbf24;
+  color: #fbbf24;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.5);
+}
+
+/* Filter Popover Menu (Al lado del botón de filtro hacia la izquierda) */
 .filter-popover {
   position: absolute;
-  right: 70px;
-  bottom: calc(var(--safe-bottom) + 80px);
-  z-index: 160;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 200;
   width: 250px;
-  max-width: calc(100vw - 90px);
-  background: rgba(22, 27, 34, 0.96);
+  max-width: calc(100vw - 80px);
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  background: rgba(22, 27, 34, 0.97);
   border: 1px solid var(--border-gold);
   border-radius: 14px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.75), 0 0 16px rgba(197, 155, 39, 0.25);
   backdrop-filter: blur(14px);
   padding: 12px 14px;
   display: flex;
   flex-direction: column;
   gap: 10px;
   transition: opacity 0.2s ease, transform 0.2s ease;
-  transform-origin: bottom right;
+}
+
+/* Indicador de flecha que apunta exactamente al botón de filtros */
+.filter-popover::after {
+  content: '';
+  position: absolute;
+  right: -7px;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  width: 12px;
+  height: 12px;
+  background: rgba(22, 27, 34, 0.97);
+  border-right: 1px solid var(--border-gold);
+  border-top: 1px solid var(--border-gold);
+  pointer-events: none;
 }
 
 .filter-popover.hidden {
   display: none !important;
+}
+
+.filter-popover::-webkit-scrollbar {
+  width: 4px;
+}
+
+.filter-popover::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.filter-popover::-webkit-scrollbar-thumb {
+  background: var(--border-gold);
+  border-radius: 4px;
 }
 
 .filter-popover-header {
