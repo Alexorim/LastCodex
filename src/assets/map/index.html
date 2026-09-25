@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Hero of Aethric - Mapa Interactivo</title>
+  <link rel="stylesheet" href="viewer.css" />
+</head>
+<body>
+  <div id="viewerApp">
+    <!-- Header flotante con buscador y filtros -->
+    <header class="viewer-header">
+      <div class="header-top-row">
+        <div class="brand-badge">
+          <span class="brand-icon">🗺️</span>
+          <span class="brand-title rpg-font">Hero of Aethric</span>
+        </div>
+        <div class="search-box-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" class="search-input" placeholder="Buscar lugar, tier o servicio..." />
+        </div>
+      </div>
+
+      <!-- Filtros rápidos por Tier y Categoría -->
+      <div class="filter-chips-row">
+        <button type="button" class="chip-btn tier-chip active" data-tier="all">Todos Tiers</button>
+        <button type="button" class="chip-btn tier-chip" data-tier="★">★1</button>
+        <button type="button" class="chip-btn tier-chip" data-tier="★★">★2</button>
+        <button type="button" class="chip-btn tier-chip" data-tier="★★★">★3</button>
+        <button type="button" class="chip-btn tier-chip" data-tier="★★★★">★4</button>
+        <button type="button" class="chip-btn tier-chip" data-tier="★5">★5</button>
+        <button type="button" class="chip-btn tier-chip" data-tier="★6">★6</button>
+        <button type="button" class="chip-btn tier-chip" data-tier="★7">★7</button>
+        <button type="button" class="chip-btn tier-chip" data-tier="★8">★8</button>
+        <button type="button" class="chip-btn tier-chip" data-tier="★9">★9</button>
+        <button type="button" class="chip-btn tier-chip" data-tier="★10">★10</button>
+
+        <!-- Filtros por tipo -->
+        <button type="button" class="chip-btn type-chip active" data-type="all">Todos Tipos</button>
+        <button type="button" class="chip-btn type-chip" data-type="city">🏰 Ciudades</button>
+        <button type="button" class="chip-btn type-chip" data-type="teleport">🌀 Portales</button>
+        <button type="button" class="chip-btn type-chip" data-type="dungeon">💀 Dungeons</button>
+        <button type="button" class="chip-btn type-chip" data-type="celestial_tower">🗼 Torres</button>
+        <button type="button" class="chip-btn type-chip" data-type="arena">⚔️ Arenas</button>
+        <button type="button" class="chip-btn type-chip" data-type="monument">🗿 Monumentos</button>
+      </div>
+    </header>
+
+    <!-- Visor de Mapamundi -->
+    <main id="mapViewport" class="map-viewport">
+      <div id="mapStage" class="map-stage">
+        <img id="worldMapImg" class="world-map-img" src="proyects/Hero of Aethric/map.png" alt="Mapa de Aethric" draggable="false" />
+        <div id="markersLayer" class="markers-layer"></div>
+      </div>
+    </main>
+
+    <!-- Controles de Zoom HUD flotantes -->
+    <div class="zoom-hud">
+      <button type="button" id="btnZoomIn" class="hud-btn" title="Acercar">＋</button>
+      <button type="button" id="btnZoomOut" class="hud-btn" title="Alejar">－</button>
+      <button type="button" id="btnZoomReset" class="hud-btn" title="Centrar mapa">⛶</button>
+    </div>
+
+    <!-- Drawer Inferior de Detalles (Ficha de Marcador / Edificio) -->
+    <section id="detailDrawer" class="detail-drawer">
+      <div class="drawer-drag-pill"></div>
+      
+      <div class="drawer-header">
+        <div class="drawer-title-row">
+          <div id="drawerIconBox" class="drawer-icon-box">📍</div>
+          <div class="drawer-titles">
+            <h3 id="drawerTitle" class="rpg-font">Nombre del Lugar</h3>
+            <div class="drawer-badges">
+              <span id="drawerBadgeType" class="badge-tag badge-type">Ciudad</span>
+              <span id="drawerBadgeTier" class="badge-tag badge-tier">★1</span>
+              <span id="drawerBadgeLevel" class="badge-tag badge-level">Nv. 1-10</span>
+            </div>
+          </div>
+        </div>
+        <button type="button" id="drawerCloseBtn" class="drawer-close-btn" title="Cerrar">✕</button>
+      </div>
+
+      <div class="drawer-body">
+        <div id="drawerLore" class="drawer-lore">"Descripción del lugar..."</div>
+        
+        <div id="drawerDetailsRow" class="drawer-details-row">
+          <strong>Servicios y Detalles</strong>
+          <span id="drawerDetailsText">Herrería, posada, taberna.</span>
+        </div>
+
+        <!-- Lista de edificios en la ciudad -->
+        <div id="drawerBuildingsSection" class="buildings-preview-box" style="display:none;">
+          <div class="buildings-preview-title rpg-font">Edificios y Servicios</div>
+          <div id="drawerBuildingsGrid" class="buildings-grid"></div>
+        </div>
+      </div>
+
+      <!-- Botón de Acción Principal para Ciudades -->
+      <button type="button" id="btnEnterCity" class="btn-enter-city rpg-font" style="display:none;">
+        <span>🏰</span>
+        <span>Ingresar a la Ciudad</span>
+      </button>
+    </section>
+
+    <!-- Overlay de Vista Interior de Ciudad -->
+    <div id="cityOverlay" class="city-view-overlay">
+      <div class="city-top-bar">
+        <button type="button" id="btnBackToWorld" class="btn-back-world rpg-font">
+          <span>⬅</span>
+          <span>Volver al Mapamundi</span>
+        </button>
+        <div class="city-info-title">
+          <span id="cityTitleText" class="city-title-text rpg-font">Ciudad</span>
+          <span id="cityBldCount" class="city-bld-count">0 Edificios</span>
+        </div>
+      </div>
+
+      <!-- Visor de Plano de la Ciudad -->
+      <div id="cityViewport" class="city-map-viewport">
+        <div id="cityStage" class="city-map-stage">
+          <img id="cityMapImg" class="city-map-img" src="" alt="Plano de la Ciudad" draggable="false" />
+          <div id="cityMarkersLayer" class="city-markers-layer"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="markers.data.js"></script>
+  <script src="viewer.js"></script>
+</body>
+</html>

@@ -2,7 +2,7 @@
   <ion-toolbar class="codex-toolbar">
     <div class="header-inner">
       <div class="brand-left clickable" (click)="goToHome()" title="Ir a Inicio">
-        <button type="button" class="back-btn" (click)="goToHome()">
+        <button type="button" class="back-btn" (click)="goToHome()" aria-label="Volver">
           <ion-icon name="arrow-back-outline"></ion-icon>
         </button>
         <img src="assets/icon/last_codex.png" alt="LastResources Logo" class="brand-emblem" />
@@ -15,40 +15,22 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding codex-content">
-  <div class="map-beta-container">
-    <div class="map-beta-card codex-box">
-      <div class="map-beta-emblem-wrap">
-        <ion-icon name="map" class="map-emblem-icon"></ion-icon>
-      </div>
-
-      <div class="beta-badge">
-        {{ currentLang === 'es' ? 'FASE DE PRUEBA' : 'TESTING PHASE' }}
-      </div>
-
-      <h2 class="beta-title">
-        {{ currentLang === 'es' ? 'Mapa Interactivo de Aethric' : 'Aethric Interactive Map' }}
-      </h2>
-
-      <p class="beta-desc">
-        {{ currentLang === 'es'
-          ? 'El mapa mundial y los planos de ciudades se encuentran en fase de prueba y optimización de rendimiento.'
-          : 'The world map and city plans are in testing phase and performance optimization.' }}
-      </p>
-
-      <div class="beta-notice-box">
-        <ion-icon name="warning-outline"></ion-icon>
-        <span>
-          {{ currentLang === 'es'
-            ? 'Actualmente optimizando la carga de texturas y memoria para garantizar máxima fluidez en dispositivos móviles.'
-            : 'Currently optimizing texture loading and memory for maximum smoothness on mobile devices.' }}
-        </span>
-      </div>
-
-      <button type="button" class="btn-return-home" (click)="goToHome()">
-        <ion-icon name="home-outline"></ion-icon>
-        <span>{{ currentLang === 'es' ? 'Volver al Inicio' : 'Return to Home' }}</span>
-      </button>
+<ion-content class="map-content-no-scroll" [fullscreen]="true">
+  <!-- Loading overlay while iframe and high-res map textures initialize -->
+  <div *ngIf="isLoadingMap" class="map-loading-overlay">
+    <div class="loading-spinner-box">
+      <ion-icon name="map-outline" class="loading-map-icon"></ion-icon>
+      <div class="loading-text">{{ currentLang === 'es' ? 'Cargando Mapa de Aethric...' : 'Loading Aethric Map...' }}</div>
+      <div class="loading-subtext">{{ currentLang === 'es' ? 'Preparando marcadores y ciudades' : 'Preparing markers and cities' }}</div>
     </div>
   </div>
+
+  <iframe
+    [src]="mapViewerUrl"
+    class="map-frame"
+    [class.loaded]="!isLoadingMap"
+    (load)="onMapLoaded()"
+    allow="fullscreen"
+    title="Aethric Map Viewer"
+  ></iframe>
 </ion-content>

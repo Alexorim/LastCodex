@@ -1,0 +1,656 @@
+@font-face {
+  font-family: 'CinzelDecorative';
+  src: url('fonts/CinzelDecorative-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg-dark: #0f1218;
+  --bg-panel: #161b22;
+  --bg-card: #1f2733;
+  --border-gold: #c59b27;
+  --border-subtle: #2d3748;
+  --text-main: #f0f3f6;
+  --text-muted: #94a3b8;
+  --text-gold: #eab308;
+  --accent-blue: #3b82f6;
+  --accent-cyan: #06b6d4;
+  --accent-gold: #f59e0b;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.rpg-font {
+  font-family: 'CinzelDecorative', serif, -apple-system, BlinkMacSystemFont;
+  letter-spacing: 0.5px;
+}
+
+/* App Container */
+#viewerApp {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header & Filter Bar */
+.viewer-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: linear-gradient(180deg, rgba(15, 18, 24, 0.95) 0%, rgba(15, 18, 24, 0.85) 80%, rgba(15, 18, 24, 0) 100%);
+  padding: calc(var(--safe-top) + 8px) 14px 14px 14px;
+  pointer-events: none;
+}
+
+.header-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+.brand-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(22, 27, 34, 0.85);
+  border: 1px solid var(--border-gold);
+  border-radius: 20px;
+  padding: 6px 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+}
+
+.brand-icon {
+  font-size: 18px;
+}
+
+.brand-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-gold);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.search-box-wrap {
+  flex: 1;
+  max-width: 320px;
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  height: 36px;
+  background: rgba(31, 39, 51, 0.85);
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  padding: 0 14px 0 34px;
+  color: var(--text-main);
+  font-size: 13px;
+  backdrop-filter: blur(8px);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  border-color: var(--accent-gold);
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  opacity: 0.6;
+}
+
+/* Filter Chips */
+.filter-chips-row {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-top: 8px;
+  pointer-events: auto;
+  scrollbar-width: none;
+}
+
+.filter-chips-row::-webkit-scrollbar {
+  display: none;
+}
+
+.chip-btn {
+  white-space: nowrap;
+  padding: 5px 11px;
+  border-radius: 14px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(31, 39, 51, 0.85);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: all 0.2s ease;
+}
+
+.chip-btn.active {
+  background: linear-gradient(135deg, #b45309 0%, #d97706 100%);
+  border-color: var(--border-gold);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.4);
+}
+
+/* Map Viewport */
+.map-viewport {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+}
+
+.map-viewport.is-panning {
+  cursor: grabbing;
+}
+
+.map-stage {
+  position: absolute;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.world-map-img {
+  display: block;
+  max-width: none;
+  image-rendering: auto;
+  pointer-events: none;
+}
+
+/* Markers Layer */
+.markers-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.viewer-marker {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  pointer-events: auto;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 20;
+  transition: transform 0.15s ease-out;
+}
+
+.viewer-marker:hover,
+.viewer-marker.active {
+  transform: translate(-50%, -100%) scale(1.15);
+  z-index: 50;
+}
+
+.marker-pin-head {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 2px solid var(--border-gold);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
+}
+
+.marker-icon-content {
+  transform: rotate(45deg);
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+
+.marker-png-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.marker-tier-stars {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  transform: rotate(45deg);
+  font-size: 8px;
+  color: #fbbf24;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+  font-weight: bold;
+}
+
+.marker-label {
+  margin-top: 3px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(197, 155, 39, 0.5);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #f8fafc;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+}
+
+.marker-label .tier-inline {
+  color: #fbbf24;
+  margin-left: 3px;
+}
+
+/* Zoom Controls HUD */
+.zoom-hud {
+  position: absolute;
+  right: 16px;
+  bottom: calc(var(--safe-bottom) + 80px);
+  z-index: 110;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hud-btn {
+  width: 42px;
+  height: 42px;
+  background: rgba(22, 27, 34, 0.9);
+  border: 1px solid var(--border-gold);
+  border-radius: 50%;
+  color: var(--text-main);
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition: transform 0.15s, background 0.15s;
+}
+
+.hud-btn:active {
+  transform: scale(0.92);
+  background: rgba(31, 39, 51, 0.95);
+}
+
+/* Detail Card / Bottom Drawer */
+.detail-drawer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 150;
+  background: var(--bg-panel);
+  border-top: 2px solid var(--border-gold);
+  border-radius: 18px 18px 0 0;
+  padding: 16px 18px calc(var(--safe-bottom) + 85px) 18px;
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.7);
+  transform: translateY(100%);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+.detail-drawer.open {
+  transform: translateY(0);
+}
+
+.drawer-drag-pill {
+  width: 40px;
+  height: 4px;
+  background: #475569;
+  border-radius: 2px;
+  margin: 0 auto 12px auto;
+}
+
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.drawer-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.drawer-icon-box {
+  width: 44px;
+  height: 44px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-gold);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.drawer-titles h3 {
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.drawer-badges {
+  display: flex;
+  gap: 6px;
+  margin-top: 3px;
+}
+
+.badge-tag {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.badge-type {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.4);
+}
+
+.badge-tier {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.badge-level {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.drawer-close-btn {
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.drawer-body {
+  font-size: 13px;
+  color: #cbd5e1;
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.drawer-lore {
+  background: rgba(0, 0, 0, 0.25);
+  border-left: 3px solid var(--border-gold);
+  padding: 8px 12px;
+  border-radius: 0 6px 6px 0;
+  font-style: italic;
+}
+
+.drawer-details-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.drawer-details-row strong {
+  color: var(--text-gold);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Interior Buildings List in City */
+.buildings-preview-box {
+  margin-top: 6px;
+}
+
+.buildings-preview-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-gold);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.buildings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 6px;
+}
+
+.building-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 11px;
+}
+
+/* Primary Action Button (Enter City) */
+.btn-enter-city {
+  width: 100%;
+  height: 44px;
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  border: 1px solid #fde047;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(180, 83, 9, 0.4);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.btn-enter-city:active {
+  transform: scale(0.98);
+}
+
+/* =========================================================
+   CITY INTERIOR VIEW (Plano de Ciudad)
+   ========================================================= */
+.city-view-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 200;
+  background: #090c10;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.city-view-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.city-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(var(--safe-top) + 8px) 14px 10px 14px;
+  background: rgba(15, 18, 24, 0.95);
+  border-bottom: 1px solid var(--border-gold);
+  z-index: 210;
+}
+
+.btn-back-world {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(31, 39, 51, 0.85);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  color: var(--text-main);
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-back-world:active {
+  background: rgba(59, 130, 246, 0.3);
+  border-color: var(--accent-blue);
+}
+
+.city-info-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.city-title-text {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-gold);
+}
+
+.city-bld-count {
+  font-size: 10.5px;
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.city-map-viewport {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+}
+
+.city-map-stage {
+  position: absolute;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.city-map-img {
+  display: block;
+  max-width: none;
+  image-rendering: auto;
+  pointer-events: none;
+}
+
+.city-markers-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.city-building-pin {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  pointer-events: auto;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 25;
+  transition: transform 0.15s ease-out;
+}
+
+.city-building-pin:hover,
+.city-building-pin.active {
+  transform: translate(-50%, -100%) scale(1.18);
+  z-index: 60;
+}
+
+.bld-pin-head {
+  width: 30px;
+  height: 30px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+  border: 2px solid #60a5fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
+}
+
+.bld-pin-icon {
+  transform: rotate(45deg);
+  font-size: 14px;
+}
+
+.bld-label {
+  margin-top: 3px;
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(96, 165, 250, 0.5);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #f8fafc;
+  white-space: nowrap;
+}
