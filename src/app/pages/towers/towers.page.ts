@@ -20,9 +20,10 @@ import {
   flameOutline,
   waterOutline,
   moonOutline,
-  sunnyOutline
+  sunnyOutline,
+  trendingUpOutline
 } from 'ionicons/icons';
-import { TowersService, TowerInfo, TowerKind, CheckpointProjection, NextGrowthTimer, TOWERS_META } from '../../services/towers.service';
+import { TowersService, TowerInfo, TowerKind, CheckpointProjection, NextGrowthTimer, TowerResetProgression, TOWERS_META } from '../../services/towers.service';
 import { SettingsService, Language } from '../../services/settings.service';
 import { Subscription, interval } from 'rxjs';
 
@@ -47,6 +48,7 @@ export class TowersPage implements OnInit, OnDestroy {
   nextTimer: NextGrowthTimer | null = null;
   projections: CheckpointProjection[] = [];
   selectedTowerDetail: TowerInfo | null = null;
+  selectedTowerResets: TowerResetProgression[] = [];
   isDetailModalOpen = false;
 
   private subs = new Subscription();
@@ -69,7 +71,8 @@ export class TowersPage implements OnInit, OnDestroy {
       flameOutline,
       waterOutline,
       moonOutline,
-      sunnyOutline
+      sunnyOutline,
+      trendingUpOutline
     });
   }
 
@@ -127,12 +130,15 @@ export class TowersPage implements OnInit, OnDestroy {
 
   openTowerDetail(tower: TowerInfo) {
     this.selectedTowerDetail = tower;
+    const lang = this.currentLang === 'es' ? 'es' : 'en';
+    this.selectedTowerResets = this.towersService.getUpcomingResetsForTower(tower.kind, 8, lang);
     this.isDetailModalOpen = true;
   }
 
   closeTowerDetail() {
     this.isDetailModalOpen = false;
     this.selectedTowerDetail = null;
+    this.selectedTowerResets = [];
   }
 
   getSortedPeaks(): TowerInfo[] {
@@ -164,8 +170,15 @@ export class TowersPage implements OnInit, OnDestroy {
   }
 
   openCodexSearch(kind: TowerKind) {
+    const meta = TOWERS_META[kind];
     this.closeTowerDetail();
-    this.router.navigate(['/codex'], { queryParams: { search: `Titan ${TOWERS_META[kind].name}` } });
+    this.router.navigate(['/codex'], {
+      queryParams: {
+        entry: meta.codexId,
+        search: meta.titanNameEs,
+        cat: 'bosses'
+      }
+    });
   }
 
   getTowerIconName(kind: TowerKind): string {

@@ -25,7 +25,7 @@
       <div class="hero-top-row">
         <div class="hero-badge">
           <ion-icon name="time-outline"></ion-icon>
-          <span>{{ currentLang === 'es' ? 'Próximo Crecimiento' : 'Next Tower Growth' }}</span>
+          <span>Tower Up</span>
         </div>
         <div class="hero-utc-tag">
           {{ currentLang === 'es' ? 'Ciclos cada ~4-5h UTC' : 'Cycles every ~4-5h UTC' }}
@@ -39,12 +39,6 @@
           <strong>{{ nextTimer?.targetFormatted }}</strong>
         </span>
       </div>
-
-      <p class="hero-info-text">
-        {{ currentLang === 'es'
-          ? 'Las 5 Torres Celestiales crecen 6 veces al día (+1 piso por ciclo en UTC 01:00, 05:00, 10:00, 15:00, 15:36 y 20:00). Al alcanzar 48-50 pisos, se consolidan en el piso 50 y luego reinician a 15.'
-          : 'The 5 Celestial Towers grow 6 times a day (+1 floor at UTC 01:00, 05:00, 10:00, 15:00, 15:36, 20:00). Upon reaching 48-50, they cap at floor 50 before resetting back to 15.' }}
-      </p>
     </div>
 
     <!-- TABS / SEGMENT SELECTOR -->
@@ -101,7 +95,7 @@
               <span class="tower-card-title rpg-font">{{ tower.title }}</span>
               <span class="tower-element" [style.color]="tower.color">
                 <ion-icon [name]="getTowerIconName(tower.kind)"></ion-icon>
-                {{ tower.element }} • {{ tower.titanName }}
+                {{ tower.titanName }}
               </span>
             </div>
 
@@ -128,7 +122,7 @@
               ⏳ 50F: <strong>{{ tower.timeUntil50 }}</strong> ({{ tower.next50Formatted }})
             </span>
             <span class="tap-detail-hint">
-              {{ currentLang === 'es' ? 'Ver detalles' : 'Details' }} ↗
+              {{ currentLang === 'es' ? 'Ver aumentos' : 'View resets' }} ↗
             </span>
           </div>
         </div>
@@ -160,7 +154,7 @@
             <img [src]="tower.iconUrl" [alt]="tower.titanName" class="peak-titan-icon" />
             <div class="peak-titles">
               <span class="peak-tower-name rpg-font">{{ tower.title }}</span>
-              <span class="peak-element" [style.color]="tower.color">{{ tower.element }}</span>
+              <span class="peak-element" [style.color]="tower.color">{{ tower.titanName }}</span>
             </div>
           </div>
 
@@ -253,7 +247,7 @@
           <div class="modal-title-group">
             <span class="modal-title rpg-font">{{ selectedTowerDetail.title }}</span>
             <span class="modal-subtitle" [style.color]="selectedTowerDetail.color">
-              {{ selectedTowerDetail.element }} • {{ selectedTowerDetail.titanName }}
+              {{ selectedTowerDetail.titanName }}
             </span>
           </div>
           <button type="button" class="modal-close-btn" (click)="closeTowerDetail()">✕</button>
@@ -265,7 +259,7 @@
             <div class="modal-hero-text">
               <div class="modal-floor-badge" [class.is-fifty]="selectedTowerDetail.isMaxFloor">
                 {{ currentLang === 'es' ? 'Piso Actual: ' : 'Current Floor: ' }}
-                <strong>{{ selectedTowerDetail.currentFloor }} / 50</strong>
+                <strong>{{ selectedTowerDetail.currentFloor }} / 50F</strong>
               </div>
               <p class="modal-lore">{{ getTowerLore(selectedTowerDetail.kind) }}</p>
             </div>
@@ -276,6 +270,30 @@
               <span class="stat-label">{{ currentLang === 'es' ? 'Próximo Piso 50' : 'Next 50th Floor' }}</span>
               <span class="stat-value">{{ selectedTowerDetail.timeUntil50 }}</span>
               <span class="stat-sub">{{ selectedTowerDetail.next50Formatted }}</span>
+            </div>
+          </div>
+
+          <!-- PROGRESIÓN DE PISOS EN LOS PRÓXIMOS REINICIOS -->
+          <div class="modal-resets-section" *ngIf="selectedTowerResets && selectedTowerResets.length > 0">
+            <div class="resets-header">
+              <ion-icon name="trending-up-outline"></ion-icon>
+              <span>{{ currentLang === 'es' ? 'Pisos en los Próximos Reinicios' : 'Floors in Upcoming Resets' }}</span>
+            </div>
+            <div class="resets-list">
+              <div
+                *ngFor="let step of selectedTowerResets"
+                class="reset-step-row"
+                [class.is-peak]="step.isFifty"
+              >
+                <div class="step-time-col">
+                  <span class="step-time">{{ step.timeFormatted }}</span>
+                  <span class="step-sub">{{ step.dateFormatted }} • {{ step.relativeTime }}</span>
+                </div>
+                <div class="step-floor-col">
+                  <span class="step-floor-badge" [class.peak]="step.isFifty">{{ step.floor }}F</span>
+                  <span class="step-status-tag" [class.peak]="step.isFifty">{{ step.statusText }}</span>
+                </div>
+              </div>
             </div>
           </div>
 

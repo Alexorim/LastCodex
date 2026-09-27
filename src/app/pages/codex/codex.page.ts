@@ -261,8 +261,19 @@ export class CodexPage implements OnInit, OnDestroy {
 
     this.subs.add(
       this.route.queryParams.subscribe(params => {
-        const itemParam = params['item'] || params['search'] || params['entry'];
-        if (itemParam) {
+        const entryParam = params['entry'];
+        const itemParam = params['item'] || params['search'];
+        if (entryParam) {
+          if (params['cat']) {
+            this.selectedCategory = params['cat'];
+          }
+          if (itemParam) {
+            this.searchQuery = itemParam;
+          }
+          this.selectedSubcategory = 'all';
+          this.currentPage = 1;
+          this.findAndOpenEntry(entryParam);
+        } else if (itemParam) {
           this.searchQuery = itemParam;
           if (params['cat']) {
             this.selectedCategory = params['cat'];
@@ -282,17 +293,23 @@ export class CodexPage implements OnInit, OnDestroy {
       return;
     }
     const clean = nameOrQuery.toLowerCase().trim();
+    const normalize = (s?: string) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+    const cleanNorm = normalize(clean);
+
     let found = this.codexDatabase.find(e =>
+      e.id.toLowerCase() === clean ||
       e.name.toLowerCase() === clean ||
       (e.nameEs && e.nameEs.toLowerCase() === clean) ||
       (e.nameEn && e.nameEn.toLowerCase() === clean) ||
-      e.id.toLowerCase() === clean
+      normalize(e.name) === cleanNorm ||
+      (e.nameEs && normalize(e.nameEs) === cleanNorm) ||
+      (e.nameEn && normalize(e.nameEn) === cleanNorm)
     );
     if (!found) {
       found = this.codexDatabase.find(e =>
-        e.name.toLowerCase().includes(clean) ||
-        (e.nameEs && e.nameEs.toLowerCase().includes(clean)) ||
-        (e.nameEn && e.nameEn.toLowerCase().includes(clean))
+        normalize(e.name).includes(cleanNorm) ||
+        (e.nameEs && normalize(e.nameEs).includes(cleanNorm)) ||
+        (e.nameEn && normalize(e.nameEn).includes(cleanNorm))
       );
     }
     if (found) {
@@ -365,11 +382,15 @@ export class CodexPage implements OnInit, OnDestroy {
       if (!q) {
         return matchCat && matchSubcat && matchTier;
       }
+      const qNorm = q.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
       const matchQuery =
         (entry.name && entry.name.toLowerCase().includes(q)) ||
+        (entry.name && entry.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().includes(qNorm)) ||
         (entry.nameEs && entry.nameEs.toLowerCase().includes(q)) ||
+        (entry.nameEs && entry.nameEs.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().includes(qNorm)) ||
         (entry.nameEn && entry.nameEn.toLowerCase().includes(q)) ||
+        (entry.nameEn && entry.nameEn.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().includes(qNorm)) ||
         (entry.type && entry.type.toLowerCase().includes(q)) ||
         (entry.rarity && entry.rarity.toLowerCase().includes(q)) ||
         (entry.description && entry.description.toLowerCase().includes(q)) ||

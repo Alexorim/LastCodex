@@ -9,6 +9,8 @@ export interface TowerMeta {
   nameEn: string;
   titanNameEs: string;
   titanNameEn: string;
+  titanNameCodex: string;
+  codexId: string;
   elementEs: string;
   elementEn: string;
   color: string;
@@ -16,6 +18,16 @@ export interface TowerMeta {
   iconUrl: string;
   loreEs: string;
   loreEn: string;
+}
+
+export interface TowerResetProgression {
+  time: Date;
+  timeFormatted: string;
+  dateFormatted: string;
+  relativeTime: string;
+  floor: number;
+  isFifty: boolean;
+  statusText: string;
 }
 
 export interface TowerInfo {
@@ -79,6 +91,8 @@ export const TOWERS_META: Record<TowerKind, TowerMeta> = {
     nameEn: 'Selene',
     titanNameEs: 'Titán Selene',
     titanNameEn: 'Titan Selene',
+    titanNameCodex: 'Titán Selene',
+    codexId: '106ab57f-7c23-4a44-9933-419f95a56df3',
     elementEs: 'Luna / Arcano',
     elementEn: 'Moon / Arcana',
     color: '#c084fc',
@@ -94,6 +108,8 @@ export const TOWERS_META: Record<TowerKind, TowerMeta> = {
     nameEn: 'Eos',
     titanNameEs: 'Titán Eos',
     titanNameEn: 'Titan Eos',
+    titanNameCodex: 'Titán Eos',
+    codexId: '087307fa-4d6b-4a7c-a83b-dc681763debc',
     elementEs: 'Luz / Amanecer',
     elementEn: 'Dawn / Holy',
     color: '#fbbf24',
@@ -107,8 +123,10 @@ export const TOWERS_META: Record<TowerKind, TowerMeta> = {
     name: 'Oceanus',
     nameEs: 'Oceanus',
     nameEn: 'Oceanus',
-    titanNameEs: 'Titán Oceanus',
+    titanNameEs: 'Titán Océano',
     titanNameEn: 'Titan Oceanus',
+    titanNameCodex: 'Titán Océano',
+    codexId: '145d32e5-1fda-4638-83ea-2a77cfdcb67c',
     elementEs: 'Agua / Abismo',
     elementEn: 'Water / Abyss',
     color: '#38bdf8',
@@ -122,8 +140,10 @@ export const TOWERS_META: Record<TowerKind, TowerMeta> = {
     name: 'Themis',
     nameEs: 'Themis',
     nameEn: 'Themis',
-    titanNameEs: 'Titán Themis',
+    titanNameEs: 'Titán Temis',
     titanNameEn: 'Titan Themis',
+    titanNameCodex: 'Titán Temis',
+    codexId: '0bd5d3a7-0815-4901-b76c-6fa7ed187e0b',
     elementEs: 'Justicia / Protección',
     elementEn: 'Justice / Ward',
     color: '#eab308',
@@ -139,6 +159,8 @@ export const TOWERS_META: Record<TowerKind, TowerMeta> = {
     nameEn: 'Prometheus',
     titanNameEs: 'Titán Prometeo',
     titanNameEn: 'Titan Prometheus',
+    titanNameCodex: 'Titán Prometeo',
+    codexId: '9b6dcda5-a183-4efd-8a4b-eeaeda86aabf',
     elementEs: 'Fuego / Guerra',
     elementEn: 'Fire / Combat',
     color: '#f87171',
@@ -385,5 +407,90 @@ export class TowersService {
     }
 
     return list;
+  }
+
+  /**
+   * Returns future checkpoint reset steps for a specific tower.
+   * Shows when it increases floor by floor (+1) until reaching 50F or resetting to 15.
+   */
+  getUpcomingResetsForTower(kind: TowerKind, count = 10, lang: 'es' | 'en' = 'es'): TowerResetProgression[] {
+    const results: TowerResetProgression[] = [];
+    const now = new Date();
+    const nowFloors = this.calculateRawFloors(now);
+    let prevFloor = nowFloors[kind];
+
+    for (let dayOffset = 0; dayOffset < 15 && results.length < count; dayOffset++) {
+      for (const [ch, cm] of CHECKPOINTS_UTC) {
+        const cp = new Date(now);
+        cp.setUTCDate(now.getUTCDate() + dayOffset);
+        cp.setUTCHours(ch, cm, 0, 0);
+
+        if (cp.getTime() <= now.getTime()) continue;
+
+        // Calculate floor 1 second after checkpoint triggers
+        const checkpointAfter = new Date(cp.getTime() + 1000);
+        const floors = this.calculateRawFloors(checkpointAfter);
+        const f = floors[kind];
+        const isFifty = f >= 48;
+        const diff = f - prevFloor;
+
+        let statusText = '';
+        if (lang === 'es') {
+          if (isFifty) {
+            statusText = '⭐ ¡Piso 50!';
+          } else if (f < prevFloor) {
+            statusText = 'Reinicia a 15';
+          } else {
+            statusText = `+${diff > 0 ? diff : 1} Piso`;
+          }
+        } else {
+          if (isFifty) {
+            statusText = '⭐ Peak 50F!';
+          } else if (f < prevFloor) {
+            statusText = 'Resets to 15';
+          } else {
+            statusText = `+${diff > 0 ? diff : 1} Floor`;
+          }
+        }
+
+        prevFloor = f;
+
+        const timeFormatted = cp.toLocaleTimeString(lang === 'es' ? 'es-ES' : 'en-US', {
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+
+        const dateFormatted = cp.toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-US', {
+          weekday: 'short',
+          month: 'short',
+          day: 'numeric'
+        });
+
+        const diffMs = cp.getTime() - now.getTime();
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        const remMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+
+        let relativeTime = '';
+        if (diffHours > 0) {
+          relativeTime = lang === 'es' ? `en ${diffHours}h ${remMinutes}m` : `in ${diffHours}h ${remMinutes}m`;
+        } else {
+          relativeTime = lang === 'es' ? `en ${remMinutes}m` : `in ${remMinutes}m`;
+        }
+
+        results.push({
+          time: cp,
+          timeFormatted: `${timeFormatted} (${String(ch).padStart(2, '0')}:${String(cm).padStart(2, '0')} UTC)`,
+          dateFormatted,
+          relativeTime,
+          floor: f,
+          isFifty,
+          statusText
+        });
+
+        if (results.length >= count) break;
+      }
+    }
+
+    return results;
   }
 }
