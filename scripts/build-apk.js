@@ -9,7 +9,7 @@ const version = pkg.version || '1.3.0';
 
 console.log(`=== Starting build pipeline for LastCodex v${version} ===`);
 
-// 1. Sync versionName in android/app/build.gradle
+// 1. Sync versionName in android/app/build.gradle and src/assets/version.json
 const gradlePath = path.join(rootDir, 'android', 'app', 'build.gradle');
 if (fs.existsSync(gradlePath)) {
   let gradleContent = fs.readFileSync(gradlePath, 'utf8');
@@ -17,6 +17,18 @@ if (fs.existsSync(gradlePath)) {
   fs.writeFileSync(gradlePath, gradleContent, 'utf8');
   console.log(`[1/5] Synchronized android/app/build.gradle versionName to "${version}"`);
 }
+
+const versionJsonPath = path.join(rootDir, 'src', 'assets', 'version.json');
+const versionMeta = {
+  version: version,
+  name: "LastResources",
+  updatedAt: new Date().toISOString().split('T')[0],
+  apkFileName: "lastcodex_stable.apk",
+  downloadUrl: "https://lastresources.vercel.app/assets/lastcodex_stable.apk",
+  mirrorUrl: "https://github.com/Alexorim/LastCodex/raw/main/src/assets/lastcodex_stable.apk"
+};
+fs.writeFileSync(versionJsonPath, JSON.stringify(versionMeta, null, 2), 'utf8');
+console.log(`[1/5] Synchronized src/assets/version.json to version "${version}"`);
 
 // 2. Build web production bundle
 console.log(`[2/5] Building Angular production web assets...`);

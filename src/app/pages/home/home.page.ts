@@ -134,9 +134,11 @@ export class HomePage implements OnInit, OnDestroy {
       this.materialsViewMode = savedMode;
     }
 
-    const isNative = Capacitor.isNativePlatform();
+    // Solo mostrar banner si expresamente vino redirigido de un APK antiguo con el parámetro ?outdated=true
+    const urlParams = new URLSearchParams(window.location.search);
+    const isRedirectedOutdated = urlParams.get('outdated') === 'true';
     const isDismissed = sessionStorage.getItem('orna_update_banner_dismissed') === 'true';
-    if (!isNative && !isDismissed) {
+    if (isRedirectedOutdated && !isDismissed) {
       this.showUpdateBanner = true;
     }
 

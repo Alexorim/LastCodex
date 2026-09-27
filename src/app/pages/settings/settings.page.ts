@@ -69,7 +69,7 @@ export class SettingsPage implements OnInit, OnDestroy {
   versionNumber = '1.4.5';
   appVersion = `v${this.versionNumber}`;
   apkFileName = 'lastcodex_stable.apk';
-  apkDownloadUrl = `assets/${this.apkFileName}`;
+  apkDownloadUrl = `https://lastresources.vercel.app/assets/${this.apkFileName}`;
   githubApkUrl = `https://github.com/Alexorim/LastCodex/raw/main/src/assets/lastcodex_stable.apk`;
 
   // Multi-language support (22 Orna languages)
@@ -207,6 +207,9 @@ export class SettingsPage implements OnInit, OnDestroy {
     );
 
     this.isAllTowersNotificationEnabled = this.notificationsService.isAllTowersNotificationEnabled();
+
+    // Verificación automática y silenciosa al entrar a Ajustes
+    this.checkAppUpdates(true);
   }
 
   async onAllTowersNotificationToggle(event: any): Promise<void> {
@@ -370,21 +373,23 @@ export class SettingsPage implements OnInit, OnDestroy {
     }
   }
 
-  async checkAppUpdates(): Promise<void> {
+  async checkAppUpdates(silent = false): Promise<void> {
     if (this.isCheckingAppUpdate) return;
     this.isCheckingAppUpdate = true;
-    this.appUpdateError = '';
+    if (!silent) {
+      this.appUpdateError = '';
+    }
     this.cdr.detectChanges();
 
     const cacheBuster = Date.now();
     let remoteVersion = '';
-    let downloadUrl = this.githubApkUrl;
+    let downloadUrl = `https://lastresources.vercel.app/assets/${this.apkFileName}`;
 
     try {
-      // 1. Probar vía jsDelivr CDN (Ultra rápido, global, sin bloqueo de operadoras)
+      // 1. Probar en primer lugar el servidor oficial en vivo de Vercel (Edge CDN, ultra rápido, sin bloqueos)
       try {
         const data = await this.fetchWithTimeout(
-          `https://cdn.jsdelivr.net/gh/Alexorim/LastCodex@main/src/assets/version.json?t=${cacheBuster}`,
+          `https://lastresources.vercel.app/assets/version.json?t=${cacheBuster}`,
           3500
         );
         if (data && data.version) {
@@ -392,7 +397,7 @@ export class SettingsPage implements OnInit, OnDestroy {
           if (data.downloadUrl) downloadUrl = data.downloadUrl;
         }
       } catch (e) {
-        console.warn('Fallback 1 (jsDelivr) failed:', e);
+        console.warn('Fallback 1 (Vercel CDN) failed:', e);
       }
 
       // 2. Probar raw.githubusercontent.com version.json
@@ -411,7 +416,23 @@ export class SettingsPage implements OnInit, OnDestroy {
         }
       }
 
-      // 3. Probar raw.githubusercontent.com package.json
+      // 3. Probar vía jsDelivr CDN
+      if (!remoteVersion) {
+        try {
+          const data = await this.fetchWithTimeout(
+            `https://cdn.jsdelivr.net/gh/Alexorim/LastCodex@main/src/assets/version.json?t=${cacheBuster}`,
+            3500
+          );
+          if (data && data.version) {
+            remoteVersion = data.version;
+            if (data.downloadUrl) downloadUrl = data.downloadUrl;
+          }
+        } catch (e) {
+          console.warn('Fallback 3 (jsDelivr) failed:', e);
+        }
+      }
+
+      // 4. Probar raw.githubusercontent.com package.json
       if (!remoteVersion) {
         try {
           const data = await this.fetchWithTimeout(
@@ -422,28 +443,17 @@ export class SettingsPage implements OnInit, OnDestroy {
             remoteVersion = data.version;
           }
         } catch (e) {
-          console.warn('Fallback 3 (package.json) failed:', e);
+          console.warn('Fallback 4 (package.json) failed:', e);
         }
       }
 
-      // 4. Fallback a assets/version.json local de la app
-      if (!remoteVersion) {
-        try {
-          const data = await this.fetchWithTimeout(`assets/version.json?t=${cacheBuster}`, 2500);
-          if (data && data.version) {
-            remoteVersion = data.version;
-            if (data.downloadUrl) downloadUrl = data.downloadUrl;
-          }
-        } catch (e) {
-          console.warn('Fallback 4 (assets/version.json) failed:', e);
-        }
-      }
-
+      // IMPORTANTE: NO hacemos fallback al archivo local assets/version.json
+      // porque hacía que una versión antigua en el móvil se leyera a sí misma y dijera que ya estaba al día.
       if (!remoteVersion) {
         throw new Error(
           this.currentLang === 'es'
-            ? 'No se pudo verificar la versión en el servidor.'
-            : 'Could not verify version on the server.'
+            ? 'No se pudo conectar con el servidor para comprobar actualizaciones. Comprueba tu conexión a internet.'
+            : 'Could not connect to server to check for updates. Please check your internet connection.'
         );
       }
 
@@ -456,12 +466,14 @@ export class SettingsPage implements OnInit, OnDestroy {
         this.appUpdateStatus = 'up-to-date';
       }
     } catch (err: any) {
-      this.appUpdateStatus = 'error';
-      this.appUpdateError = err?.message || (
-        this.currentLang === 'es'
-          ? 'Error de conexión al buscar actualizaciones.'
-          : 'Connection error while checking for updates.'
-      );
+      if (!silent) {
+        this.appUpdateStatus = 'error';
+        this.appUpdateError = err?.message || (
+          this.currentLang === 'es'
+            ? 'Error de conexión al buscar actualizaciones.'
+            : 'Connection error while checking for updates.'
+        );
+      }
     } finally {
       this.isCheckingAppUpdate = false;
       this.cdr.detectChanges();
@@ -498,21 +510,19 @@ export class SettingsPage implements OnInit, OnDestroy {
       typeof (window as any).Capacitor.isNativePlatform === 'function' &&
       (window as any).Capacitor.isNativePlatform();
 
-    const directRemoteUrl = `https://github.com/Alexorim/LastCodex/raw/main/src/assets/${this.apkFileName}`;
-    const directLocalUrl = `assets/${this.apkFileName}`;
+    const remoteUrl = this.apkDownloadUrl || `https://lastresources.vercel.app/assets/${this.apkFileName}`;
 
     if (isCapacitor) {
       if (event) event.preventDefault();
-      // On native Capacitor, open the direct link in the system browser so Android download manager handles the APK
-      window.open(directRemoteUrl, '_system');
+      // En Capacitor nativo (Android), abrir la URL remota en el navegador del sistema
+      // para que el Gestor de Descargas baje el APK más reciente desde la nube y no del cliente local
+      window.open(remoteUrl, '_system');
       return;
     }
 
-    // On browser / web:
-    // If event is missing, trigger via window.open
+    // En navegador web:
     if (!event) {
-      window.open(directLocalUrl, '_blank');
+      window.open(remoteUrl, '_blank');
     }
-    // If event is present from <a>, allow browser's native download to proceed without preventDefault
   }
 }
