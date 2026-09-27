@@ -199,7 +199,8 @@ export class CalendarPage implements OnInit, OnDestroy {
             const success = await this.notificationsService.scheduleMaterialReminder(
               item.materialName,
               targetDate,
-              matName
+              matName,
+              firstApp?.guildName
             );
 
             if (success) {

@@ -201,13 +201,28 @@ export class NotificationsService {
     return null;
   }
 
-  async scheduleMaterialReminder(materialName: string, targetDate: Date, displayName?: string): Promise<boolean> {
+  async scheduleMaterialReminder(
+    materialName: string,
+    targetDate: Date,
+    displayName?: string,
+    guildName?: string
+  ): Promise<boolean> {
     const key = materialName.toLowerCase();
     const id = this.generateNotificationId('mat', key);
     const name = displayName || materialName;
 
-    const title = `📦 ¡Material Disponible: ${name}!`;
-    const body = `El material ${name} ya está disponible en la rotación de materiales de gremios.`;
+    let targetGuild = 'gremio';
+    if (guildName && guildName.trim()) {
+      const trimmed = guildName.trim();
+      if (trimmed.toLowerCase().startsWith('gremio') || trimmed.toLowerCase().startsWith('guild')) {
+        targetGuild = trimmed;
+      } else {
+        targetGuild = `gremio ${trimmed}`;
+      }
+    }
+
+    const title = `¡Material Disponible: ${name}!`;
+    const body = `El material ${name} ya está disponible en el ${targetGuild}.`;
 
     const success = await this.scheduleLocal(id, title, body, targetDate);
     if (success) {
@@ -260,8 +275,8 @@ export class NotificationsService {
 
   async scheduleTower50Reminder(kind: TowerKind, towerTitle: string, targetDate: Date): Promise<boolean> {
     const id = this.generateNotificationId('tower', kind);
-    const title = `⭐ ¡${towerTitle} al Piso 50!`;
-    const body = `La ${towerTitle} acaba de alcanzar su punto máximo (Piso 50). ¡Es momento de farmear esquirlas celestiales!`;
+    const title = `¡${towerTitle} al Piso 50!`;
+    const body = `La ${towerTitle} acaba de alcanzar su punto máximo (Piso 50).\n¡Es momento de farmear!`;
 
     const success = await this.scheduleLocal(id, title, body, targetDate);
     if (success) {
