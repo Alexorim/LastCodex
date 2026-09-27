@@ -200,16 +200,16 @@
       </div>
       <div class="info-row">
         <span class="info-label">{{ currentLang === 'es' ? 'Reinicio de Gremios:' : 'Guild Reset Time:' }}</span>
-        <span class="info-val highlight">{{ localResetTime || '11:00 PM' }} (hora local)</span>
+        <span class="info-val highlight">{{ localResetTime || '12:00 AM' }} (hora local)</span>
       </div>
       <div class="info-row">
         <span class="info-label">{{ currentLang === 'es' ? 'Hora Global Orna:' : 'Global Orna Reset:' }}</span>
-        <span class="info-val">04:00:00 UTC</span>
+        <span class="info-val">05:00:00 UTC</span>
       </div>
       <p class="card-desc mt-2">
         {{ currentLang === 'es'
-          ? 'El contador calcula automáticamente el tiempo restante hasta las 11:00 PM (en UTC-5) ajustado a tu reloj local.'
-          : 'The timer automatically tracks the exact reset countdown to 11:00 PM (UTC-5) adjusted to your device.' }}
+          ? 'El contador calcula automáticamente el tiempo restante hasta las 12:00 AM (medianoche en UTC-5) ajustado a tu reloj local.'
+          : 'The timer automatically tracks the exact reset countdown to 12:00 AM (midnight in UTC-5) adjusted to your device.' }}
       </p>
     </div>
 

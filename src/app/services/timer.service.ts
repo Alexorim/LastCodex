@@ -36,10 +36,10 @@ export class TimerService {
   private updateTime(): void {
     const now = new Date();
 
-    // Orna daily shop reset occurs globally at 04:00:00 UTC (11:00 PM / 23:00 in UTC-5)
-    let target = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 4, 0, 0, 0));
+    // Orna daily shop reset occurs globally at 05:00:00 UTC (12:00 AM Midnight in UTC-5 / 00:00)
+    let target = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 5, 0, 0, 0));
     if (now.getTime() >= target.getTime()) {
-      target = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 4, 0, 0, 0));
+      target = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 5, 0, 0, 0));
     }
 
     const diffSeconds = Math.max(0, Math.floor((target.getTime() - now.getTime()) / 1000));
@@ -62,15 +62,15 @@ export class TimerService {
       const timeStr = target.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       this.localResetTimeSubject.next(timeStr);
     } catch {
-      this.localResetTimeSubject.next('11:00 PM');
+      this.localResetTimeSubject.next('12:00 AM');
     }
   }
 
   isInStaleWindow(): boolean {
     const now = new Date();
-    // Check if within 10 minutes past the 04:00 UTC mark
+    // Check if within 10 minutes past the 05:00 UTC mark
     const currentHour = now.getUTCHours();
     const currentMinute = now.getUTCMinutes();
-    return currentHour === 4 && currentMinute < 10;
+    return currentHour === 5 && currentMinute < 10;
   }
 }
