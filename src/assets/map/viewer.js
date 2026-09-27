@@ -36,11 +36,11 @@ class LastCodexMapViewer {
     this.selectedItem = null;
     this.activeCity = null;
 
-    // Filters
+    // Filters (Default: solo ciudades activas por defecto al entrar al mapa)
     this.searchQuery = "";
     this.selectedTier = "all";
     this.selectedType = "all";
-    this.hiddenTypes = new Set();
+    this.hiddenTypes = new Set(['teleport', 'dungeon', 'celestial_tower', 'arena', 'monument']);
 
     // World Map Pan & Zoom
     this.scale = 1;
@@ -88,6 +88,14 @@ class LastCodexMapViewer {
     this.filterMenu = document.getElementById('filterMenu');
     this.btnCloseFilterMenu = document.getElementById('btnCloseFilterMenu');
     this.filterCheckboxes = document.querySelectorAll('.filter-checkbox-item input[type="checkbox"]');
+    if (this.filterCheckboxes && this.filterCheckboxes.length > 0) {
+      this.hiddenTypes.clear();
+      this.filterCheckboxes.forEach(chk => {
+        if (!chk.checked && chk.dataset.type) {
+          this.hiddenTypes.add(chk.dataset.type);
+        }
+      });
+    }
     this.btnFilterSelectAll = document.getElementById('btnFilterSelectAll');
     this.btnFilterDeselectAll = document.getElementById('btnFilterDeselectAll');
 
