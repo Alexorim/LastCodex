@@ -1,0 +1,296 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="codex-toolbar">
+    <div class="header-inner">
+      <div class="brand-left clickable" (click)="goToHome()" title="Ir a Inicio">
+        <img src="assets/icon/last_codex.png" alt="LastResources Logo" class="brand-emblem" />
+        <div>
+          <span class="brand-name">LastResources</span>
+          <span class="brand-subtitle">{{ currentLang === 'es' ? 'Torres de Olimpia' : 'Towers of Olympia' }}</span>
+        </div>
+      </div>
+      <div class="brand-right">
+        <button type="button" class="header-refresh-btn" (click)="refreshData()" [title]="currentLang === 'es' ? 'Actualizar' : 'Refresh'">
+          <ion-icon name="refresh-outline"></ion-icon>
+        </button>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding codex-content">
+  <div class="towers-container">
+
+    <!-- HERO TIMER CARD -->
+    <div class="tower-hero-banner codex-box">
+      <div class="hero-top-row">
+        <div class="hero-badge">
+          <ion-icon name="time-outline"></ion-icon>
+          <span>{{ currentLang === 'es' ? 'Próximo Crecimiento' : 'Next Tower Growth' }}</span>
+        </div>
+        <div class="hero-utc-tag">
+          {{ currentLang === 'es' ? 'Ciclos cada ~4-5h UTC' : 'Cycles every ~4-5h UTC' }}
+        </div>
+      </div>
+
+      <div class="countdown-display">
+        <span class="countdown-numbers">{{ nextTimer?.formattedCountdown || '00:00:00' }}</span>
+        <span class="countdown-target">
+          {{ currentLang === 'es' ? 'Siguiente ciclo a las ' : 'Next cycle at ' }}
+          <strong>{{ nextTimer?.targetFormatted }}</strong>
+        </span>
+      </div>
+
+      <p class="hero-info-text">
+        {{ currentLang === 'es'
+          ? 'Las 5 Torres Celestiales crecen 6 veces al día (+1 piso por ciclo en UTC 01:00, 05:00, 10:00, 15:00, 15:36 y 20:00). Al alcanzar 48-50 pisos, se consolidan en el piso 50 y luego reinician a 15.'
+          : 'The 5 Celestial Towers grow 6 times a day (+1 floor at UTC 01:00, 05:00, 10:00, 15:00, 15:36, 20:00). Upon reaching 48-50, they cap at floor 50 before resetting back to 15.' }}
+      </p>
+    </div>
+
+    <!-- TABS / SEGMENT SELECTOR -->
+    <div class="tower-tabs-bar">
+      <button
+        type="button"
+        class="tower-tab-btn"
+        [class.active]="selectedTab === 'current'"
+        (click)="selectTab('current')"
+      >
+        <ion-icon name="flash-outline"></ion-icon>
+        <span>{{ currentLang === 'es' ? 'Pisos Actuales' : 'Current Floors' }}</span>
+      </button>
+
+      <button
+        type="button"
+        class="tower-tab-btn"
+        [class.active]="selectedTab === 'peaks'"
+        (click)="selectTab('peaks')"
+      >
+        <ion-icon name="sparkles"></ion-icon>
+        <span>{{ currentLang === 'es' ? 'Próximos 50F' : 'Upcoming 50F' }}</span>
+      </button>
+
+      <button
+        type="button"
+        class="tower-tab-btn"
+        [class.active]="selectedTab === 'schedule'"
+        (click)="selectTab('schedule')"
+      >
+        <ion-icon name="calendar-outline"></ion-icon>
+        <span>{{ currentLang === 'es' ? 'Cronograma' : 'Schedule' }}</span>
+      </button>
+    </div>
+
+    <!-- TAB 1: PISOS ACTUALES -->
+    <div *ngIf="selectedTab === 'current'" class="towers-grid">
+      <div
+        *ngFor="let tower of towers"
+        class="tower-card codex-box"
+        [class.max-floor]="tower.isMaxFloor"
+        [class.near-max]="tower.isNearMax && !tower.isMaxFloor"
+        (click)="openTowerDetail(tower)"
+      >
+        <div class="card-left">
+          <div class="titan-avatar-wrapper" [style.background-color]="tower.accentBg">
+            <img [src]="tower.iconUrl" [alt]="tower.titanName" class="titan-sprite" />
+          </div>
+        </div>
+
+        <div class="card-main">
+          <div class="card-header-row">
+            <div class="tower-titles">
+              <span class="tower-card-title rpg-font">{{ tower.title }}</span>
+              <span class="tower-element" [style.color]="tower.color">
+                <ion-icon [name]="getTowerIconName(tower.kind)"></ion-icon>
+                {{ tower.element }} • {{ tower.titanName }}
+              </span>
+            </div>
+
+            <div class="floor-pill" [class.max]="tower.isMaxFloor" [class.near]="tower.isNearMax && !tower.isMaxFloor">
+              <span class="floor-num">{{ tower.currentFloor }}</span>
+              <span class="floor-max">/50F</span>
+            </div>
+          </div>
+
+          <!-- Barra de Progreso de Pisos (15 a 50) -->
+          <div class="tower-progress-bar-wrap">
+            <div
+              class="tower-progress-bar-fill"
+              [style.width.%]="tower.progressPercent"
+              [style.background]="tower.isMaxFloor ? 'linear-gradient(90deg, #10b981 0%, #34d399 100%)' : 'linear-gradient(90deg, var(--codex-gold) 0%, var(--codex-gold-bright) 100%)'"
+            ></div>
+          </div>
+
+          <div class="card-footer-row">
+            <span *ngIf="tower.isMaxFloor" class="highlight-tag max-tag">
+              ⭐ {{ currentLang === 'es' ? '¡En su punto máximo (Piso 50)!' : 'Peak Rewards Active (Floor 50)!' }}
+            </span>
+            <span *ngIf="!tower.isMaxFloor" class="highlight-tag next-tag">
+              ⏳ 50F: <strong>{{ tower.timeUntil50 }}</strong> ({{ tower.next50Formatted }})
+            </span>
+            <span class="tap-detail-hint">
+              {{ currentLang === 'es' ? 'Ver detalles' : 'Details' }} ↗
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: PRÓXIMOS 50 PISOS (PLANIFICADOR) -->
+    <div *ngIf="selectedTab === 'peaks'" class="peaks-container">
+      <div class="peaks-info-banner codex-box">
+        <ion-icon name="sparkles" class="banner-icon-gold"></ion-icon>
+        <div>
+          <h4>{{ currentLang === 'es' ? 'Planificador de Torres en 50 Pisos' : 'Floor 50 Peak Run Planner' }}</h4>
+          <p>
+            {{ currentLang === 'es'
+              ? 'Las torres de 50 pisos ofrecen el máximo de esquirlas celestiales y la batalla final contra el Titán. Aquí tienes las próximas aperturas ordenadas por fecha:'
+              : '50-floor towers yield maximum celestial shards and the Titan boss encounter. Here are the upcoming peaks sorted chronologically:' }}
+          </p>
+        </div>
+      </div>
+
+      <div class="peaks-list">
+        <div
+          *ngFor="let tower of getSortedPeaks()"
+          class="peak-item-card codex-box"
+          [class.active-now]="tower.isMaxFloor"
+          (click)="openTowerDetail(tower)"
+        >
+          <div class="peak-item-left">
+            <img [src]="tower.iconUrl" [alt]="tower.titanName" class="peak-titan-icon" />
+            <div class="peak-titles">
+              <span class="peak-tower-name rpg-font">{{ tower.title }}</span>
+              <span class="peak-element" [style.color]="tower.color">{{ tower.element }}</span>
+            </div>
+          </div>
+
+          <div class="peak-item-right">
+            <span *ngIf="tower.isMaxFloor" class="peak-badge peak-now">
+              {{ currentLang === 'es' ? '¡ACTIVA HOY (50F)!' : 'ACTIVE NOW (50F)!' }}
+            </span>
+            <div *ngIf="!tower.isMaxFloor" class="peak-future-group">
+              <span class="peak-time-countdown">{{ tower.timeUntil50 }}</span>
+              <span class="peak-full-date">{{ tower.next50Formatted }}</span>
+            </div>
+            <ion-icon name="chevron-forward-outline" class="peak-chevron"></ion-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: CRONOGRAMA COMPLETO -->
+    <div *ngIf="selectedTab === 'schedule'" class="schedule-container">
+      <div class="schedule-filters-row">
+        <button
+          type="button"
+          class="filter-chip"
+          [class.active]="selectedTowerFilter === 'all'"
+          (click)="selectedTowerFilter = 'all'"
+        >
+          {{ currentLang === 'es' ? 'Todas las Torres' : 'All Towers' }}
+        </button>
+        <button
+          *ngFor="let t of towers"
+          type="button"
+          class="filter-chip"
+          [class.active]="selectedTowerFilter === t.kind"
+          (click)="selectedTowerFilter = t.kind"
+        >
+          {{ t.name }}
+        </button>
+      </div>
+
+      <div class="schedule-table-card codex-box">
+        <div class="table-responsive">
+          <table class="towers-table">
+            <thead>
+              <tr>
+                <th class="th-time">{{ currentLang === 'es' ? 'Hora Local' : 'Local Time' }}</th>
+                <th *ngIf="selectedTowerFilter === 'all' || selectedTowerFilter === 'selene'" class="th-selene">Selene</th>
+                <th *ngIf="selectedTowerFilter === 'all' || selectedTowerFilter === 'eos'" class="th-eos">Eos</th>
+                <th *ngIf="selectedTowerFilter === 'all' || selectedTowerFilter === 'oceanus'" class="th-oceanus">Oceanus</th>
+                <th *ngIf="selectedTowerFilter === 'all' || selectedTowerFilter === 'themis'" class="th-themis">Themis</th>
+                <th *ngIf="selectedTowerFilter === 'all' || selectedTowerFilter === 'prometheus'" class="th-prometheus">Prometheus</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of getFilteredProjections()" [class.row-today]="row.isToday" [class.has-fifty]="row.has50Floor">
+                <td class="td-time">
+                  <div class="time-main">{{ row.timeFormatted }}</div>
+                  <div class="time-sub">{{ row.dateFormatted }} ({{ row.relativeTime }})</div>
+                </td>
+
+                <td *ngIf="selectedTowerFilter === 'all' || selectedTowerFilter === 'selene'" class="td-floor" [class.is-fifty]="row.floors['selene'] >= 48">
+                  <span class="floor-cell-badge">{{ row.floors['selene'] }}F</span>
+                </td>
+
+                <td *ngIf="selectedTowerFilter === 'all' || selectedTowerFilter === 'eos'" class="td-floor" [class.is-fifty]="row.floors['eos'] >= 48">
+                  <span class="floor-cell-badge">{{ row.floors['eos'] }}F</span>
+                </td>
+
+                <td *ngIf="selectedTowerFilter === 'all' || selectedTowerFilter === 'oceanus'" class="td-floor" [class.is-fifty]="row.floors['oceanus'] >= 48">
+                  <span class="floor-cell-badge">{{ row.floors['oceanus'] }}F</span>
+                </td>
+
+                <td *ngIf="selectedTowerFilter === 'all' || selectedTowerFilter === 'themis'" class="td-floor" [class.is-fifty]="row.floors['themis'] >= 48">
+                  <span class="floor-cell-badge">{{ row.floors['themis'] }}F</span>
+                </td>
+
+                <td *ngIf="selectedTowerFilter === 'all' || selectedTowerFilter === 'prometheus'" class="td-floor" [class.is-fifty]="row.floors['prometheus'] >= 48">
+                  <span class="floor-cell-badge">{{ row.floors['prometheus'] }}F</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL DETALLE DE TORRE -->
+    <div *ngIf="isDetailModalOpen && selectedTowerDetail" class="tower-modal-backdrop" (click)="closeTowerDetail()">
+      <div class="tower-modal-card codex-box" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <span class="modal-title rpg-font">{{ selectedTowerDetail.title }}</span>
+            <span class="modal-subtitle" [style.color]="selectedTowerDetail.color">
+              {{ selectedTowerDetail.element }} • {{ selectedTowerDetail.titanName }}
+            </span>
+          </div>
+          <button type="button" class="modal-close-btn" (click)="closeTowerDetail()">✕</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="modal-titan-hero" [style.background]="selectedTowerDetail.accentBg">
+            <img [src]="selectedTowerDetail.iconUrl" [alt]="selectedTowerDetail.titanName" class="modal-titan-img" />
+            <div class="modal-hero-text">
+              <div class="modal-floor-badge" [class.is-fifty]="selectedTowerDetail.isMaxFloor">
+                {{ currentLang === 'es' ? 'Piso Actual: ' : 'Current Floor: ' }}
+                <strong>{{ selectedTowerDetail.currentFloor }} / 50</strong>
+              </div>
+              <p class="modal-lore">{{ getTowerLore(selectedTowerDetail.kind) }}</p>
+            </div>
+          </div>
+
+          <div class="modal-quick-stats">
+            <div class="stat-box">
+              <span class="stat-label">{{ currentLang === 'es' ? 'Próximo Piso 50' : 'Next 50th Floor' }}</span>
+              <span class="stat-value">{{ selectedTowerDetail.timeUntil50 }}</span>
+              <span class="stat-sub">{{ selectedTowerDetail.next50Formatted }}</span>
+            </div>
+          </div>
+
+          <div class="modal-action-buttons">
+            <button type="button" class="btn-codex-jump" (click)="openCodexSearch(selectedTowerDetail.kind)">
+              <ion-icon name="open-outline"></ion-icon>
+              <span>{{ currentLang === 'es' ? 'Ver Titán en Códice' : 'View Titan in Codex' }}</span>
+            </button>
+            <a [href]="getTitanCodexUrl(selectedTowerDetail.kind)" target="_blank" rel="noopener noreferrer" class="btn-official-jump">
+              PlayOrna.com ↗
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</ion-content>

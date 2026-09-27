@@ -20,6 +20,10 @@ const routes: Routes = [
         loadComponent: () => import('../pages/calendar/calendar.page').then(m => m.CalendarPage)
       },
       {
+        path: 'towers',
+        loadComponent: () => import('../pages/towers/towers.page').then(m => m.TowersPage)
+      },
+      {
         path: 'codex/classes',
         loadComponent: () => import('../pages/codex-classes/codex-classes.page').then(m => m.CodexClassesPage)
       },
