@@ -29,7 +29,9 @@ import {
   notificationsOutline,
   notifications,
   alarmOutline,
-  alarm
+  alarm,
+  shieldOutline,
+  documentTextOutline
 } from 'ionicons/icons';
 import { Router } from '@angular/router';
 import { SettingsService, Language, ThemeMode, AVAILABLE_LANGUAGES, LanguageOption } from '../../services/settings.service';
@@ -126,8 +128,14 @@ export class SettingsPage implements OnInit, OnDestroy {
       notificationsOutline,
       notifications,
       alarmOutline,
-      alarm
+      alarm,
+      shieldOutline,
+      documentTextOutline
     });
+  }
+
+  goToLegal(): void {
+    this.router.navigate(['/legal']);
   }
 
   ngOnInit() {

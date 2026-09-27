@@ -553,6 +553,10 @@
     flex-wrap: wrap;
 
     .codex-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
       font-size: 0.8rem;
       color: var(--codex-gold);
       text-decoration: none;
@@ -565,6 +569,39 @@
       &:hover {
         border-color: var(--codex-gold);
         background: #252320;
+      }
+
+      &.legal-btn {
+        color: var(--codex-text-primary, #e0d8c3);
+        border-color: rgba(77, 208, 225, 0.35);
+
+        &:hover {
+          border-color: #4dd0e1;
+          color: #4dd0e1;
+        }
+      }
+    }
+  }
+
+  .footer-legal-links {
+    margin-top: 6px;
+
+    .footer-legal-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.74rem;
+      color: var(--codex-text-muted, #9e9589);
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: var(--codex-gold, #bda545);
+        color: var(--codex-gold, #bda545);
       }
     }
   }

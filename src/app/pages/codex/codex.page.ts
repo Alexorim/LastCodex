@@ -43,6 +43,7 @@ import {
   playBackOutline,
   playForwardOutline
 } from 'ionicons/icons';
+import { RouterModule } from '@angular/router';
 import { SettingsService, Language } from '../../services/settings.service';
 import { CodexService, CodexEntry, CodexSubItem, SyncProgress, UpdateCheckResult } from '../../services/codex.service';
 import { BackButtonService } from '../../services/back-button.service';
@@ -63,7 +64,7 @@ export interface CodexCategory {
   templateUrl: './codex.page.html',
   styleUrls: ['./codex.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule, RouterModule]
 })
 export class CodexPage implements OnInit, OnDestroy {
   private settingsService = inject(SettingsService);
@@ -73,6 +74,10 @@ export class CodexPage implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
 
   private subs = new Subscription();
+
+  goToLegal(): void {
+    this.router.navigate(['/legal']);
+  }
   private unregisterBackOverlay: (() => void) | null = null;
   private pendingSearchItem: string | null = null;
   currentLang: Language = 'es';

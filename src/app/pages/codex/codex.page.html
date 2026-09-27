@@ -17,6 +17,22 @@
       </div>
     </div>
 
+    <!-- Indicación Expresa: Datos Públicos con Fines Informativos y Educativos -->
+    <div class="codex-public-notice">
+      <div class="notice-left">
+        <ion-icon name="information-circle-outline" class="notice-icon"></ion-icon>
+        <span class="notice-text">
+          {{ currentLang === 'es'
+            ? 'Los datos mostrados en este Códice son datos públicos recopilados exclusivamente con fines informativos y educativos para la comunidad de jugadores.'
+            : 'Data displayed in this Codex are public data collected exclusively for informational and educational purposes for the player community.' }}
+        </span>
+      </div>
+      <button type="button" class="notice-legal-btn" (click)="goToLegal()" [title]="currentLang === 'es' ? 'Ver Aviso Legal Completo' : 'View Legal Notice'">
+        <ion-icon name="shield-outline"></ion-icon>
+        <span>{{ currentLang === 'es' ? 'Aviso Legal' : 'Legal' }}</span>
+      </button>
+    </div>
+
     <!-- Additional Content Available Notification Banner -->
     <div class="codex-update-banner" *ngIf="updateStatus?.hasUpdate && !bannerDismissed && !syncProgress.running">
       <div class="banner-left">
@@ -604,6 +620,16 @@
             </div>
           </div>
 
+          <!-- Atribución de datos públicos en el modal -->
+          <div class="modal-data-attribution">
+            <ion-icon name="information-circle-outline"></ion-icon>
+            <span>
+              {{ currentLang === 'es'
+                ? 'Datos públicos recopilados con fines informativos para la comunidad de jugadores. Marcas y derechos reservados de Northern Forge Studios.'
+                : 'Public game data collected for informational purposes for the player community. Trademarks and copyrights reserved by Northern Forge Studios.' }}
+            </span>
+          </div>
+
         </div>
       </div>
     </div>
@@ -612,8 +638,16 @@
     <div class="codex-footer">
       <div class="brand-credit">LastResources</div>
       <p class="disclaimer-text">
-        Fan-made project. Not affiliated with Northern Forge Studios or the official Orna developers.
+        {{ currentLang === 'es'
+          ? 'Herramienta comunitaria gratuita sin fines de lucro hecha por y para fans. Orna y Hero of Aethric son marcas de Northern Forge Studios. Este proyecto no está respaldado ni asociado con Northern Forge Studios.'
+          : 'Free non-profit community tool made by and for fans. Orna and Hero of Aethric are trademarks of Northern Forge Studios. This project is not affiliated with Northern Forge Studios.' }}
       </p>
+      <div class="footer-legal-links">
+        <button type="button" class="footer-legal-btn" (click)="goToLegal()">
+          <ion-icon name="shield-checkmark-outline"></ion-icon>
+          <span>{{ currentLang === 'es' ? 'Aviso Legal, DMCA & Privacidad' : 'Legal Notice, DMCA & Privacy' }}</span>
+        </button>
+      </div>
     </div>
 
   </div>

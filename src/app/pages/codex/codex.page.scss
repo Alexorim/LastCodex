@@ -2310,4 +2310,101 @@
   }
 }
 
+/* Indicación Expresa de Datos Públicos & Aviso Legal */
+.codex-public-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(189, 165, 69, 0.08);
+  border: 1px solid rgba(189, 165, 69, 0.25);
+  border-radius: 8px;
+  padding: 8px 14px;
+  margin: 6px 0 12px 0;
+
+  .notice-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+
+    .notice-icon {
+      font-size: 1.25rem;
+      color: var(--codex-gold, #bda545);
+      flex-shrink: 0;
+    }
+
+    .notice-text {
+      font-size: 0.76rem;
+      color: var(--codex-text-muted, #9e9589);
+      line-height: 1.35;
+    }
+  }
+
+  .notice-legal-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(189, 165, 69, 0.35);
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 0.74rem;
+    color: var(--codex-gold, #bda545);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+
+    &:hover {
+      background: var(--codex-gold, #bda545);
+      color: #1a1918;
+    }
+  }
+}
+
+.modal-data-attribution {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  margin-top: 16px;
+  font-size: 0.74rem;
+  color: var(--codex-text-muted, #9e9589);
+  line-height: 1.35;
+
+  ion-icon {
+    font-size: 1.1rem;
+    color: var(--codex-gold, #bda545);
+    flex-shrink: 0;
+  }
+}
+
+.footer-legal-links {
+  margin-top: 8px;
+
+  .footer-legal-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 0.76rem;
+    color: var(--codex-text-muted, #9e9589);
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: var(--codex-gold, #bda545);
+      color: var(--codex-gold, #bda545);
+    }
+  }
+}
+
+
 

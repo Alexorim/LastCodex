@@ -44,6 +44,10 @@ const routes: Routes = [
         loadComponent: () => import('../pages/settings/settings.page').then(m => m.SettingsPage)
       },
       {
+        path: 'legal',
+        loadComponent: () => import('../pages/legal/legal.page').then(m => m.LegalPage)
+      },
+      {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full'

@@ -427,6 +427,10 @@
         <a href="https://playorna.com/codex/" target="_blank" rel="noopener noreferrer" class="codex-link">
           Official Orna Codex ↗
         </a>
+        <button type="button" class="codex-link legal-btn" (click)="goToLegal()">
+          <ion-icon name="shield-checkmark-outline"></ion-icon>
+          <span>{{ currentLang === 'es' ? 'Aviso Legal, DMCA & Privacidad' : 'Legal Notice, DMCA & Privacy' }}</span>
+        </button>
       </div>
     </div>
 
@@ -434,8 +438,16 @@
     <div class="codex-footer">
       <div class="brand-credit">LastResources</div>
       <p class="disclaimer-text">
-        Fan-made project. Not affiliated with Northern Forge Studios or the official Orna developers.
+        {{ currentLang === 'es'
+          ? 'Herramienta comunitaria gratuita sin fines de lucro hecha por y para fans. Orna y Hero of Aethric son marcas de Northern Forge Studios. Este proyecto no está respaldado ni asociado con Northern Forge Studios.'
+          : 'Free non-profit fan-made community tool. Orna and Hero of Aethric are trademarks of Northern Forge Studios. This project is not affiliated with Northern Forge Studios.' }}
       </p>
+      <div class="footer-legal-links" style="margin-top: 6px;">
+        <button type="button" class="footer-legal-link-btn" (click)="goToLegal()">
+          <ion-icon name="shield-outline"></ion-icon>
+          <span>{{ currentLang === 'es' ? 'Aviso Legal & Privacidad' : 'Legal & Privacy' }}</span>
+        </button>
+      </div>
     </div>
 
   </div>

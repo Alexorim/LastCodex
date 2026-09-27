@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.orna.forecast',
+  appId: 'com.lastresources.app',
   appName: 'LastResources',
   webDir: 'www',
   server: {

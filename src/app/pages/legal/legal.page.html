@@ -1,0 +1,216 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="codex-toolbar">
+    <div class="header-inner">
+      <div class="brand-left clickable" (click)="goToHome()" title="Ir a Inicio">
+        <img src="assets/icon/last_codex.png" alt="LastResources Logo" class="brand-emblem" />
+        <div>
+          <span class="brand-name">LastResources</span>
+          <span class="page-subtitle">{{ currentLang === 'es' ? 'Aviso Legal y Privacidad' : 'Legal Notice & Privacy' }}</span>
+        </div>
+      </div>
+      <div class="header-right">
+        <button type="button" class="btn-header-back" (click)="goToSettings()" [title]="currentLang === 'es' ? 'Volver a Ajustes' : 'Back to Settings'">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+          <span>{{ currentLang === 'es' ? 'Ajustes' : 'Settings' }}</span>
+        </button>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding codex-content">
+  <div class="legal-container">
+
+    <!-- Hero Card Header -->
+    <div class="legal-hero-card">
+      <div class="hero-icon-circle">
+        <ion-icon name="shield-checkmark-outline"></ion-icon>
+      </div>
+      <div class="hero-titles">
+        <h2>{{ currentLang === 'es' ? 'Aviso Legal, Propiedad Intelectual y Privacidad' : 'Legal Notice, Intellectual Property & Privacy Policy' }}</h2>
+        <p class="hero-tagline">
+          {{ currentLang === 'es'
+            ? 'Transparencia, respeto a los derechos de autor y compromiso total con la privacidad de los jugadores.'
+            : 'Transparency, intellectual property respect, and full commitment to player privacy.' }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Section 1: Herramienta Comunitaria Gratuita y Sin Fines de Lucro -->
+    <div class="legal-card">
+      <div class="card-header">
+        <ion-icon name="heart-outline" class="card-icon gold"></ion-icon>
+        <h3>{{ currentLang === 'es' ? '1. Herramienta Comunitaria sin Fines de Lucro' : '1. Non-Profit Community Tool' }}</h3>
+      </div>
+      <div class="card-body">
+        <p>
+          {{ currentLang === 'es'
+            ? 'LastResources es una herramienta independiente desarrollada por y para la comunidad de jugadores. Se ofrece de manera 100% gratuita, de libre acceso y sin fines de lucro.'
+            : 'LastResources is an independent community tool created by and for players. It is offered 100% free of charge, with open access and strictly non-profit.' }}
+        </p>
+        <p>
+          {{ currentLang === 'es'
+            ? 'Esta aplicación y sitio web NO contienen publicidad monetizada, compras dentro de la app, muros de pago ni suscripciones pagas. Su único propósito es apoyar y facilitar la experiencia de los jugadores al consultar rotaciones de tiendas, eventos y el Códice del juego.'
+            : 'This application and website contain NO commercial advertising, in-app purchases, paywalls, or paid subscriptions. Its sole purpose is to assist and enrich the player experience when consulting shop rotations, game events, and the Codex.' }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Section 2: Reconocimiento de Marcas y Propiedad Intelectual -->
+    <div class="legal-card highlight-border">
+      <div class="card-header">
+        <ion-icon name="document-text-outline" class="card-icon cyan"></ion-icon>
+        <h3>{{ currentLang === 'es' ? '2. Reconocimiento de Marcas y Derechos de Autor' : '2. Trademark & Copyright Notice' }}</h3>
+      </div>
+      <div class="card-body">
+        <div class="trademark-callout">
+          <p>
+            <strong>"Orna: The GPS RPG"</strong> {{ currentLang === 'es' ? 'y' : 'and' }} <strong>"Hero of Aethric"</strong>
+            {{ currentLang === 'es'
+              ? 'son marcas comerciales registradas y material con derechos reservados propiedad exclusiva de'
+              : 'are registered trademarks and copyrighted material exclusively owned by' }}
+            <a href="https://northernforge.com/" target="_blank" rel="noopener noreferrer" class="external-forge-link">
+              Northern Forge Studios ↗
+            </a>.
+          </p>
+        </div>
+        <p>
+          {{ currentLang === 'es'
+            ? 'Todos los nombres de objetos, monstruos, criaturas, clases, sprites artísticos, iconos, descripciones y elementos visuales derivados del universo de Orna pertenecen íntegramente a Northern Forge Studios.'
+            : 'All names of items, monsters, creatures, classes, pixel sprites, icons, descriptions, and visual assets derived from the Orna universe remain the sole property of Northern Forge Studios.' }}
+        </p>
+        <div class="disclaimer-badge-box">
+          <ion-icon name="alert-circle-outline" class="badge-box-icon"></ion-icon>
+          <span>
+            {{ currentLang === 'es'
+              ? 'Este proyecto no está respaldado, patrocinado, afiliado ni de ninguna manera asociado oficialmente con Northern Forge Studios ni con el equipo oficial de desarrollo de Orna.'
+              : 'This project is not endorsed, sponsored, affiliated, or officially associated in any way with Northern Forge Studios or the official Orna development team.' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Datos Públicos con Fines Informativos y Educativos -->
+    <div class="legal-card">
+      <div class="card-header">
+        <ion-icon name="information-circle-outline" class="card-icon purple"></ion-icon>
+        <h3>{{ currentLang === 'es' ? '3. Naturaleza de los Datos (Datos Públicos)' : '3. Nature of Public Data' }}</h3>
+      </div>
+      <div class="card-body">
+        <p>
+          {{ currentLang === 'es'
+            ? 'Los datos e información mostrados en esta plataforma (incluyendo el Códice, los pronósticos de rotación de gremios, horarios y eventos de temporada) son datos públicos recopilados exclusivamente con fines informativos, de referencia rápida y educativos para la comunidad de jugadores.'
+            : 'Data and information displayed on this platform (including the Codex, guild shop rotations, reset schedules, and seasonal events) are public data collected exclusively for informational, educational, and quick-reference purposes for the gaming community.' }}
+        </p>
+        <p>
+          {{ currentLang === 'es'
+            ? 'La información es recopilada de recursos públicos accesibles (como el Códice oficial disponible en playorna.com/codex y aportes colaborativos de la comunidad) para promover el juego justo y el disfrute general de la comunidad.'
+            : 'Information is gathered from publicly accessible sources (such as the official web Codex at playorna.com/codex and collaborative community contributions) to encourage fair play and general enjoyment for the player community.' }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Section 4: Privacidad y Ausencia de Cookies Publicitarias -->
+    <div class="legal-card">
+      <div class="card-header">
+        <ion-icon name="lock-closed-outline" class="card-icon green"></ion-icon>
+        <h3>{{ currentLang === 'es' ? '4. Privacidad y Protección de Datos (Cero Rastreo)' : '4. Privacy & Data Protection (Zero Tracking)' }}</h3>
+      </div>
+      <div class="card-body">
+        <div class="privacy-points">
+          <div class="privacy-point-item">
+            <span class="point-bullet">✓</span>
+            <div>
+              <strong>{{ currentLang === 'es' ? 'Sin recopilación de datos personales:' : 'No Personal Data Collection:' }}</strong>
+              <span>
+                {{ currentLang === 'es'
+                  ? ' No solicitamos, no registramos ni almacenamos nombres, correos electrónicos, cuentas de juego, ubicaciones GPS en tiempo real ni ninguna información de identificación personal (PII).'
+                  : ' We do not request, track, or store user names, emails, game accounts, live GPS coordinates, or any personally identifiable information (PII).' }}
+              </span>
+            </div>
+          </div>
+
+          <div class="privacy-point-item">
+            <span class="point-bullet">✓</span>
+            <div>
+              <strong>{{ currentLang === 'es' ? 'Cero cookies publicitarias o de rastreo:' : 'Zero Advertising or Tracking Cookies:' }}</strong>
+              <span>
+                {{ currentLang === 'es'
+                  ? ' No utilizamos cookies de terceros, píxeles de remarketing, identificadores para anunciantes ni redes de seguimiento publicitario.'
+                  : ' We do not use third-party cookies, remarketing pixels, advertising IDs, or tracking networks of any kind.' }}
+              </span>
+            </div>
+          </div>
+
+          <div class="privacy-point-item">
+            <span class="point-bullet">✓</span>
+            <div>
+              <strong>{{ currentLang === 'es' ? 'Almacenamiento 100% local en tu dispositivo:' : '100% Local Storage on Your Device:' }}</strong>
+              <span>
+                {{ currentLang === 'es'
+                  ? ' Las opciones de configuración (como el idioma seleccionado, el tema visual o los recordatorios de materiales y torres) se guardan estrictamente en el almacenamiento local de tu navegador o dispositivo (LocalStorage / Capacitor Preferences) y jamás salen de tu control.'
+                  : ' Preferences (such as chosen language, color theme, or tower and material notification reminders) are kept strictly within your device local storage (LocalStorage / Capacitor Preferences) and never leave your control.' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 5: Cláusula Safe Harbor / DMCA Takedown Notice -->
+    <div class="legal-card dmca-card">
+      <div class="card-header">
+        <ion-icon name="shield-outline" class="card-icon gold"></ion-icon>
+        <h3>{{ currentLang === 'es' ? '5. Cláusula Safe Harbor y Política de Retirada (DMCA)' : '5. Safe Harbor & DMCA Takedown Policy' }}</h3>
+      </div>
+      <div class="card-body">
+        <p>
+          {{ currentLang === 'es'
+            ? 'En cumplimiento de las leyes aplicables de propiedad intelectual, el Digital Millennium Copyright Act (DMCA) y los principios de buena fe y uso legítimo comunitario (Fair Use):'
+            : 'In compliance with applicable intellectual property laws, the Digital Millennium Copyright Act (DMCA), and good faith community Fair Use principles:' }}
+        </p>
+        <p>
+          {{ currentLang === 'es'
+            ? 'Si eres el titular de derechos de autor, marcas registradas o un representante legal debidamente autorizado, y consideras que algún contenido, imagen, logotipo o recurso presente en esta aplicación o sitio web infringe tus derechos o deseas su modificación o retirada inmediata, te solicitamos ponerte en contacto directamente con nosotros:'
+            : 'If you are a copyright or trademark owner (or an authorized agent), and you believe that any content, image, logo, or asset present in this application or website infringes upon your rights or you wish for it to be modified or removed immediately, please contact us directly:' }}
+        </p>
+
+        <!-- Contact Box -->
+        <div class="dmca-contact-box">
+          <div class="dmca-contact-left">
+            <ion-icon name="mail-outline" class="dmca-mail-icon"></ion-icon>
+            <div class="dmca-contact-text">
+              <span class="dmca-label">{{ currentLang === 'es' ? 'Correo de Contacto DMCA / Notificaciones:' : 'DMCA Contact Email / Notices:' }}</span>
+              <a href="mailto:guygamerxd@gmail.com" class="dmca-email-link">guygamerxd@gmail.com</a>
+            </div>
+          </div>
+          <a href="mailto:guygamerxd@gmail.com?subject=LastResources%20-%20DMCA%20Notice" class="btn-dmca-action">
+            <ion-icon name="open-outline"></ion-icon>
+            <span>{{ currentLang === 'es' ? 'Enviar Notificación' : 'Send Notice' }}</span>
+          </a>
+        </div>
+
+        <p class="dmca-footer-note">
+          {{ currentLang === 'es'
+            ? 'Nos comprometemos a revisar y atender cualquier notificación legítima en un plazo máximo de 24 a 48 horas laborales, procediendo a retirar o rectificar el contenido de forma inmediata y amistosa.'
+            : 'We commit to reviewing and addressing any legitimate notice within 24 to 48 business hours, proceeding to remove or rectify the content promptly and amicably.' }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Global Footer Disclaimer -->
+    <div class="codex-footer">
+      <div class="brand-credit">LastResources</div>
+      <p class="disclaimer-text">
+        Fan-made project. Not affiliated with Northern Forge Studios or the official Orna developers.
+      </p>
+      <div class="footer-actions-row">
+        <button type="button" class="btn-footer-link" (click)="goToHome()">
+          <ion-icon name="home-outline"></ion-icon>
+          <span>{{ currentLang === 'es' ? 'Volver al Inicio' : 'Return Home' }}</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</ion-content>
