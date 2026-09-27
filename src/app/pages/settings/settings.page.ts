@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angula
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular/lazy';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
   settings,
@@ -25,12 +25,18 @@ import {
   searchOutline,
   libraryOutline,
   downloadOutline,
-  mapOutline
+  mapOutline,
+  notificationsOutline,
+  notifications,
+  alarmOutline,
+  alarm
 } from 'ionicons/icons';
 import { Router } from '@angular/router';
 import { SettingsService, Language, ThemeMode, AVAILABLE_LANGUAGES, LanguageOption } from '../../services/settings.service';
 import { TimerService } from '../../services/timer.service';
 import { CodexService, SyncProgress, UpdateCheckResult } from '../../services/codex.service';
+import { NotificationsService } from '../../services/notifications.service';
+import { TowersService } from '../../services/towers.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -44,8 +50,11 @@ export class SettingsPage implements OnInit, OnDestroy {
   private settingsService = inject(SettingsService);
   private timerService = inject(TimerService);
   private codexService = inject(CodexService);
+  private notificationsService = inject(NotificationsService);
+  private towersService = inject(TowersService);
   private router = inject(Router);
   private alertController = inject(AlertController);
+  private toastCtrl = inject(ToastController);
   private cdr = inject(ChangeDetectorRef);
 
   private subs = new Subscription();
@@ -55,7 +64,9 @@ export class SettingsPage implements OnInit, OnDestroy {
   deviceTimezone = '';
   localResetTime = '';
 
-  versionNumber = '1.4.4';
+  isAllTowersNotificationEnabled = false;
+
+  versionNumber = '1.4.5';
   appVersion = `v${this.versionNumber}`;
   apkFileName = 'lastcodex_stable.apk';
   apkDownloadUrl = `assets/${this.apkFileName}`;
@@ -111,7 +122,11 @@ export class SettingsPage implements OnInit, OnDestroy {
       searchOutline,
       libraryOutline,
       downloadOutline,
-      mapOutline
+      mapOutline,
+      notificationsOutline,
+      notifications,
+      alarmOutline,
+      alarm
     });
   }
 
@@ -190,6 +205,52 @@ export class SettingsPage implements OnInit, OnDestroy {
         this.updateStatus = status;
       })
     );
+
+    this.isAllTowersNotificationEnabled = this.notificationsService.isAllTowersNotificationEnabled();
+  }
+
+  async onAllTowersNotificationToggle(event: any): Promise<void> {
+    const checked = event.detail ? event.detail.checked : event.target.checked;
+    const isEs = this.currentLang === 'es';
+    const towers = this.towersService.getTowers(isEs ? 'es' : 'en');
+    const success = await this.notificationsService.setAllTowersNotificationEnabled(checked, towers);
+
+    this.isAllTowersNotificationEnabled = this.notificationsService.isAllTowersNotificationEnabled();
+    this.cdr.detectChanges();
+
+    if (checked) {
+      if (success) {
+        const toast = await this.toastCtrl.create({
+          message: isEs
+            ? '🔔 Notificaciones activadas para todas las Torres en Piso 50'
+            : '🔔 Notifications activated for all Towers at Floor 50',
+          duration: 3000,
+          position: 'bottom',
+          color: 'success'
+        });
+        await toast.present();
+      } else {
+        const toast = await this.toastCtrl.create({
+          message: isEs
+            ? '⚠️ Debes conceder permisos de notificación en tu celular para activar esta alerta'
+            : '⚠️ Please grant notification permission on your device to activate this alert',
+          duration: 3500,
+          position: 'bottom',
+          color: 'warning'
+        });
+        await toast.present();
+      }
+    } else {
+      const toast = await this.toastCtrl.create({
+        message: isEs
+          ? 'Notificaciones de Torres desactivadas'
+          : 'Tower notifications disabled',
+        duration: 2000,
+        position: 'bottom',
+        color: 'medium'
+      });
+      await toast.present();
+    }
   }
 
   ngOnDestroy() {

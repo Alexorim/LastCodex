@@ -213,6 +213,38 @@
       </p>
     </div>
 
+    <!-- Section: Notifications & Alerts -->
+    <div class="settings-card notifications-card">
+      <div class="card-header">
+        <ion-icon name="notifications-outline" class="card-icon alert-icon"></ion-icon>
+        <h3>{{ currentLang === 'es' ? 'Alertas y Notificaciones' : 'Alerts & Notifications' }}</h3>
+      </div>
+      <p class="card-desc">
+        {{ currentLang === 'es'
+          ? 'Recibe recordatorios automáticos en la barra de notificaciones de tu celular para eventos importantes de Orna.'
+          : 'Receive automatic reminders in your device notification bar for important Orna events.' }}
+      </p>
+
+      <div class="toggle-setting-row">
+        <div class="toggle-setting-info">
+          <div class="toggle-title-row">
+            <ion-icon name="alarm-outline" class="toggle-sub-icon"></ion-icon>
+            <span class="toggle-title">{{ currentLang === 'es' ? 'Avisar cuando Las Torres lleguen a 50 pisos' : 'Notify when Towers reach 50 Floors' }}</span>
+          </div>
+          <span class="toggle-desc">
+            {{ currentLang === 'es'
+              ? 'Te enviará una alerta a la barra de estado cuando cualquiera de las 5 torres alcance su cúspide de 50 pisos en la rotación.'
+              : 'Sends an alert to your status bar when any of the 5 towers reaches its peak 50 floors in rotation.' }}
+          </span>
+        </div>
+        <ion-toggle
+          class="custom-toggle"
+          [checked]="isAllTowersNotificationEnabled"
+          (ionChange)="onAllTowersNotificationToggle($event)">
+        </ion-toggle>
+      </div>
+    </div>
+
     <!-- Section 5: About & Credits -->
     <div class="settings-card about-card">
       <div class="card-header">

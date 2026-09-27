@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular/lazy';
+import { AlertController, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
   timeOutline,
@@ -21,10 +22,14 @@ import {
   waterOutline,
   moonOutline,
   sunnyOutline,
-  trendingUpOutline
+  trendingUpOutline,
+  alarm,
+  alarmOutline,
+  notificationsOutline
 } from 'ionicons/icons';
 import { TowersService, TowerInfo, TowerKind, CheckpointProjection, NextGrowthTimer, TowerResetProgression, TOWERS_META } from '../../services/towers.service';
 import { SettingsService, Language } from '../../services/settings.service';
+import { NotificationsService } from '../../services/notifications.service';
 import { Subscription, interval } from 'rxjs';
 
 @Component({
@@ -37,6 +42,9 @@ import { Subscription, interval } from 'rxjs';
 export class TowersPage implements OnInit, OnDestroy {
   private towersService = inject(TowersService);
   private settingsService = inject(SettingsService);
+  private notificationsService = inject(NotificationsService);
+  private alertCtrl = inject(AlertController);
+  private toastCtrl = inject(ToastController);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 
@@ -72,7 +80,10 @@ export class TowersPage implements OnInit, OnDestroy {
       waterOutline,
       moonOutline,
       sunnyOutline,
-      trendingUpOutline
+      trendingUpOutline,
+      alarm,
+      alarmOutline,
+      notificationsOutline
     });
   }
 
@@ -190,5 +201,116 @@ export class TowersPage implements OnInit, OnDestroy {
       case 'prometheus': return 'flame-outline';
       default: return 'sparkles';
     }
+  }
+
+  isTowerReminderActive(kind: TowerKind): boolean {
+    return this.notificationsService.isTowerReminderActive(kind);
+  }
+
+  async onTowerReminderClick(tower: TowerInfo, event?: Event): Promise<void> {
+    if (event) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
+
+    const isEs = this.currentLang === 'es';
+    const isAlreadySet = this.isTowerReminderActive(tower.kind);
+
+    if (isAlreadySet) {
+      const alert = await this.alertCtrl.create({
+        header: isEs ? 'Recordatorio Activo' : 'Active Reminder',
+        subHeader: tower.title,
+        message: isEs
+          ? `Ya tienes programado un recordatorio para cuando la ${tower.title} alcance el Piso 50. ¿Deseas cancelarlo?`
+          : `You already have an alert scheduled for when ${tower.title} reaches Floor 50. Do you want to cancel it?`,
+        buttons: [
+          {
+            text: isEs ? 'Mantener' : 'Keep',
+            role: 'cancel'
+          },
+          {
+            text: isEs ? 'Cancelar Recordatorio' : 'Cancel Reminder',
+            role: 'destructive',
+            handler: async () => {
+              await this.notificationsService.cancelTower50Reminder(tower.kind);
+              const toast = await this.toastCtrl.create({
+                message: isEs ? `Recordatorio cancelado para ${tower.title}` : `Reminder canceled for ${tower.title}`,
+                duration: 2000,
+                position: 'bottom',
+                color: 'medium'
+              });
+              await toast.present();
+            }
+          }
+        ]
+      });
+      await alert.present();
+      return;
+    }
+
+    if (tower.isMaxFloor) {
+      const toast = await this.toastCtrl.create({
+        message: isEs
+          ? `⭐ ¡La ${tower.title} ya está en su punto máximo (Piso 50) hoy!`
+          : `⭐ ${tower.title} is already at its peak (Floor 50) today!`,
+        duration: 3000,
+        position: 'bottom',
+        color: 'success'
+      });
+      await toast.present();
+      return;
+    }
+
+    if (!tower.next50Date) {
+      return;
+    }
+
+    const alert = await this.alertCtrl.create({
+      header: isEs ? 'Recordatorio Piso 50' : 'Floor 50 Reminder',
+      subHeader: tower.title,
+      message: isEs
+        ? `¿Quieres recibir una notificación cuando la ${tower.title} alcance el Piso 50 el ${tower.next50Formatted} (en ${tower.timeUntil50})?`
+        : `Do you want to get an alert when ${tower.title} reaches Floor 50 on ${tower.next50Formatted} (in ${tower.timeUntil50})?`,
+      buttons: [
+        {
+          text: isEs ? 'No' : 'No',
+          role: 'cancel'
+        },
+        {
+          text: isEs ? 'Sí, avisarme' : 'Yes, notify me',
+          handler: async () => {
+            const success = await this.notificationsService.scheduleTower50Reminder(
+              tower.kind,
+              tower.title,
+              tower.next50Date!
+            );
+
+            if (success) {
+              const toast = await this.toastCtrl.create({
+                message: isEs
+                  ? `🔔 ¡Listo! Te notificaremos cuando ${tower.title} llegue al Piso 50`
+                  : `🔔 Ready! We will notify you when ${tower.title} reaches Floor 50`,
+                duration: 2500,
+                position: 'bottom',
+                color: 'success'
+              });
+              await toast.present();
+            } else {
+              const toast = await this.toastCtrl.create({
+                message: isEs
+                  ? '⚠️ Debes permitir las notificaciones para activar recordatorios'
+                  : '⚠️ Please enable notifications to activate reminders',
+                duration: 3000,
+                position: 'bottom',
+                color: 'warning'
+              });
+              await toast.present();
+            }
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 }

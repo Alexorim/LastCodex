@@ -331,6 +331,43 @@
         }
       }
 
+      .header-right-badges {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .card-alarm-btn {
+          width: 32px;
+          height: 32px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          border-radius: 6px;
+          color: var(--codex-text-muted, #9e9a93);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          ion-icon {
+            font-size: 1.15rem;
+          }
+
+          &:hover {
+            background: rgba(189, 165, 69, 0.2);
+            border-color: var(--codex-gold, #bda545);
+            color: var(--codex-gold, #bda545);
+          }
+
+          &.active {
+            background: rgba(245, 158, 11, 0.2);
+            border-color: #f59e0b;
+            color: #fbbf24;
+            box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+          }
+        }
+      }
+
       .floor-pill {
         display: inline-flex;
         align-items: baseline;
@@ -827,6 +864,41 @@
           .stat-sub {
             font-size: 0.74rem;
             color: var(--codex-text-light, #e0d8ce);
+          }
+        }
+
+        .btn-tower-reminder {
+          margin-top: 10px;
+          width: 100%;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          padding: 10px 14px;
+          background: rgba(189, 165, 69, 0.12);
+          border: 1px solid rgba(189, 165, 69, 0.35);
+          border-radius: 8px;
+          color: var(--codex-gold, #bda545);
+          font-family: var(--codex-font-heading, 'Cinzel', serif);
+          font-size: 0.82rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          ion-icon {
+            font-size: 1.15rem;
+          }
+
+          &:hover {
+            background: rgba(189, 165, 69, 0.25);
+            border-color: var(--codex-gold, #bda545);
+          }
+
+          &.active {
+            background: rgba(245, 158, 11, 0.2);
+            border-color: #f59e0b;
+            color: #fbbf24;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.35);
           }
         }
       }

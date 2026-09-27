@@ -36,6 +36,16 @@
           </div>
 
           <div class="item-badge-wrap">
+            <button
+              type="button"
+              class="mat-alarm-btn"
+              [class.active]="isReminderSet(item.materialName)"
+              (click)="onMaterialClockClick($event, item)"
+              [title]="isReminderSet(item.materialName) ? (currentLang === 'es' ? 'Recordatorio activo' : 'Reminder active') : (currentLang === 'es' ? 'Avisarme cuando salga' : 'Notify me when in stock')"
+            >
+              <ion-icon [name]="isReminderSet(item.materialName) ? 'alarm' : 'alarm-outline'"></ion-icon>
+            </button>
+
             <span *ngIf="item.guildAppearances[0]?.daysUntil === 0" class="mini-badge badge-today">
               {{ currentLang === 'es' ? '¡HOY!' : 'TODAY!' }}
             </span>
@@ -48,6 +58,21 @@
 
         <!-- Sublista expandible -->
         <div *ngIf="isExpanded(item.materialName)" class="guild-expand-panel">
+          <div class="panel-reminder-bar">
+            <button
+              type="button"
+              class="panel-alarm-btn"
+              [class.active]="isReminderSet(item.materialName)"
+              (click)="onMaterialClockClick($event, item)"
+            >
+              <ion-icon [name]="isReminderSet(item.materialName) ? 'alarm' : 'alarm-outline'"></ion-icon>
+              <span>
+                {{ isReminderSet(item.materialName)
+                  ? (currentLang === 'es' ? 'Recordatorio Activo para este material' : 'Reminder active for this material')
+                  : (currentLang === 'es' ? 'Avisarme cuando esté disponible en los gremios' : 'Remind me when available in guilds') }}
+              </span>
+            </button>
+          </div>
           <div *ngFor="let g of item.guildAppearances" class="expand-row">
             <div class="expand-left">
               <img

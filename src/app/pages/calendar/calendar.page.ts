@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular/lazy';
+import { AlertController, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { chevronDown, chevronForward, calendarOutline, shieldOutline } from 'ionicons/icons';
+import { chevronDown, chevronForward, calendarOutline, shieldOutline, alarm, alarmOutline, timeOutline, notificationsOutline } from 'ionicons/icons';
 import { MaterialsService } from '../../services/materials.service';
 import { SettingsService, Language } from '../../services/settings.service';
+import { NotificationsService } from '../../services/notifications.service';
 import { MaterialSearchResult } from '../../models/material.model';
 import { getMaterialIcon } from '../../utils/material-icon.util';
 import { getGuildIcon } from '../../utils/guild-icon.util';
@@ -23,6 +25,9 @@ import { Subscription } from 'rxjs';
 export class CalendarPage implements OnInit, OnDestroy {
   private materialsService = inject(MaterialsService);
   private settingsService = inject(SettingsService);
+  private notificationsService = inject(NotificationsService);
+  private alertCtrl = inject(AlertController);
+  private toastCtrl = inject(ToastController);
   private router = inject(Router);
 
   private dataSub: Subscription | null = null;
@@ -33,7 +38,7 @@ export class CalendarPage implements OnInit, OnDestroy {
   currentLang: Language = 'es';
 
   constructor() {
-    addIcons({ chevronDown, chevronForward, calendarOutline, shieldOutline });
+    addIcons({ chevronDown, chevronForward, calendarOutline, shieldOutline, alarm, alarmOutline, timeOutline, notificationsOutline });
   }
 
   ngOnInit() {
@@ -117,5 +122,112 @@ export class CalendarPage implements OnInit, OnDestroy {
     if (lower.includes('towers') || lower.includes('titan')) return '#8d6e63';
     if (lower.includes('monument')) return '#7e57c2';
     return '#78909c';
+  }
+
+  isReminderSet(materialName: string): boolean {
+    return this.notificationsService.isMaterialReminderActive(materialName);
+  }
+
+  async onMaterialClockClick(event: Event, item: MaterialSearchResult): Promise<void> {
+    event.stopPropagation();
+    event.preventDefault();
+
+    const isEs = this.currentLang === 'es';
+    const matName = this.getMatName(item.materialName);
+    const isAlreadySet = this.isReminderSet(item.materialName);
+
+    if (isAlreadySet) {
+      const alert = await this.alertCtrl.create({
+        header: isEs ? 'Recordatorio Activo' : 'Active Reminder',
+        subHeader: matName,
+        message: isEs
+          ? `Ya tienes una alerta programada para cuando aparezca ${matName}. ¿Deseas cancelarla?`
+          : `You already have an alert scheduled for ${matName}. Do you want to cancel it?`,
+        buttons: [
+          {
+            text: isEs ? 'Mantener' : 'Keep',
+            role: 'cancel'
+          },
+          {
+            text: isEs ? 'Cancelar Recordatorio' : 'Cancel Reminder',
+            role: 'destructive',
+            handler: async () => {
+              await this.notificationsService.cancelMaterialReminder(item.materialName);
+              const toast = await this.toastCtrl.create({
+                message: isEs ? `Recordatorio cancelado para ${matName}` : `Reminder canceled for ${matName}`,
+                duration: 2000,
+                position: 'bottom',
+                color: 'medium'
+              });
+              await toast.present();
+            }
+          }
+        ]
+      });
+      await alert.present();
+      return;
+    }
+
+    // Determine target date
+    const firstApp = item.guildAppearances && item.guildAppearances.length > 0 ? item.guildAppearances[0] : null;
+    const daysUntil = firstApp && typeof firstApp.daysUntil === 'number' ? firstApp.daysUntil : 1;
+
+    const targetDate = new Date();
+    targetDate.setDate(targetDate.getDate() + daysUntil);
+    targetDate.setHours(0, 5, 0, 0); // 5 min after 00:00 rotation
+
+    const dateStr = targetDate.toLocaleDateString(isEs ? 'es-ES' : 'en-US', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'short'
+    });
+
+    const alert = await this.alertCtrl.create({
+      header: isEs ? 'Crear Recordatorio' : 'Set Reminder',
+      subHeader: matName,
+      message: isEs
+        ? `¿Quieres programar una notificación para avisarte cuando ${matName} esté disponible en los gremios (${dateStr})?`
+        : `Do you want to set a notification to alert you when ${matName} is in guilds (${dateStr})?`,
+      buttons: [
+        {
+          text: isEs ? 'No' : 'No',
+          role: 'cancel'
+        },
+        {
+          text: isEs ? 'Sí, avisarme' : 'Yes, notify me',
+          handler: async () => {
+            const success = await this.notificationsService.scheduleMaterialReminder(
+              item.materialName,
+              targetDate,
+              matName
+            );
+
+            if (success) {
+              const toast = await this.toastCtrl.create({
+                message: isEs
+                  ? `🔔 ¡Listo! Te avisaremos cuando salga ${matName}`
+                  : `🔔 Ready! We will notify you when ${matName} appears`,
+                duration: 2500,
+                position: 'bottom',
+                color: 'success'
+              });
+              await toast.present();
+            } else {
+              const toast = await this.toastCtrl.create({
+                message: isEs
+                  ? '⚠️ Debes permitir las notificaciones para activar recordatorios'
+                  : '⚠️ Please enable notifications to activate reminders',
+                duration: 3000,
+                position: 'bottom',
+                color: 'warning'
+              });
+              await toast.present();
+            }
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 }

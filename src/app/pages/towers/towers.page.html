@@ -99,9 +99,21 @@
               </span>
             </div>
 
-            <div class="floor-pill" [class.max]="tower.isMaxFloor" [class.near]="tower.isNearMax && !tower.isMaxFloor">
-              <span class="floor-num">{{ tower.currentFloor }}</span>
-              <span class="floor-max">/50F</span>
+            <div class="header-right-badges">
+              <div class="floor-pill" [class.max]="tower.isMaxFloor" [class.near]="tower.isNearMax && !tower.isMaxFloor">
+                <span class="floor-num">{{ tower.currentFloor }}</span>
+                <span class="floor-max">/50F</span>
+              </div>
+
+              <button
+                type="button"
+                class="card-alarm-btn"
+                [class.active]="isTowerReminderActive(tower.kind)"
+                (click)="onTowerReminderClick(tower, $event)"
+                [title]="isTowerReminderActive(tower.kind) ? (currentLang === 'es' ? 'Recordatorio activo' : 'Reminder active') : (currentLang === 'es' ? 'Avisar en Piso 50' : 'Alert at Floor 50')"
+              >
+                <ion-icon [name]="isTowerReminderActive(tower.kind) ? 'alarm' : 'alarm-outline'"></ion-icon>
+              </button>
             </div>
           </div>
 
@@ -271,6 +283,20 @@
               <span class="stat-value">{{ selectedTowerDetail.timeUntil50 }}</span>
               <span class="stat-sub">{{ selectedTowerDetail.next50Formatted }}</span>
             </div>
+
+            <button
+              type="button"
+              class="btn-tower-reminder"
+              [class.active]="isTowerReminderActive(selectedTowerDetail.kind)"
+              (click)="onTowerReminderClick(selectedTowerDetail)"
+            >
+              <ion-icon [name]="isTowerReminderActive(selectedTowerDetail.kind) ? 'alarm' : 'alarm-outline'"></ion-icon>
+              <span>
+                {{ isTowerReminderActive(selectedTowerDetail.kind)
+                  ? (currentLang === 'es' ? '🔔 Recordatorio 50F Activado' : '🔔 50F Reminder Active')
+                  : (currentLang === 'es' ? 'Avisarme cuando esté en Piso 50' : 'Alert me when at Floor 50') }}
+              </span>
+            </button>
           </div>
 
           <!-- PROGRESIÓN DE PISOS EN LOS PRÓXIMOS REINICIOS -->

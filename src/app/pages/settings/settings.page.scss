@@ -1342,4 +1342,56 @@
   }
 }
 
+.notifications-card {
+  .toggle-setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 14px;
+    background: rgba(0, 0, 0, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    margin-top: 8px;
+
+    .toggle-setting-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .toggle-title-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .toggle-sub-icon {
+          color: var(--codex-gold, #bda545);
+          font-size: 1.15rem;
+          flex-shrink: 0;
+        }
+
+        .toggle-title {
+          font-weight: 600;
+          font-size: 0.92rem;
+          color: var(--codex-text-primary, #e0d8c3);
+        }
+      }
+
+      .toggle-desc {
+        font-size: 0.78rem;
+        color: var(--codex-text-muted, #9e9589);
+        line-height: 1.35;
+      }
+    }
+
+    .custom-toggle {
+      --track-background: rgba(255, 255, 255, 0.15);
+      --track-background-checked: var(--codex-gold, #bda545);
+      --handle-background: #fff;
+      --handle-background-checked: #fff;
+      flex-shrink: 0;
+    }
+  }
+}
+
 

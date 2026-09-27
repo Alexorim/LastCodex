@@ -150,6 +150,37 @@
     align-items: center;
     gap: 8px;
 
+    .mat-alarm-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      color: var(--codex-text-muted);
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      ion-icon {
+        font-size: 1.15rem;
+      }
+
+      &:hover {
+        background: rgba(189, 165, 69, 0.2);
+        color: var(--codex-gold);
+        border-color: var(--codex-gold);
+      }
+
+      &.active {
+        background: rgba(245, 158, 11, 0.2);
+        border-color: #f59e0b;
+        color: #fbbf24;
+        box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+      }
+    }
+
     .expand-icon {
       color: var(--codex-gold);
       font-size: 1.1rem;
@@ -187,6 +218,43 @@
   background: rgba(0, 0, 0, 0.25);
   border-top: 1px solid rgba(255, 255, 255, 0.04);
   padding: 8px 14px 10px 48px;
+
+  .panel-reminder-bar {
+    padding: 2px 0 10px 0;
+    margin-bottom: 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+    .panel-alarm-btn {
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 7px 12px;
+      background: rgba(189, 165, 69, 0.1);
+      border: 1px solid rgba(189, 165, 69, 0.3);
+      border-radius: 6px;
+      color: var(--codex-gold);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      ion-icon {
+        font-size: 1.05rem;
+      }
+
+      &:hover {
+        background: rgba(189, 165, 69, 0.22);
+      }
+
+      &.active {
+        background: rgba(245, 158, 11, 0.18);
+        border-color: #f59e0b;
+        color: #fbbf24;
+      }
+    }
+  }
 
   .expand-row {
     display: flex;
