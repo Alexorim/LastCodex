@@ -2,7 +2,7 @@
   <ion-toolbar class="vault-toolbar">
     <div class="header-inner">
       <div class="brand-left">
-        <button type="button" class="back-btn" (click)="goBack()" title="Volver a Ajustes">
+        <button type="button" class="back-btn" (click)="goBack()" [title]="isEs ? 'Volver a Ajustes' : 'Back to Settings'">
           <ion-icon name="arrow-back-outline"></ion-icon>
         </button>
         <div class="obsidian-title-group">
@@ -20,8 +20,8 @@
           <div class="title-texts">
             <span class="vault-brand">Obsidian Vault</span>
             <span class="vault-stats">
-              {{ vaultData?.nodes?.length || 0 }} {{ currentLang === 'es' ? 'notas' : 'notes' }} •
-              {{ vaultData?.links?.length || 0 }} {{ currentLang === 'es' ? 'conexiones' : 'links' }}
+              {{ vaultData?.nodes?.length || 0 }} {{ isEs ? 'notas' : 'notes' }} •
+              {{ vaultData?.links?.length || 0 }} {{ isEs ? 'conexiones' : 'links' }}
             </span>
           </div>
         </div>
@@ -34,7 +34,7 @@
           class="header-action-btn"
           [class.active]="viewMode === 'graph'"
           (click)="setViewMode(viewMode === 'graph' ? 'list' : 'graph')"
-          [title]="viewMode === 'graph' ? 'Cambiar a lista de notas' : 'Cambiar a vista de grafo'">
+          [title]="viewMode === 'graph' ? (isEs ? 'Cambiar a lista de notas' : 'Switch to notes list') : (isEs ? 'Cambiar a vista de grafo' : 'Switch to graph view')">
           <ion-icon [name]="viewMode === 'graph' ? 'list-outline' : 'git-network-outline'"></ion-icon>
         </button>
 
@@ -44,7 +44,7 @@
           class="header-action-btn sync-btn"
           [class.spinning]="isSyncing"
           (click)="syncWithGitHub()"
-          [title]="currentLang === 'es' ? 'Sincronizar con GitHub' : 'Sync with GitHub'">
+          [title]="isEs ? 'Sincronizar con GitHub' : 'Sync with GitHub'">
           <ion-icon name="sync-outline"></ion-icon>
         </button>
       </div>
@@ -58,7 +58,7 @@
           type="text"
           [(ngModel)]="searchQuery"
           (ngModelChange)="onSearchChange()"
-          [placeholder]="currentLang === 'es' ? 'Buscar en la red neuronal...' : 'Search neural network...'"
+          [placeholder]="isEs ? 'Buscar en la red neuronal...' : 'Search neural network...'"
           class="vault-search-input" />
         <button *ngIf="searchQuery" (click)="searchQuery = ''; onSearchChange()" class="clear-search-btn">
           <ion-icon name="close-circle"></ion-icon>
@@ -72,7 +72,7 @@
           class="cat-pill"
           [class.active]="selectedCategory === 'ALL'"
           (click)="filterByCategory('ALL')">
-          {{ currentLang === 'es' ? 'Todas' : 'All' }}
+          {{ isEs ? 'Todas' : 'All' }}
         </button>
         <button
           *ngFor="let cat of categories"
@@ -80,7 +80,7 @@
           class="cat-pill"
           [class.active]="selectedCategory === cat"
           (click)="filterByCategory(cat)">
-          {{ cat }}
+          {{ getCategoryTitle(cat) }}
         </button>
       </div>
     </div>
@@ -95,7 +95,7 @@
 
     <!-- Floating Graph Controls -->
     <div class="graph-hud-controls">
-      <button type="button" class="hud-btn" (click)="resetGraphZoom()" title="Ajustar y centrar grafo">
+      <button type="button" class="hud-btn" (click)="resetGraphZoom()" [title]="isEs ? 'Ajustar y centrar grafo' : 'Fit and center graph'">
         <ion-icon name="scan-outline"></ion-icon>
       </button>
     </div>
@@ -104,7 +104,7 @@
   <!-- MODE B: EXPLORADOR DE NOTAS (LIST) -->
   <div class="notes-list-wrapper" *ngIf="viewMode === 'list'">
     <div class="notes-count-info">
-      {{ filteredNodes.length }} {{ currentLang === 'es' ? 'notas encontradas' : 'notes found' }}
+      {{ filteredNodes.length }} {{ isEs ? 'notas encontradas' : 'notes found' }}
     </div>
 
     <div class="notes-grid">
@@ -114,14 +114,14 @@
         (click)="openNote(node)">
         <div class="note-card-header">
           <span class="note-cat-badge" [style.backgroundColor]="node.color + '22'" [style.borderColor]="node.color" [style.color]="node.color">
-            {{ node.category }}
+            {{ getCategoryTitle(node.category) }}
           </span>
           <span class="note-links-count">
             <ion-icon name="share-social-outline"></ion-icon>
             {{ node.links.length || 0 }}
           </span>
         </div>
-        <h4 class="note-card-title">{{ node.title || node.id }}</h4>
+        <h4 class="note-card-title">{{ getNodeTitle(node) }}</h4>
         <p class="note-card-path">{{ node.path }}</p>
       </div>
     </div>
@@ -134,12 +134,12 @@
     <div class="reader-header">
       <div class="reader-title-group">
         <span class="reader-cat-badge" [style.backgroundColor]="selectedNode.color + '22'" [style.borderColor]="selectedNode.color" [style.color]="selectedNode.color">
-          {{ selectedNode.category }}
+          {{ getCategoryTitle(selectedNode.category) }}
         </span>
-        <h2 class="reader-title">{{ selectedNode.title || selectedNode.id }}</h2>
+        <h2 class="reader-title">{{ getNodeTitle(selectedNode) }}</h2>
         <span class="reader-path">{{ selectedNode.path }}</span>
       </div>
-      <button type="button" class="reader-close-btn" (click)="closeNote()">
+      <button type="button" class="reader-close-btn" (click)="closeNote()" [title]="isEs ? 'Cerrar nota' : 'Close note'">
         <ion-icon name="close-outline"></ion-icon>
       </button>
     </div>
@@ -154,7 +154,7 @@
         <div class="synapses-group" *ngIf="outgoingNodes.length > 0">
           <h4 class="synapses-title">
             <ion-icon name="arrow-forward-circle-outline"></ion-icon>
-            {{ currentLang === 'es' ? 'Sinapsis Salientes' : 'Outgoing Synapses' }} ({{ outgoingNodes.length }})
+            {{ isEs ? 'Sinapsis Salientes' : 'Outgoing Synapses' }} ({{ outgoingNodes.length }})
           </h4>
           <div class="synapses-chips">
             <button
@@ -163,7 +163,7 @@
               class="synapse-chip"
               (click)="openNote(out)">
               <span class="chip-dot" [style.backgroundColor]="out.color"></span>
-              <span class="chip-text">{{ out.title || out.id }}</span>
+              <span class="chip-text">{{ getNodeTitle(out) }}</span>
             </button>
           </div>
         </div>
@@ -172,7 +172,7 @@
         <div class="synapses-group" *ngIf="incomingLinks.length > 0">
           <h4 class="synapses-title">
             <ion-icon name="arrow-back-circle-outline"></ion-icon>
-            {{ currentLang === 'es' ? 'Referencias Entrantes (Backlinks)' : 'Incoming Backlinks' }} ({{ incomingLinks.length }})
+            {{ isEs ? 'Referencias Entrantes (Backlinks)' : 'Incoming Backlinks' }} ({{ incomingLinks.length }})
           </h4>
           <div class="synapses-chips">
             <button
@@ -181,7 +181,7 @@
               class="synapse-chip"
               (click)="openNote(inc)">
               <span class="chip-dot" [style.backgroundColor]="inc.color"></span>
-              <span class="chip-text">{{ inc.title || inc.id }}</span>
+              <span class="chip-text">{{ getNodeTitle(inc) }}</span>
             </button>
           </div>
         </div>

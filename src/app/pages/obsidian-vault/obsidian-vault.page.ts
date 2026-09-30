@@ -23,6 +23,7 @@ import {
   arrowBackCircleOutline
 } from 'ionicons/icons';
 import { VaultService, VaultGraphData, VaultNode } from '../../services/vault.service';
+import { SettingsService } from '../../services/settings.service';
 
 @Component({
   selector: 'app-obsidian-vault',
@@ -52,10 +53,12 @@ export class ObsidianVaultPage implements OnInit, AfterViewInit, OnDestroy {
 
   private graphInstance: any = null;
   private vaultSub?: Subscription;
+  private langSub?: Subscription;
   private resizeObserver?: ResizeObserver;
 
   constructor(
     private vaultService: VaultService,
+    private settingsService: SettingsService,
     private router: Router,
     private toastCtrl: ToastController,
     private loadingCtrl: LoadingController,
@@ -77,9 +80,70 @@ export class ObsidianVaultPage implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  get isEs(): boolean {
+    return !this.currentLang || this.currentLang.startsWith('es');
+  }
+
+  getCategoryTitle(cat: string): string {
+    if (this.isEs) return cat;
+    const mapEn: Record<string, string> = {
+      '01 - General': '01 - Overview',
+      '02 - Modulos': '02 - Modules',
+      '03 - Servicios': '03 - Services',
+      '04 - Paginas': '04 - Pages',
+      '05 - Modelos': '05 - Data Models',
+      '06 - Plataformas': '06 - Platforms',
+      '07 - Scripts': '07 - Automation Scripts',
+      '08 - Utilidades': '08 - Utilities',
+      '09 - Actualizaciones': '09 - Changelog & Updates',
+      'Root': 'Root Central'
+    };
+    return mapEn[cat] || cat;
+  }
+
+  getNodeTitle(node: VaultNode | null | undefined): string {
+    if (!node) return '';
+    const original = node.title || node.id;
+    if (this.isEs) return original;
+
+    const titlesEn: Record<string, string> = {
+      'Nodo Central (MOC) - LastCodex': 'Central Node (MOC) - LastCodex',
+      '00 - Nodo Central (MOC) - LastCodex': '00 - Central Node (MOC) - LastCodex',
+      '01 - Arquitectura General': '01 - General Architecture',
+      '02 - Versiones y Changelog': '02 - Versions & Changelog',
+      '00 - Registro de Actualizaciones (Changelog Maestro)': '00 - Master Changelog & Updates',
+      'HomePage - Forecast Hoy y Mañana': 'HomePage - Today & Tomorrow Forecast',
+      'CalendarPage - Calendario y Exportacion': 'CalendarPage - Calendar & Export',
+      'TowersPage - Torres Celestiales y Temporizadores': 'TowersPage - Celestial Towers & Timers',
+      'ProofsPage - Calculadora de Pruebas de Gremios': 'ProofsPage - Guild Proofs Calculator',
+      'CodexPage - Códice Masivo y Filtros': 'CodexPage - Massive Codex & Filters',
+      'SettingsPage - Idiomas y Ajustes': 'SettingsPage - Languages & Preferences',
+      'MapPage - Visor de Mapa de Aethric': 'MapPage - Aethric World Map Viewer',
+      'LegalPage - Aviso Legal y DMCA': 'LegalPage - Legal Notice & DMCA',
+      'Plataforma Android y Capacitor': 'Android & Capacitor Platform',
+      'Plataforma Desktop y Electron': 'Desktop & Electron Platform',
+      'Plataforma Web y Vercel': 'Web & Vercel Platform',
+      'Script Build APK': 'APK Automated Build Script',
+      'Script Scrape Codex': 'Codex Web Scraper Script',
+      'Script Download Sprites': 'Offline Sprite Downloader Script',
+      'Script Generate Vault Graph': 'Vault Knowledge Graph Generator Script',
+      'Plantilla de Nueva Versión': 'New Version Template',
+      'Guía de Contribución y Estilo': 'Contribution & Style Guide'
+    };
+    return titlesEn[original] || titlesEn[node.id] || original;
+  }
+
   async ngOnInit(): Promise<void> {
-    const savedLang = localStorage.getItem('lastresources_lang') || 'es';
-    this.currentLang = savedLang;
+    this.currentLang = this.settingsService.currentLang || 'es';
+
+    this.langSub = this.settingsService.lang$.subscribe(lang => {
+      this.currentLang = lang;
+      this.applyFilter();
+      if (this.graphInstance) {
+        this.graphInstance.refresh();
+      }
+      this.cdr.detectChanges();
+    });
 
     this.vaultSub = this.vaultService.vaultData$.subscribe(data => {
       if (data) {
@@ -116,6 +180,7 @@ export class ObsidianVaultPage implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.vaultSub?.unsubscribe();
+    this.langSub?.unsubscribe();
     this.resizeObserver?.disconnect();
     if (this.graphInstance) {
       this.graphInstance._destructor();
@@ -205,12 +270,16 @@ export class ObsidianVaultPage implements OnInit, AfterViewInit, OnDestroy {
         return Math.max(1, Math.min(3.5, ((node.links?.length || 1) * 0.3) + 1));
       })
       .nodeLabel((node: any) => {
-        return `<div style="background: rgba(15,18,25,0.95); padding: 4px 8px; border-radius: 5px; border: 1px solid #7c3aed; color: #fff; font-size: 11px; font-weight: 600;">${node.title || node.id}</div>`;
+        const catLabel = this.getCategoryTitle(node.category);
+        const nodeTitle = this.getNodeTitle(node);
+        return `<div style="background: rgba(15,18,25,0.95); padding: 5px 9px; border-radius: 6px; border: 1px solid #7c3aed; color: #fff; font-size: 11px; font-weight: 600;"><span style="color: #c084fc; font-size: 9.5px; display: block; margin-bottom: 2px;">${catLabel}</span>${nodeTitle}</div>`;
       })
       .nodeAutoColorBy('category')
       .nodeCanvasObject((node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
         const query = this.searchQuery.trim().toLowerCase();
+        const nodeTitle = this.getNodeTitle(node);
         const isMatched = !query ||
+          nodeTitle.toLowerCase().includes(query) ||
           node.title?.toLowerCase().includes(query) ||
           node.id?.toLowerCase().includes(query);
         const isSelected = this.selectedNode && this.selectedNode.id === node.id;
@@ -243,7 +312,7 @@ export class ObsidianVaultPage implements OnInit, AfterViewInit, OnDestroy {
 
         // Etiqueta solo con buen nivel de zoom, seleccionado o búsqueda activa
         if (globalScale > 1.8 || isSelected || (query && isMatched)) {
-          const label = node.title || node.id;
+          const label = nodeTitle;
           const fontSize = Math.max(7 / globalScale, 2.5);
           ctx.font = `${isSelected ? 'bold ' : ''}${fontSize}px sans-serif`;
           ctx.textAlign = 'center';
