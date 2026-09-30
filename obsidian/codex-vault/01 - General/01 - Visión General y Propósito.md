@@ -4,49 +4,64 @@ type: general
 tags:
   - "#concepto"
   - "#general"
+  - "#lastresources"
   - "#lastcodex"
-version: 1.3.0
+version: 1.4.5
 created: 2026-09-23
+updated: 2026-09-29
 ---
 
 # 🌐 Visión General y Propósito del Proyecto
 
-**LastCodex** (nacido inicialmente bajo el nombre **OrnaForecast** / **Orna Guild Material Forecast**) es una aplicación multiplataforma y suite de herramientas esenciales para jugadores de los títulos RPG de Northern Forge Studios: **Orna: The GPS RPG** y **Hero of Aethric**.
+**LastResources** (conocido históricamente en versiones anteriores como **LastCodex** y **OrnaForecast**) es una suite integral de herramientas de código abierto y utilidades comunitarias para jugadores de los títulos RPG de Northern Forge Studios: **Orna: The GPS RPG** y **Hero of Aethric**.
 
 Conexión en la red:
 - Nodo Padre: [[00 - Nodo Central (MOC) - LastCodex]]
 - Arquitectura: [[03 - Arquitectura del Sistema]]
-- Módulos Principales: [[Módulo Forecast de Gremios]], [[Módulo Códice de Orna]], [[Módulo Rastreador de Eventos]]
+- Módulos Principales: 
+  - [[Módulo Forecast de Gremios]]
+  - [[Módulo Torres Celestiales]]
+  - [[Módulo Códice de Orna]]
+  - [[Módulo Mapa Interactivo de Ciudades y Marcadores]]
+  - [[Módulo Notificaciones del Sistema]]
+  - [[Módulo Legal y Cumplimiento DMCA]]
+  - [[Módulo Rastreador de Eventos]]
 - Plataformas: [[Plataforma Android y Capacitor]], [[Plataforma Desktop y Electron]], [[Plataforma Web y PWA]]
 
 ---
 
-## 🎯 Problema que Resuelve
+## 🎯 Problemas que Resuelve
 
 1. **Rotación Impredecible de Materiales de Gremios**:
-   - En *Orna*, los gremios (*Monument Guild*, *Circle of Anguish*, *Blades of Finesse*, *Spelunking Guild*) rotan diariamente sus tiendas a las **00:00 UTC**.
-   - Los jugadores de alto nivel (T10 / T11) necesitan planificar con semanas o meses de anticipación qué días gastar sus pruebas/monedas de gremio en materiales exóticos como *Ortanite*, *Pure Runestone*, *Cursed Ortanite*, etc.
-   - **Solución de LastCodex**: El [[Módulo Forecast de Gremios]] proporciona predicción diaria, semanal y mensual gracias al algoritmo alimentado por datos de la comunidad, presentado en [[HomePage - Forecast Hoy y Mañana]] y [[CalendarPage - Calendario de Materiales]].
+   - En *Orna*, los gremios rotan periódicamente sus tiendas.
+   - Jugadores avanzados necesitan planificar con semanas de antelación cuándo invertir sus pruebas en materiales exóticos (*Ortanite*, *Pure Runestone*, *Cursed Ortanite*, etc.).
+   - **Solución de LastResources**: El [[Módulo Forecast de Gremios]] ofrece predicción precisa diaria y mensual en [[HomePage - Forecast Hoy y Mañana]] y [[CalendarPage - Calendario de Materiales]], permitiendo además programar recordatorios que notifican al celular en el momento exacto de aparición.
 
-2. **Dificultad de Acceso al Códice en Vivo**:
-   - La web oficial de PlayOrna puede resultar lenta o inaccesible con conexiones de datos móviles deficientes durante partidas en la calle.
-   - No cuenta con filtros avanzados por subcategorías específicas (ej: diferenciar báculos de varitas, o cascos de sombreros) ni integración bilingüe instantánea.
-   - **Solución de LastCodex**: El [[Módulo Códice de Orna]] implementa una base de datos local basada en [[CodexService]] e IndexedDB que funciona **100% offline**, con búsqueda instantánea, sprites empaquetados e interfaz optimizada para móviles.
+2. **Seguimiento y Ascenso de Torres Celestiales**:
+   - Coordinar el farmeo de pisos en las 5 Torres Celestiales (Selene, Prometeo, Eos, Oceanus, Themis) requiere saber con exactitud cuándo alcanzan el límite de 50 pisos.
+   - **Solución de LastResources**: El [[Módulo Torres Celestiales]] proyecta la progresión de pisos por cada reseteo y emite alertas automáticas al móvil cuando una torre alcanza los 50 pisos.
 
-3. **Comunicación en Gremios y Comunidades**:
-   - Compartir qué materiales hay hoy en formato texto suele ser desordenado y propenso a errores.
-   - **Solución de LastCodex**: Mediante [[Forecast Canvas]], la aplicación permite exportar imágenes infográficas estilizadas listas para publicar en Discord o WhatsApp con un solo clic.
+3. **Cartografía y Ubicación en Aethric y Orna**:
+   - Ubicar ciudades y puntos clave sin perderse en el mapa del juego.
+   - **Solución de LastResources**: El [[Módulo Mapa Interactivo de Ciudades y Marcadores]] provee un visor cartográfico completo con zoom escalable y filtros por capas (activando solo ciudades por defecto para máxima fluidez).
+
+4. **Códice Offline Sin Latencia**:
+   - Consultar monstruos, hechizos, drops y equipo sin depender de cobertura o conexión móvil deficiente.
+   - **Solución de LastResources**: El [[Módulo Códice de Orna]] almacena más de 5,000 registros en IndexedDB con soporte para 22 idiomas, filtros por subcategorías y acceso directo a titanes celestiales.
+
+5. **Infografías y Comunicación Comunitaria**:
+   - Mediante [[Forecast Canvas]], permite exportar resúmenes visuales para Discord y WhatsApp en un solo toque.
+
+6. **Transparencia y Seguridad Legal**:
+   - Declaración de proyecto comunitario de fans, sin ánimo de lucro, sin recopilación de datos privados, respetando las marcas de Northern Forge y con canal formal DMCA Safe Harbor mediante [[Módulo Legal y Cumplimiento DMCA]].
 
 ---
 
 ## 👥 Público Objetivo
 
-- **Jugadores de Fin de Juego (T9, T10 y T11 / Celestial / Ascensión)**:
-  - Buscan optimizar sus materiales de mejora y no perderse rotaciones raras en Monumentos o Blades of Finesse.
-- **Líderes y Oficiales de Reino (Kingdoms)**:
-  - Generan y publican reportes diarios para sus miembros.
-- **Nuevos Jugadores (T1 a T8)**:
-  - Consultan estadísticas, monstruos, caídas de jefes y rutas de clases mediante [[CodexClassesPage - Clases y Habilidades]].
+- **Jugadores de Fin de Juego (T9, T10, T11 / Titanes Celestiales / Ascensión)**.
+- **Líderes y Oficiales de Reino (Kingdoms)** que organizan eventos y farmeo colectivo.
+- **Nuevos Jugadores (T1 a T8)** que consultan builds, clases y drops en [[CodexClassesPage - Clases y Habilidades]].
 
 ---
 
@@ -54,15 +69,8 @@ Conexión en la red:
 
 | Principio | Implementación |
 | :--- | :--- |
-| **Offline-First** | Funcionalidad completa sin conexión gracias a IndexedDB y caché reactiva. |
-| **Zero-Latency Search** | Filtrado local en memoria de más de 3,000 entradas en menos de 10ms. |
-| **Bilingüe Nativo** | Soporte completo para nombres y descripciones en Español e Inglés gestionado por [[SettingsService]]. |
-| **Multiplataforma Real** | Código único desplegado en Web (Vercel), Android (Capacitor) y Windows (Electron). |
-| **Estética RPG Temática** | Diseño oscuro ("Codex Dark") inspirado en la interfaz del juego, con acentos dorados y runas. |
-
----
-
-## 🔗 Sinapsis Relacionadas
-- Ir a control de versiones: [[02 - Versiones y Changelog]]
-- Ir a tecnologías empleadas: [[04 - Stack Tecnológico]]
-- Ver servicio de persistencia: [[CodexService]]
+| **Offline-First** | Funcionalidad completa sin conexión gracias a IndexedDB y almacenamiento local. |
+| **Zero-Latency Search** | Filtrado instantáneo en memoria de más de 5,000 entradas. |
+| **Alertas Nativas** | Notificaciones en barra de estado de Android sin telemetría invasiva con [[NotificationsService]]. |
+| **Multilingüe** | Soporte para 22 idiomas coordinado por [[SettingsService]]. |
+| **Multiplataforma** | Un único código Angular/Capacitor desplegado en Web (Vercel), Android (APK) y Windows (Electron). |
