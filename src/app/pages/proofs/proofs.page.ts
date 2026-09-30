@@ -42,12 +42,10 @@ export class ProofsPage implements OnInit {
   public allMaterials: MaterialOption[] = [];
   public filteredMaterials: MaterialOption[] = [];
   public searchFilter: string = '';
-  public selectedTierFilter: number | null = null;
-
   public selectedMaterial: MaterialOption | null = null;
   public materialCount: number = 10;
   public calculations: ProofCalculationResult[] = [];
-  public isSelectingMaterial: boolean = true;
+  public isSelectingMaterial: boolean = false;
 
   constructor() {
     addIcons({
@@ -79,11 +77,12 @@ export class ProofsPage implements OnInit {
         if (found) {
           this.selectMaterial(found);
           this.isSelectingMaterial = false;
+          return;
         }
-      } else {
-        this.selectedMaterial = null;
-        this.isSelectingMaterial = true;
       }
+      this.selectedMaterial = null;
+      this.isSelectingMaterial = false;
+      this.updateCalculations();
     });
   }
 
@@ -93,17 +92,8 @@ export class ProofsPage implements OnInit {
     this.applyFilters();
   }
 
-  public setTierFilter(tier: number | null): void {
-    this.selectedTierFilter = this.selectedTierFilter === tier ? null : tier;
-    this.applyFilters();
-  }
-
   private applyFilters(): void {
     let list = this.allMaterials;
-
-    if (this.selectedTierFilter !== null) {
-      list = list.filter(m => m.tier === this.selectedTierFilter);
-    }
 
     if (this.searchFilter) {
       list = list.filter(m =>
@@ -126,7 +116,6 @@ export class ProofsPage implements OnInit {
     this.isSelectingMaterial = !this.isSelectingMaterial;
     if (this.isSelectingMaterial) {
       this.searchFilter = '';
-      this.selectedTierFilter = null;
       this.applyFilters();
     }
   }
@@ -164,7 +153,11 @@ export class ProofsPage implements OnInit {
 
   private updateCalculations(): void {
     if (!this.selectedMaterial) {
-      this.calculations = [];
+      this.calculations = this.proofsService.getCurrencies().map(curr => ({
+        currency: curr,
+        cost: 0,
+        costFormatted: '0'
+      }));
       return;
     }
     this.calculations = this.proofsService.calculateAll(

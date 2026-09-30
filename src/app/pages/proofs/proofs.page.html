@@ -55,10 +55,27 @@
         </button>
       </div>
 
-      <!-- Mensaje si no hay material seleccionado y no está buscando -->
-      <div *ngIf="!selectedMaterial && !isSelectingMaterial" class="empty-material-prompt" (click)="toggleMaterialSelector()">
-        <ion-icon name="cube-outline"></ion-icon>
-        <span>{{ currentLang === 'es' ? 'Ningún material seleccionado. Toca aquí para elegir uno.' : 'No material selected. Tap here to select one.' }}</span>
+      <!-- Cuadro de Material cuando no hay ninguno seleccionado -->
+      <div *ngIf="!selectedMaterial && !isSelectingMaterial" class="empty-material-card" (click)="toggleMaterialSelector()">
+        <div class="empty-material-left">
+          <div class="empty-sprite-halo">
+            <ion-icon name="add-circle-outline"></ion-icon>
+          </div>
+          <div class="empty-material-meta">
+            <h4 class="empty-material-title">
+              {{ currentLang === 'es' ? 'Seleccionar Material' : 'Select Material' }}
+            </h4>
+            <span class="empty-material-subtitle">
+              {{ currentLang === 'es' ? 'Toca aquí para elegir o buscar un material' : 'Tap here to choose or search a material' }}
+            </span>
+          </div>
+        </div>
+        <div class="empty-material-right">
+          <button type="button" class="pick-material-cta-btn">
+            <ion-icon name="search-outline"></ion-icon>
+            <span>{{ currentLang === 'es' ? 'Buscar' : 'Search' }}</span>
+          </button>
+        </div>
       </div>
 
       <!-- Tarjeta del Material Activo -->
@@ -105,25 +122,6 @@
           debounce="150"
         ></ion-searchbar>
 
-        <!-- Filtros rápidos por Tier -->
-        <div class="tier-pills-row">
-          <button
-            type="button"
-            class="tier-pill"
-            [class.active]="selectedTierFilter === null"
-            (click)="setTierFilter(null)">
-            {{ currentLang === 'es' ? 'Todos' : 'All' }}
-          </button>
-          <button
-            *ngFor="let t of [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]"
-            type="button"
-            class="tier-pill"
-            [class.active]="selectedTierFilter === t"
-            (click)="setTierFilter(t)">
-            T{{ t }}
-          </button>
-        </div>
-
         <!-- Cuadrícula de materiales filtrados -->
         <div class="materials-picker-grid">
           <div
@@ -149,15 +147,18 @@
       </div>
     </div>
 
-    <!-- SECCIÓN 2: INPUT DE CANTIDAD -->
-    <div *ngIf="selectedMaterial" class="quantity-input-box codex-box">
+    <!-- SECCIÓN 2: INPUT DE CANTIDAD (Siempre visible) -->
+    <div class="quantity-input-box codex-box">
       <div class="quantity-header">
         <label class="quantity-label">
           <ion-icon name="swap-vertical-outline"></ion-icon>
           <span>{{ currentLang === 'es' ? 'Cantidad de Material Deseada' : 'Desired Material Quantity' }}</span>
         </label>
-        <span class="base-calc-pill">
+        <span class="base-calc-pill" *ngIf="selectedMaterial">
           100 {{ currentLang === 'es' ? 'materiales equivalen a' : 'materials equal' }} {{ selectedMaterial.baseRate }} {{ currentLang === 'es' ? 'unidades base' : 'base units' }}
+        </span>
+        <span class="base-calc-pill base-calc-placeholder" *ngIf="!selectedMaterial">
+          {{ currentLang === 'es' ? 'Selecciona un material para calcular' : 'Select a material to calculate' }}
         </span>
       </div>
 
@@ -194,8 +195,8 @@
       </div>
     </div>
 
-    <!-- SECCIÓN 3: RESULTADOS EN CADA GREMIO -->
-    <div *ngIf="selectedMaterial" class="proofs-output-section">
+    <!-- SECCIÓN 3: RESULTADOS EN CADA GREMIO (Siempre visible) -->
+    <div class="proofs-output-section">
       <div class="section-title-bar">
         <div class="title-left">
           <ion-icon name="calculator-outline"></ion-icon>
