@@ -85,236 +85,95 @@
   }
 }
 
-/* Selection Box */
-.material-selection-box {
+/* Config Bar: Unified 2-Column Horizontal Card */
+.calc-config-bar {
+  background: #23211f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 10px 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
   box-sizing: border-box;
-  max-width: 100%;
-  overflow: hidden;
+  width: 100%;
 
-  .box-header-row {
+  .config-columns-row {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 10px;
+    align-items: stretch;
+
+    @media (max-width: 480px) {
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 8px;
+    }
+  }
+
+  .config-col {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-    gap: 8px;
+    flex-direction: column;
+    min-width: 0;
 
-    .box-label {
+    .col-header {
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 0.9rem;
+      gap: 5px;
+      font-size: 0.72rem;
       font-weight: 700;
       color: #e5a93c;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      min-width: 0;
+      margin-bottom: 6px;
 
-      @media (max-width: 600px) {
-        font-size: 0.78rem;
+      ion-icon {
+        font-size: 0.85rem;
       }
     }
+  }
 
-    .toggle-picker-btn {
-      display: inline-flex;
+  /* Col 1: Material Slot */
+  .col-material {
+    cursor: pointer;
+
+    .material-slot-empty {
+      display: flex;
       align-items: center;
-      gap: 6px;
-      background: rgba(229, 169, 60, 0.12);
-      border: 1px solid rgba(229, 169, 60, 0.3);
-      color: #e5a93c;
-      padding: 6px 12px;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px dashed rgba(229, 169, 60, 0.4);
       border-radius: 8px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
-      flex-shrink: 0;
+      padding: 6px 10px;
+      height: 48px;
+      box-sizing: border-box;
       transition: all 0.2s ease;
 
-      @media (max-width: 600px) {
-        padding: 5px 8px;
-        font-size: 0.74rem;
-      }
-
       &:hover {
-        background: rgba(229, 169, 60, 0.22);
-      }
-    }
-  }
-
-  .selected-material-card {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #2a2826;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 12px;
-    padding: 14px;
-    gap: 12px;
-
-    .material-hero-left {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-
-      .sprite-halo {
-        width: 58px;
-        height: 58px;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
-
-        .material-sprite {
-          width: 44px;
-          height: 44px;
-          image-rendering: pixelated;
-          object-fit: contain;
-        }
+        background: rgba(229, 169, 60, 0.08);
+        border-color: #e5a93c;
       }
 
-      .material-meta {
-        display: flex;
-        flex-direction: column;
-        gap: 3px;
-
-        .material-name {
-          margin: 0;
-          font-size: 1.15rem;
-          font-weight: 700;
-          color: #fff;
-        }
-
-        .material-subname {
-          font-size: 0.8rem;
-          color: #9e988f;
-          font-style: italic;
-        }
-
-        .badges-row {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 6px;
-          margin-top: 4px;
-
-          .badge-tier {
-            background: #d97706;
-            color: #fff;
-            padding: 2px 7px;
-            border-radius: 4px;
-            font-size: 0.72rem;
-            font-weight: 700;
-          }
-
-          .badge-rarity {
-            padding: 2px 7px;
-            border-radius: 4px;
-            font-size: 0.72rem;
-            font-weight: 600;
-
-            &.rarity-legendary { background: #7c3aed; color: #fff; }
-            &.rarity-famed { background: #2563eb; color: #fff; }
-            &.rarity-rare { background: #059669; color: #fff; }
-            &.rarity-common { background: rgba(255, 255, 255, 0.15); color: #ddd; }
-          }
-
-          .badge-base-rate {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #cbd5e1;
-            padding: 2px 7px;
-            border-radius: 4px;
-            font-size: 0.72rem;
-            font-weight: 600;
-          }
-        }
-      }
-    }
-
-    .material-hero-right {
-      .codex-link-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        background: rgba(255, 255, 255, 0.07);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        color: #d1cbc1;
-        padding: 8px 12px;
-        border-radius: 8px;
-        font-size: 0.8rem;
-        cursor: pointer;
-        transition: all 0.2s;
-
-        &:hover {
-          background: rgba(255, 255, 255, 0.15);
-          color: #fff;
-        }
-      }
-    }
-  }
-
-  .empty-material-card {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    padding: 10px 12px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px dashed rgba(229, 169, 60, 0.4);
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-sizing: border-box;
-    width: 100%;
-    max-width: 100%;
-    overflow: hidden;
-
-    &:hover {
-      background: rgba(229, 169, 60, 0.08);
-      border-color: #e5a93c;
-
-      .empty-material-right .pick-material-cta-btn {
-        background: #e5a93c;
-        color: #1a1918;
-      }
-    }
-
-    .empty-material-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
-      flex: 1;
-      overflow: hidden;
-
-      .empty-sprite-halo {
-        width: 42px;
-        height: 42px;
-        border-radius: 8px;
-        background: rgba(229, 169, 60, 0.1);
-        border: 1px dashed rgba(229, 169, 60, 0.5);
+      .slot-halo {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        background: rgba(229, 169, 60, 0.12);
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
 
         ion-icon {
-          font-size: 1.5rem;
+          font-size: 1.25rem;
           color: #e5a93c;
         }
       }
 
-      .empty-material-meta {
+      .slot-text {
         display: flex;
         flex-direction: column;
-        gap: 2px;
         min-width: 0;
         overflow: hidden;
 
-        .empty-material-title {
-          margin: 0;
-          font-size: 0.95rem;
+        .slot-title {
+          font-size: 0.84rem;
           font-weight: 700;
           color: #fff;
           white-space: nowrap;
@@ -322,49 +181,149 @@
           text-overflow: ellipsis;
         }
 
-        .empty-material-subtitle {
-          font-size: 0.75rem;
+        .slot-action {
+          font-size: 0.68rem;
           color: #a8a29e;
           white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
         }
       }
     }
 
-    .empty-material-right {
-      flex-shrink: 0;
+    .material-slot-selected {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(229, 169, 60, 0.08);
+      border: 1px solid rgba(229, 169, 60, 0.35);
+      border-radius: 8px;
+      padding: 6px 10px;
+      height: 48px;
+      box-sizing: border-box;
+      transition: all 0.2s ease;
 
-      .pick-material-cta-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        background: rgba(229, 169, 60, 0.15);
-        border: 1px solid rgba(229, 169, 60, 0.35);
-        color: #e5a93c;
-        padding: 6px 10px;
-        border-radius: 8px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s;
-        pointer-events: none;
-        white-space: nowrap;
+      &:hover {
+        background: rgba(229, 169, 60, 0.14);
+        border-color: #e5a93c;
+      }
 
-        ion-icon {
-          font-size: 0.95rem;
+      .selected-sprite {
+        width: 34px;
+        height: 34px;
+        object-fit: contain;
+        image-rendering: pixelated;
+        flex-shrink: 0;
+      }
+
+      .selected-meta {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        overflow: hidden;
+
+        .selected-name {
+          font-size: 0.82rem;
+          font-weight: 700;
+          color: #fff;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
+
+        .selected-tier {
+          font-size: 0.68rem;
+          font-weight: 600;
+          color: #f59e0b;
+        }
+      }
+    }
+  }
+
+  /* Col 2: Quantity Input */
+  .col-quantity {
+    .quantity-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      height: 48px;
+
+      .quantity-number-input {
+        width: 100%;
+        height: 100%;
+        background: #181716;
+        border: 1.5px solid #e5a93c;
+        border-radius: 8px;
+        color: #fff;
+        font-size: 1.35rem;
+        font-weight: 800;
+        text-align: center;
+        padding: 0 34px 0 8px;
+        box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+        box-sizing: border-box;
+
+        &:focus {
+          outline: none;
+          box-shadow: 0 0 10px rgba(229, 169, 60, 0.45);
+        }
+      }
+
+      .quantity-unit-tag {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 0.72rem;
+        color: #e5a93c;
+        font-weight: 700;
+        pointer-events: none;
+      }
+    }
+  }
+
+  /* Footer Micro-Bar */
+  .config-footer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    padding-top: 6px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+    .base-rate-text {
+      font-size: 0.72rem;
+      color: #9e9a93;
+    }
+
+    .mini-codex-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #d1cbc1;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: all 0.15s;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+      }
+
+      ion-icon {
+        font-size: 0.78rem;
       }
     }
   }
 
   /* Material Picker Dropdown */
   .material-picker-panel {
-    margin-top: 12px;
+    margin-top: 10px;
     background: #1e1d1b;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 12px;
+    border-radius: 10px;
+    padding: 10px;
 
     .custom-searchbar {
       --background: #2a2826;
@@ -376,21 +335,21 @@
     }
 
     .materials-picker-grid {
-      max-height: 280px;
+      max-height: 240px;
       overflow-y: auto;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-      gap: 8px;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 6px;
       padding-right: 4px;
 
       .picker-item-card {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
         background: #272523;
         border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 8px;
-        padding: 8px;
+        padding: 6px 8px;
         cursor: pointer;
         transition: all 0.15s;
 
@@ -400,8 +359,8 @@
         }
 
         .picker-sprite {
-          width: 32px;
-          height: 32px;
+          width: 28px;
+          height: 28px;
           object-fit: contain;
           image-rendering: pixelated;
         }
@@ -412,7 +371,7 @@
           overflow: hidden;
 
           .picker-name {
-            font-size: 0.8rem;
+            font-size: 0.76rem;
             font-weight: 600;
             color: #fff;
             white-space: nowrap;
@@ -424,16 +383,15 @@
             display: flex;
             gap: 4px;
             align-items: center;
-            margin-top: 2px;
 
             .picker-tier {
-              font-size: 0.65rem;
+              font-size: 0.62rem;
               font-weight: 700;
               color: #f59e0b;
             }
 
             .picker-rarity {
-              font-size: 0.65rem;
+              font-size: 0.62rem;
               font-weight: 600;
               &.rarity-legendary { color: #a78bfa; }
               &.rarity-famed { color: #60a5fa; }
@@ -446,88 +404,14 @@
 
       .no-materials-found {
         grid-column: 1 / -1;
-        padding: 24px;
+        padding: 20px;
         text-align: center;
         color: #8c867d;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 8px;
-      }
-    }
-  }
-}
-
-/* Quantity Input Box */
-.quantity-input-box {
-  .quantity-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-    flex-wrap: wrap;
-    gap: 8px;
-
-    .quantity-label {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: #e5a93c;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .base-calc-pill {
-      font-size: 0.75rem;
-      color: #9e988f;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 2px 8px;
-      border-radius: 12px;
-    }
-  }
-
-  .quantity-input-single {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    margin: 4px 0 2px 0;
-
-    .large-input-wrap {
-      position: relative;
-      width: 100%;
-      max-width: 320px;
-
-      .count-number-input {
-        width: 100%;
-        background: #181716;
-        border: 2px solid #e5a93c;
-        border-radius: 12px;
-        color: #fff;
-        font-size: 1.6rem;
-        font-weight: 800;
-        text-align: center;
-        padding: 12px 60px 12px 16px;
-        box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6);
-        box-sizing: border-box;
-
-        &:focus {
-          outline: none;
-          box-shadow: 0 0 14px rgba(229, 169, 60, 0.45);
-        }
-      }
-
-      .input-unit-tag {
-        position: absolute;
-        right: 16px;
-        top: 50%;
-        transform: translateY(-50%);
         font-size: 0.8rem;
-        color: #e5a93c;
-        font-weight: 700;
-        pointer-events: none;
       }
     }
   }

@@ -16,7 +16,9 @@ import {
   arrowForwardOutline,
   bookOutline,
   addCircleOutline,
-  removeCircleOutline
+  removeCircleOutline,
+  cubeOutline,
+  addOutline
 } from 'ionicons/icons';
 import { ProofsService, MaterialOption, ProofCurrency, ProofCalculationResult } from '../../services/proofs.service';
 import { SettingsService } from '../../services/settings.service';
@@ -60,7 +62,9 @@ export class ProofsPage implements OnInit {
       arrowForwardOutline,
       bookOutline,
       addCircleOutline,
-      removeCircleOutline
+      removeCircleOutline,
+      cubeOutline,
+      addOutline
     });
   }
 

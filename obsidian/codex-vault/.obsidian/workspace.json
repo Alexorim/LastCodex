@@ -79,8 +79,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "4eeaa040ad85752f",
@@ -188,11 +187,13 @@
   },
   "active": "49ccbce848ccd837",
   "lastOpenFiles": [
+    "00 - Nodo Central (MOC) - LastCodex.md",
+    "README.md",
+    "_debug_remotely_save/sync_plans_hist_exported_on_1790244948813.md",
     "09 - Actualizaciones/v1.4.6 - Calculadora Oficial de Pruebas y Optimizaciones Móviles.md",
     "04 - Paginas/ProofsPage - Calculadora de Pruebas.md",
     "03 - Servicios/ProofsService.md",
     "02 - Modulos/Módulo Calculadora de Pruebas de Gremios.md",
-    "README.md",
     "09 - Actualizaciones/v1.4.5 - Rebranding LastResources, Torres Celestiales, Notificaciones Push y Blindaje Legal.md",
     "09 - Actualizaciones/v1.4.4 - Visor de Mapa Interactivo y Comprobador de Actualizaciones Remoto.md",
     "09 - Actualizaciones/v1.4.3 - Nombre Estable APK, Glassmorphism Sakura y Soporte Notch.md",
@@ -206,14 +207,12 @@
     "02 - Modulos/Módulo Notificaciones del Sistema.md",
     "02 - Modulos/Módulo Mapa Interactivo de Ciudades y Marcadores.md",
     "02 - Modulos/Módulo Legal y Cumplimiento DMCA.md",
-    "00 - Nodo Central (MOC) - LastCodex.md",
     "03 - Servicios/SettingsService.md",
     "09 - Actualizaciones/v1.3.1 - Paginación Numérica y Modo Cuadrícula en Códice.md",
     "09 - Actualizaciones/v1.3.0 - Renacimiento LastCodex, Subcategorías y APK Versionada.md",
     "09 - Actualizaciones/Plantilla de Nueva Versión.md",
     "09 - Actualizaciones/00 - Registro de Actualizaciones (Changelog Maestro).md",
     "01 - General/04 - Stack Tecnológico.md",
-    "08 - Utilidades/Iconos y Sprites.md",
     "09 - Actualizaciones",
     "08 - Utilidades",
     "07 - Scripts",

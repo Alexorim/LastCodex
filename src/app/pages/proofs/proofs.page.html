@@ -39,80 +39,75 @@
       </div>
     </div>
 
-    <!-- SECCIÓN 1: SELECCIÓN DE MATERIAL -->
-    <div class="material-selection-box codex-box">
-      <div class="box-header-row">
-        <div class="box-label">
-          <ion-icon name="search-outline"></ion-icon>
-          <span>{{ currentLang === 'es' ? 'Material Seleccionado' : 'Selected Material' }}</span>
-        </div>
-        <button
-          type="button"
-          class="toggle-picker-btn"
-          (click)="toggleMaterialSelector()">
-          <ion-icon [name]="isSelectingMaterial ? 'close-circle-outline' : 'search-outline'"></ion-icon>
-          <span>{{ isSelectingMaterial ? (currentLang === 'es' ? 'Cerrar Buscador' : 'Close Search') : (selectedMaterial ? (currentLang === 'es' ? 'Cambiar Material' : 'Change Material') : (currentLang === 'es' ? 'Elegir Material' : 'Select Material')) }}</span>
-        </button>
-      </div>
+    <!-- TARJETA UNIFICADA: MATERIAL (COL 1) Y CANTIDAD (COL 2) -->
+    <div class="calc-config-bar codex-box">
+      <div class="config-columns-row">
 
-      <!-- Cuadro de Material cuando no hay ninguno seleccionado -->
-      <div *ngIf="!selectedMaterial && !isSelectingMaterial" class="empty-material-card" (click)="toggleMaterialSelector()">
-        <div class="empty-material-left">
-          <div class="empty-sprite-halo">
-            <ion-icon name="add-circle-outline"></ion-icon>
+        <!-- COLUMNA 1: MATERIAL SELECCIONADO -->
+        <div class="config-col col-material" (click)="toggleMaterialSelector()">
+          <div class="col-header">
+            <ion-icon name="cube-outline"></ion-icon>
+            <span>{{ currentLang === 'es' ? 'Material' : 'Material' }}</span>
           </div>
-          <div class="empty-material-meta">
-            <h4 class="empty-material-title">
-              {{ currentLang === 'es' ? 'Seleccionar Material' : 'Select Material' }}
-            </h4>
-            <span class="empty-material-subtitle">
-              {{ currentLang === 'es' ? 'Toca aquí para elegir o buscar un material' : 'Tap here to choose or search a material' }}
-            </span>
-          </div>
-        </div>
-        <div class="empty-material-right">
-          <button type="button" class="pick-material-cta-btn">
-            <ion-icon name="search-outline"></ion-icon>
-            <span>{{ currentLang === 'es' ? 'Buscar' : 'Search' }}</span>
-          </button>
-        </div>
-      </div>
 
-      <!-- Tarjeta del Material Activo -->
-      <div *ngIf="selectedMaterial && !isSelectingMaterial" class="selected-material-card">
-        <div class="material-hero-left">
-          <div class="sprite-halo">
-            <img [src]="selectedMaterial.icon" (error)="onImageError($event)" class="material-sprite" alt="" />
+          <!-- Estado Vacío -->
+          <div *ngIf="!selectedMaterial" class="material-slot-empty">
+            <div class="slot-halo">
+              <ion-icon name="add-outline"></ion-icon>
+            </div>
+            <div class="slot-text">
+              <span class="slot-title">{{ currentLang === 'es' ? 'Elegir' : 'Select' }}</span>
+              <span class="slot-action">{{ currentLang === 'es' ? 'Toca aquí' : 'Tap here' }}</span>
+            </div>
           </div>
-          <div class="material-meta">
-            <h4 class="material-name">
-              {{ currentLang === 'es' ? selectedMaterial.nameEs : selectedMaterial.nameEn }}
-            </h4>
-            <span class="material-subname" *ngIf="currentLang === 'es' && selectedMaterial.nameEn !== selectedMaterial.nameEs">
-              {{ selectedMaterial.nameEn }}
-            </span>
-            <div class="badges-row">
-              <span class="badge-tier">★ Tier {{ selectedMaterial.tier }}</span>
-              <span class="badge-rarity" [ngClass]="getRarityClass(selectedMaterial.rarity)">
-                {{ getRarityLabel(selectedMaterial.rarity) }}
-              </span>
-              <span class="badge-base-rate" title="Fórmula: Tier x 10 + Rareza x 5">
-                {{ currentLang === 'es' ? 'Tasa Base' : 'Base Rate' }}: 100 : {{ selectedMaterial.baseRate }}
-              </span>
+
+          <!-- Estado Seleccionado -->
+          <div *ngIf="selectedMaterial" class="material-slot-selected">
+            <img [src]="selectedMaterial.icon" (error)="onImageError($event)" class="selected-sprite" alt="" />
+            <div class="selected-meta">
+              <span class="selected-name">{{ currentLang === 'es' ? selectedMaterial.nameEs : selectedMaterial.nameEn }}</span>
+              <span class="selected-tier">★ T{{ selectedMaterial.tier }}</span>
             </div>
           </div>
         </div>
 
-        <div class="material-hero-right">
-          <button type="button" class="codex-link-btn" (click)="goToCodex()" [title]="currentLang === 'es' ? 'Ver drops y lore en Códice' : 'View drops & lore in Codex'">
-            <ion-icon name="book-outline"></ion-icon>
-            <span>Códice</span>
-          </button>
+        <!-- COLUMNA 2: CANTIDAD DE MATERIAL -->
+        <div class="config-col col-quantity">
+          <div class="col-header">
+            <ion-icon name="swap-vertical-outline"></ion-icon>
+            <span>{{ currentLang === 'es' ? 'Cantidad' : 'Quantity' }}</span>
+          </div>
+
+          <div class="quantity-input-wrap">
+            <input
+              type="number"
+              class="quantity-number-input"
+              [ngModel]="materialCount"
+              (ngModelChange)="onMaterialCountChange($event)"
+              min="0"
+              max="99999"
+              placeholder="0"
+              inputmode="numeric"
+            />
+            <span class="quantity-unit-tag">{{ currentLang === 'es' ? 'Unid.' : 'Pcs.' }}</span>
+          </div>
         </div>
+
+      </div>
+
+      <!-- Footer informativo si hay material seleccionado -->
+      <div *ngIf="selectedMaterial" class="config-footer-row">
+        <span class="base-rate-text">
+          {{ currentLang === 'es' ? 'Tasa base' : 'Base rate' }}: 100 : {{ selectedMaterial.baseRate }}
+        </span>
+        <button type="button" class="mini-codex-btn" (click)="$event.stopPropagation(); goToCodex()" [title]="currentLang === 'es' ? 'Ver en Códice' : 'View in Codex'">
+          <ion-icon name="book-outline"></ion-icon>
+          <span>Códice</span>
+        </button>
       </div>
 
       <!-- PANEL DE BÚSQUEDA Y SELECCIÓN DESPLEGABLE -->
-      <div *ngIf="isSelectingMaterial" class="material-picker-panel">
+      <div *ngIf="isSelectingMaterial" class="material-picker-panel" (click)="$event.stopPropagation()">
         <ion-searchbar
           [(ngModel)]="searchFilter"
           (ionInput)="onSearchChange($event)"
@@ -143,37 +138,6 @@
             <ion-icon name="information-circle-outline"></ion-icon>
             <span>{{ currentLang === 'es' ? 'No se encontraron materiales.' : 'No materials found.' }}</span>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SECCIÓN 2: INPUT DE CANTIDAD (Siempre visible) -->
-    <div class="quantity-input-box codex-box">
-      <div class="quantity-header">
-        <label class="quantity-label">
-          <ion-icon name="swap-vertical-outline"></ion-icon>
-          <span>{{ currentLang === 'es' ? 'Cantidad de Material Deseada' : 'Desired Material Quantity' }}</span>
-        </label>
-        <span class="base-calc-pill" *ngIf="selectedMaterial">
-          100 {{ currentLang === 'es' ? 'materiales equivalen a' : 'materials equal' }} {{ selectedMaterial.baseRate }} {{ currentLang === 'es' ? 'unidades base' : 'base units' }}
-        </span>
-        <span class="base-calc-pill base-calc-placeholder" *ngIf="!selectedMaterial">
-          {{ currentLang === 'es' ? 'Selecciona un material para calcular' : 'Select a material to calculate' }}
-        </span>
-      </div>
-
-      <div class="quantity-input-single">
-        <div class="main-input-wrap large-input-wrap">
-          <input
-            type="number"
-            class="count-number-input"
-            [ngModel]="materialCount"
-            (ngModelChange)="onMaterialCountChange($event)"
-            min="0"
-            max="99999"
-            placeholder="0"
-          />
-          <span class="input-unit-tag">{{ currentLang === 'es' ? 'Unid.' : 'Pcs.' }}</span>
         </div>
       </div>
     </div>
