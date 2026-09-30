@@ -162,11 +162,8 @@
         </span>
       </div>
 
-      <div class="stepper-controls-row">
-        <button type="button" class="step-btn" (click)="addMaterialCount(-10)" title="-10">-10</button>
-        <button type="button" class="step-btn" (click)="addMaterialCount(-1)" title="-1">-1</button>
-
-        <div class="main-input-wrap">
+      <div class="quantity-input-single">
+        <div class="main-input-wrap large-input-wrap">
           <input
             type="number"
             class="count-number-input"
@@ -174,28 +171,14 @@
             (ngModelChange)="onMaterialCountChange($event)"
             min="0"
             max="99999"
+            placeholder="0"
           />
           <span class="input-unit-tag">{{ currentLang === 'es' ? 'Unid.' : 'Pcs.' }}</span>
         </div>
-
-        <button type="button" class="step-btn" (click)="addMaterialCount(1)" title="+1">+1</button>
-        <button type="button" class="step-btn" (click)="addMaterialCount(10)" title="+10">+10</button>
-      </div>
-
-      <!-- Presets de cantidad rápida -->
-      <div class="preset-chips-row">
-        <span class="presets-tag">{{ currentLang === 'es' ? 'Cantidad rápida:' : 'Quick counts:' }}</span>
-        <button *ngFor="let preset of [1, 5, 10, 25, 50, 100, 250, 500]"
-          type="button"
-          class="preset-chip"
-          [class.active]="materialCount === preset"
-          (click)="setPresetCount(preset)">
-          {{ preset }}
-        </button>
       </div>
     </div>
 
-    <!-- SECCIÓN 3: RESULTADOS EN CADA GREMIO (Siempre visible) -->
+    <!-- SECCIÓN 3: RESULTADOS EN CADA GREMIO (Siempre visible, 2 por columna) -->
     <div class="proofs-output-section">
       <div class="section-title-bar">
         <div class="title-left">
@@ -209,36 +192,23 @@
         </span>
       </div>
 
-      <p class="section-subtitle">
-        {{ currentLang === 'es'
-          ? 'Introduce una cantidad de material arriba, o edita directamente cualquier moneda abajo para ver cuántos materiales puedes comprar.'
-          : 'Enter material quantity above, or edit any currency below to see how many materials you can afford.' }}
-      </p>
-
-      <div class="proofs-grid">
+      <div class="proofs-grid two-cols-grid">
         <div
           *ngFor="let calc of calculations"
-          class="proof-card"
-          [style.border-left-color]="calc.currency.color">
+          class="proof-card mini-card"
+          [style.border-left-color]="calc.currency.color"
+          [title]="(currentLang === 'es' ? calc.currency.nameEs : calc.currency.nameEn) + ' (' + (currentLang === 'es' ? calc.currency.guildEs : calc.currency.guildEn) + ')'">
 
-          <div class="proof-card-top">
+          <div class="mini-card-top">
             <div class="proof-icon-wrap">
               <img [src]="calc.currency.icon" (error)="onImageError($event)" class="proof-sprite" alt="" />
             </div>
-            <div class="proof-titles">
-              <span class="currency-name">
-                {{ currentLang === 'es' ? calc.currency.nameEs : calc.currency.nameEn }}
-              </span>
-              <span class="currency-guild">
-                {{ currentLang === 'es' ? calc.currency.guildEs : calc.currency.guildEn }}
-              </span>
-            </div>
-            <div class="rate-badge" [style.color]="calc.currency.color">
+            <span class="rate-badge" [style.color]="calc.currency.color">
               x{{ calc.currency.rate }}
-            </div>
+            </span>
           </div>
 
-          <div class="proof-card-bottom">
+          <div class="mini-card-bottom">
             <div class="cost-input-container">
               <span class="cost-currency-symbol">🪙</span>
               <input

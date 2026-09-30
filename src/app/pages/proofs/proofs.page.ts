@@ -126,16 +126,7 @@ export class ProofsPage implements OnInit {
     this.updateCalculations();
   }
 
-  public addMaterialCount(delta: number): void {
-    const next = (this.materialCount || 0) + delta;
-    this.materialCount = Math.max(0, next);
-    this.updateCalculations();
-  }
 
-  public setPresetCount(count: number): void {
-    this.materialCount = count;
-    this.updateCalculations();
-  }
 
   public onProofCountChange(currency: ProofCurrency, event: any): void {
     if (!this.selectedMaterial) return;
