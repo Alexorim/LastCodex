@@ -5,7 +5,14 @@ const { execSync } = require('child_process');
 const rootDir = path.resolve(__dirname, '..');
 const pkgPath = path.join(rootDir, 'package.json');
 const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-const version = pkg.version || '1.3.0';
+const versionJsonPath = path.join(rootDir, 'src', 'assets', 'version.json');
+let version = pkg.version || '1.3.0';
+if (fs.existsSync(versionJsonPath)) {
+  try {
+    const vData = JSON.parse(fs.readFileSync(versionJsonPath, 'utf8'));
+    if (vData.version) version = vData.version;
+  } catch (e) {}
+}
 
 console.log(`=== Starting build pipeline for LastCodex v${version} ===`);
 
@@ -18,7 +25,6 @@ if (fs.existsSync(gradlePath)) {
   console.log(`[1/5] Synchronized android/app/build.gradle versionName to "${version}"`);
 }
 
-const versionJsonPath = path.join(rootDir, 'src', 'assets', 'version.json');
 const versionMeta = {
   version: version,
   name: "LastResources",

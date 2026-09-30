@@ -40,6 +40,22 @@ export class TabsPage implements OnInit, OnDestroy {
     });
   }
 
+  onTabClick(tab: string, event: Event): void {
+    this.settingsService.notifyTabClick(tab);
+
+    if (tab === 'codex') {
+      const closeBtn = document.querySelector('.modal-backdrop .modal-close-btn') as HTMLElement | null;
+      if (closeBtn) {
+        closeBtn.click();
+      }
+    } else if (tab === 'towers') {
+      const closeBtn = document.querySelector('.tower-modal-backdrop .modal-close-btn') as HTMLElement | null;
+      if (closeBtn) {
+        closeBtn.click();
+      }
+    }
+  }
+
   async openMapWarning(event: Event): Promise<void> {
     event.preventDefault();
     event.stopPropagation();

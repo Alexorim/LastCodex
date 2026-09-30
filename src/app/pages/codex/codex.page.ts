@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -72,6 +72,7 @@ export class CodexPage implements OnInit, OnDestroy {
   private backButtonService = inject(BackButtonService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private cdr = inject(ChangeDetectorRef);
 
   private subs = new Subscription();
 
@@ -239,6 +240,15 @@ export class CodexPage implements OnInit, OnDestroy {
     this.subs.add(
       this.settingsService.lang$.subscribe(lang => {
         this.currentLang = lang;
+      })
+    );
+
+    this.subs.add(
+      this.settingsService.tabClick$.subscribe(tab => {
+        if (tab === 'codex' && this.selectedEntry) {
+          this.closeEntry();
+          this.cdr.detectChanges();
+        }
       })
     );
 

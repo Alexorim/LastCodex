@@ -12,13 +12,13 @@
       <ion-label>{{ currentLang === 'es' ? 'Calendario' : 'Calendar' }}</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="towers" href="/towers">
+    <ion-tab-button tab="towers" href="/towers" (click)="onTabClick('towers', $event)">
       <ion-icon aria-hidden="true" src="assets/icon/tower.svg"></ion-icon>
       <ion-label>Towers</ion-label>
     </ion-tab-button>
 
 
-    <ion-tab-button tab="codex" href="/codex">
+    <ion-tab-button tab="codex" href="/codex" (click)="onTabClick('codex', $event)">
       <ion-icon aria-hidden="true" name="book"></ion-icon>
       <ion-label>Codex</ion-label>
     </ion-tab-button>

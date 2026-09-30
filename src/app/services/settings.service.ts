@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 export interface LanguageOption {
   code: string;
@@ -52,6 +52,13 @@ export class SettingsService {
     (localStorage.getItem(this.THEME_KEY) as ThemeMode) || 'codex-dark'
   );
   public theme$ = this.themeSubject.asObservable();
+
+  private tabClickSubject = new Subject<string>();
+  public tabClick$ = this.tabClickSubject.asObservable();
+
+  public notifyTabClick(tab: string): void {
+    this.tabClickSubject.next(tab);
+  }
 
   constructor() {
     // Apply saved theme on app start

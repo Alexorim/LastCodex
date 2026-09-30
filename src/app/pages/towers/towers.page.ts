@@ -97,6 +97,15 @@ export class TowersPage implements OnInit, OnDestroy {
       })
     );
 
+    this.subs.add(
+      this.settingsService.tabClick$.subscribe((tab) => {
+        if (tab === 'towers' && this.isDetailModalOpen) {
+          this.closeTowerDetail();
+          this.cdr.detectChanges();
+        }
+      })
+    );
+
     this.refreshData();
 
     // Live countdown update every second
