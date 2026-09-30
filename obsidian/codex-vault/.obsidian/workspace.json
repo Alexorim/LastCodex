@@ -11,14 +11,10 @@
             "id": "49ccbce848ccd837",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "09 - Actualizaciones/v1.3.1 - Paginación Numérica y Modo Cuadrícula en Códice.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "v1.3.1 - Paginación Numérica y Modo Cuadrícula en Códice"
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Vista gráfica"
             }
           }
         ]
@@ -83,7 +79,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "4eeaa040ad85752f",
@@ -179,6 +176,7 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "remotely-save:Remotely Save": false,
       "switcher:Abrir selector rápido": false,
       "graph:Abrir vista gráfica": false,
       "canvas:Crear nuevo lienzo": false,
@@ -190,37 +188,37 @@
   },
   "active": "49ccbce848ccd837",
   "lastOpenFiles": [
-    "09 - Actualizaciones/v1.3.0 - Renacimiento LastCodex, Subcategorías y APK Versionada.md",
+    "09 - Actualizaciones/v1.4.6 - Calculadora Oficial de Pruebas y Optimizaciones Móviles.md",
+    "04 - Paginas/ProofsPage - Calculadora de Pruebas.md",
+    "03 - Servicios/ProofsService.md",
+    "02 - Modulos/Módulo Calculadora de Pruebas de Gremios.md",
+    "README.md",
+    "09 - Actualizaciones/v1.4.5 - Rebranding LastResources, Torres Celestiales, Notificaciones Push y Blindaje Legal.md",
+    "09 - Actualizaciones/v1.4.4 - Visor de Mapa Interactivo y Comprobador de Actualizaciones Remoto.md",
+    "09 - Actualizaciones/v1.4.3 - Nombre Estable APK, Glassmorphism Sakura y Soporte Notch.md",
+    "09 - Actualizaciones/v1.4.2 - Tema Sakura, Footer Compacto y Auto-ocultación de Barra.md",
+    "04 - Paginas/TowersPage - Torres Celestiales.md",
+    "04 - Paginas/MapPage - Mapa Interactivo.md",
+    "04 - Paginas/LegalPage - Aviso Legal y Privacidad.md",
+    "03 - Servicios/TowersService.md",
+    "03 - Servicios/NotificationsService.md",
+    "02 - Modulos/Módulo Torres Celestiales.md",
+    "02 - Modulos/Módulo Notificaciones del Sistema.md",
+    "02 - Modulos/Módulo Mapa Interactivo de Ciudades y Marcadores.md",
+    "02 - Modulos/Módulo Legal y Cumplimiento DMCA.md",
+    "00 - Nodo Central (MOC) - LastCodex.md",
+    "03 - Servicios/SettingsService.md",
     "09 - Actualizaciones/v1.3.1 - Paginación Numérica y Modo Cuadrícula en Códice.md",
+    "09 - Actualizaciones/v1.3.0 - Renacimiento LastCodex, Subcategorías y APK Versionada.md",
     "09 - Actualizaciones/Plantilla de Nueva Versión.md",
     "09 - Actualizaciones/00 - Registro de Actualizaciones (Changelog Maestro).md",
-    "00 - Nodo Central (MOC) - LastCodex.md",
     "01 - General/04 - Stack Tecnológico.md",
     "08 - Utilidades/Iconos y Sprites.md",
-    "08 - Utilidades/Traducciones y Mapeo de Nombres.md",
-    "08 - Utilidades/Forecast Canvas.md",
-    "09 - Actualizaciones/v1.0.0 - Lanzamiento Inicial Orna Guild Forecast y Multiplataforma.md",
-    "06 - Plataformas/Plataforma Android y Capacitor.md",
-    "09 - Actualizaciones/v1.1.0 - Clases, Eventos, Canvas Offline y Soporte Android.md",
-    "09 - Actualizaciones/v1.2.0 - Códice Masivo Offline (5065 ítems) y Sincronización.md",
     "09 - Actualizaciones",
-    "04 - Paginas/CodexPage - Explorador del Códice.md",
-    "04 - Paginas/CodexClassesPage - Clases y Habilidades.md",
     "08 - Utilidades",
-    "07 - Scripts/Script Scraper del Codex.md",
-    "07 - Scripts/Script Generador de Íconos.md",
-    "07 - Scripts/Script Build APK.md",
     "07 - Scripts",
-    "06 - Plataformas/Plataforma Web y PWA.md",
-    "06 - Plataformas/Plataforma Desktop y Electron.md",
     "06 - Plataformas",
-    "05 - Modelos/Modelo Event.md",
-    "05 - Modelos/Modelo DayForecast y GuildStock.md",
-    "05 - Modelos/Modelo CodexEntry.md",
     "05 - Modelos",
-    "04 - Paginas/SettingsPage - Configuración.md",
-    "04 - Paginas/EventsPage - Eventos en Vivo.md",
-    "04 - Paginas/SearchPage - Buscador de Materiales.md",
     "04 - Paginas",
     "03 - Servicios",
     "02 - Modulos",

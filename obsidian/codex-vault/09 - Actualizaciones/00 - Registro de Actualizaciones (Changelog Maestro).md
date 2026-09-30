@@ -36,7 +36,12 @@ Conexiones:
 
 | Versión | Nombre Clave | Estado | Fecha de Corte | Commits Clave |
 | :--- | :--- | :--- | :--- | :--- |
-| **[[v1.4.1 - Efecto Glassmorphism en Sprite Codex, Paleta Café y Corrección Tema Claro]]** | *Glassmorphism & Paleta Café* | **Actual (Producción)** | Septiembre 2026 | `v1.4.1` |
+| **[[v1.4.6 - Calculadora Oficial de Pruebas y Optimizaciones Móviles]]** | *Proofs Calculator & Mobile UI* | **Actual (Producción)** | 29 Septiembre 2026 | `db0b79b`, `f4ed012` |
+| **[[v1.4.5 - Rebranding LastResources, Torres Celestiales, Notificaciones Push y Blindaje Legal]]** | *LastResources & Torres* | Precedente | 27 Septiembre 2026 | `v1.4.5` |
+| **[[v1.4.4 - Visor de Mapa Interactivo y Comprobador de Actualizaciones Remoto]]** | *Mapa & Remote Updates* | Precedente | Septiembre 2026 | `v1.4.4` |
+| **[[v1.4.3 - Nombre Estable APK, Glassmorphism Sakura y Soporte Notch]]** | *APK Estable & Notch* | Precedente | Septiembre 2026 | `v1.4.3` |
+| **[[v1.4.2 - Tema Sakura, Footer Compacto y Auto-ocultación de Barra]]** | *Tema Sakura & Footer* | Precedente | Septiembre 2026 | `v1.4.2` |
+| **[[v1.4.1 - Efecto Glassmorphism en Sprite Codex, Paleta Café y Corrección Tema Claro]]** | *Glassmorphism & Paleta Café* | Precedente | Septiembre 2026 | `v1.4.1` |
 | **[[v1.4.0 - Tema Claro, 22 Idiomas, Ajuste de Grilla Codex y Limpieza de Barra]]** | *Tema Claro & 22 Idiomas* | Precedente | Septiembre 2026 | `v1.4.0` |
 | **[[v1.3.1 - Paginación Numérica y Modo Cuadrícula en Códice]]** | *Paginación & Vista Cuadrícula* | Precedente | Septiembre 2026 | `d1389bd` |
 | **[[v1.3.0 - Renacimiento LastCodex, Subcategorías y APK Versionada]]** | *Branding & Subcategorías* | Precedente | Septiembre 2026 | `14039c3`, `dd3d54f`, `998984e`, `c2d471c` |

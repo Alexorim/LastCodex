@@ -35,11 +35,18 @@ Bienvenido al núcleo de la **red neuronal de conocimiento** de **LastCodex** (t
 
 ### 🧩 2. Módulos Funcionales
 - [[Módulo Forecast de Gremios]]: Predicción y calendario de materiales de gremio (*Blades of Finesse*, *Monument*, *Anguish*, *Spelunking*).
+- [[Módulo Calculadora de Pruebas de Gremios]]: Calculadora matemática oficial de costes y canje de materiales por pruebas de gremios.
+- [[Módulo Torres Celestiales]]: Monitor en vivo de las 5 Torres Celestiales de Olimpia y proyección de pisos futuros.
+- [[Módulo Notificaciones del Sistema]]: Alertas nativas en barra de estado de Android para materiales y torres en piso 50.
+- [[Módulo Legal y Cumplimiento DMCA]]: Políticas de privacidad, no-rastreo y salvaguarda DMCA.
 - [[Módulo Códice de Orna]]: Base de datos offline de más de 3000 ítems, monstruos, jefes, hechizos y habilidades.
 - [[Módulo Rastreador de Eventos]]: Monitorización de eventos mensuales y jefes limitados en tiempo real.
 - [[Módulo Configuración y Sistema]]: Personalización de idiomas (ES/EN), temas visuales, IndexedDB y diagnóstico.
 
 ### ⚙️ 3. Capa de Servicios (Lógica & Datos)
+- [[ProofsService]]: Algoritmos oficiales de conversión y cálculo de pruebas y materiales de gremios.
+- [[TowersService]]: Ciclos de rotación y seguimiento de las 5 torres de Olimpia.
+- [[NotificationsService]]: Programación de notificaciones push locales nativas mediante Capacitor.
 - [[CodexService]]: Motor del Códice, persistencia en IndexedDB (`lastcodex_offline_db` v3), observables reactivos y sincronización web.
 - [[MaterialsService]]: Ingesta y parseo reactivo del CSV de pronóstico de Google Sheets con caché en LocalStorage.
 - [[TimerService]]: Control de temporizadores para el reseteo UTC medianoche y cálculo de *stale window*.
@@ -48,11 +55,14 @@ Bienvenido al núcleo de la **red neuronal de conocimiento** de **LastCodex** (t
 
 ### 📱 4. Capa de Presentación (Páginas & Vistas)
 - [[HomePage - Forecast Hoy y Mañana]]: Pantalla principal con stocks diarios, cuenta atrás y generador de infografías.
+- [[ProofsPage - Calculadora de Pruebas]]: Vista interactiva de conversión de pruebas optimizada para móviles (2 columnas).
+- [[TowersPage - Torres Celestiales]]: Interfaz de pisos actuales, progresión futura y acceso a calculadora.
 - [[CalendarPage - Calendario de Materiales]]: Matriz de calendario interactiva con los materiales pronosticados por día.
 - [[SearchPage - Buscador de Materiales]]: Buscador con historial de rotaciones y predicción de próximas apariciones.
 - [[CodexPage - Explorador del Códice]]: Explorador con filtros por Tier (T1-T11), subcategorías dinámicas y búsqueda rápida.
 - [[CodexClassesPage - Clases y Habilidades]]: Vista detallada de clases del juego, pasivas y hechizos aprendidos.
 - [[EventsPage - Eventos en Vivo]]: Listado y desglose de eventos activos, calendarios y recompensas.
+- [[LegalPage - Aviso Legal y Privacidad]]: Vista formal de aviso legal y políticas de privacidad.
 - [[SettingsPage - Configuración]]: Panel de ajustes, actualización del códice y descarga directa de la APK compilada.
 
 ### 🧱 5. Modelos de Datos
@@ -77,8 +87,10 @@ Bienvenido al núcleo de la **red neuronal de conocimiento** de **LastCodex** (t
 
 ### 📜 9. Registro de Actualizaciones & Changelog
 - [[00 - Registro de Actualizaciones (Changelog Maestro)]]: Índice histórico completo de versiones.
-  - [[v1.4.1 - Efecto Glassmorphism en Sprite Codex, Paleta Café y Corrección Tema Claro]]: Versión activa en producción (Glassmorphism en sprite, Paleta Café y Corrección Tema Claro).
-  - [[v1.4.0 - Tema Claro, 22 Idiomas, Ajuste de Grilla Codex y Limpieza de Barra]]: Versión precedente (Tema Claro, 22 Idiomas, Grilla corregida y Limpieza de Barra).
+  - [[v1.4.6 - Calculadora Oficial de Pruebas y Optimizaciones Móviles]]: Versión activa en producción (Calculadora de pruebas, 2 columnas móvil y header dinámico).
+  - [[v1.4.5 - Rebranding LastResources, Torres Celestiales, Notificaciones Push y Blindaje Legal]]: Rebranding a LastResources, módulo de torres, notificaciones locales y legal DMCA.
+  - [[v1.4.1 - Efecto Glassmorphism en Sprite Codex, Paleta Café y Corrección Tema Claro]]: Glassmorphism en sprite, Paleta Café y Corrección Tema Claro.
+  - [[v1.4.0 - Tema Claro, 22 Idiomas, Ajuste de Grilla Codex y Limpieza de Barra]]: Tema Claro, 22 Idiomas, Grilla corregida y Limpieza de Barra.
   - [[v1.3.1 - Paginación Numérica y Modo Cuadrícula en Códice]]: Paginación numérica y vista cuadrícula inicial.
   - [[v1.3.0 - Renacimiento LastCodex, Subcategorías y APK Versionada]]: Rebranding, subcategorías y APK versionada.
   - [[v1.2.0 - Códice Masivo Offline (5065 ítems) y Sincronización]]: Integración de base de datos masiva IndexedDB.
