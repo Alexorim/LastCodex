@@ -454,8 +454,8 @@
 
   .proofs-grid.two-cols-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
 
     .proof-card.mini-card {
       background: #23211f;
@@ -498,6 +498,32 @@
             height: 26px;
             object-fit: contain;
             image-rendering: pixelated;
+          }
+        }
+
+        .proof-titles {
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+          min-width: 0;
+          margin-left: 10px;
+          margin-right: 8px;
+
+          .currency-name {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+
+          .currency-guild {
+            font-size: 0.72rem;
+            color: #9e9a93;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
         }
 
@@ -581,24 +607,15 @@
 }
 
 /* Responsive */
-@media (max-width: 580px) {
-  .proofs-grid {
-    grid-template-columns: 1fr !important;
+@media (max-width: 768px) {
+  .proofs-grid,
+  .proofs-grid.two-cols-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
   }
 
-  .selected-material-card {
-    flex-direction: column;
-    align-items: flex-start !important;
-
-    .material-hero-right {
-      width: 100%;
-      margin-top: 8px;
-
-      .codex-link-btn {
-        width: 100%;
-        justify-content: center;
-      }
-    }
+  .proof-titles.desktop-only {
+    display: none !important;
   }
 }
 

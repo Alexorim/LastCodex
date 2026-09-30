@@ -167,6 +167,14 @@
             <div class="proof-icon-wrap">
               <img [src]="calc.currency.icon" (error)="onImageError($event)" class="proof-sprite" alt="" />
             </div>
+            <div class="proof-titles desktop-only">
+              <span class="currency-name">
+                {{ currentLang === 'es' ? calc.currency.nameEs : calc.currency.nameEn }}
+              </span>
+              <span class="currency-guild">
+                {{ currentLang === 'es' ? calc.currency.guildEs : calc.currency.guildEn }}
+              </span>
+            </div>
             <span class="rate-badge" [style.color]="calc.currency.color">
               x{{ calc.currency.rate }}
             </span>
