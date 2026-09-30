@@ -23,9 +23,9 @@ const versionMeta = {
   version: version,
   name: "LastResources",
   updatedAt: new Date().toISOString().split('T')[0],
-  apkFileName: "lastcodex_stable.apk",
-  downloadUrl: "https://lastresources.vercel.app/assets/lastcodex_stable.apk",
-  mirrorUrl: "https://github.com/Alexorim/LastCodex/raw/main/src/assets/lastcodex_stable.apk"
+  apkFileName: `lastresources_${version}.apk`,
+  downloadUrl: `https://lastresources.vercel.app/assets/lastresources_${version}.apk`,
+  mirrorUrl: `https://github.com/Alexorim/LastCodex/raw/main/src/assets/lastresources_${version}.apk`
 };
 fs.writeFileSync(versionJsonPath, JSON.stringify(versionMeta, null, 2), 'utf8');
 console.log(`[1/5] Synchronized src/assets/version.json to version "${version}"`);
@@ -46,7 +46,7 @@ execSync(gradlewCmd, { cwd: androidDir, stdio: 'inherit' });
 
 // 5. Manage output APK files
 console.log(`[5/5] Managing APK artifacts...`);
-const expectedApkName = 'lastcodex_stable.apk';
+const expectedApkName = `lastresources_${version}.apk`;
 const apkSource = path.join(rootDir, 'android', 'app', 'build', 'outputs', 'apk', 'debug', expectedApkName);
 
 if (!fs.existsSync(apkSource)) {
@@ -65,17 +65,17 @@ for (const dir of targetDirs) {
     fs.mkdirSync(dir, { recursive: true });
   }
 
-  // Copy the stable APK
+  // Copy the primary versioned APK
   const destPath = path.join(dir, expectedApkName);
   fs.copyFileSync(apkSource, destPath);
   console.log(`Copied APK: ${expectedApkName} to ${destPath}`);
 
   // Keep compatibility aliases
-  const aliases = [`lastcodex_${version}.apk`, 'LastCodex.apk'];
+  const aliases = [`lastresources_stable.apk`, 'lastcodex_stable.apk', `lastcodex_${version}.apk`, 'LastCodex.apk'];
   for (const alias of aliases) {
     const aliasPath = path.join(dir, alias);
     fs.copyFileSync(apkSource, aliasPath);
   }
 }
 
-console.log(`\nSUCCESS: LastCodex stable APK ready as "${expectedApkName}"!\n`);
+console.log(`\nSUCCESS: LastResources APK ready as "${expectedApkName}"!\n`);

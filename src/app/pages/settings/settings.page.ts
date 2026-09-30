@@ -69,11 +69,11 @@ export class SettingsPage implements OnInit, OnDestroy {
 
   isAllTowersNotificationEnabled = false;
 
-  versionNumber = '1.4.5';
+  versionNumber = '1.4.6';
   appVersion = `v${this.versionNumber}`;
-  apkFileName = 'lastcodex_stable.apk';
+  apkFileName = `lastresources_${this.versionNumber}.apk`;
   apkDownloadUrl = `https://lastresources.vercel.app/assets/${this.apkFileName}`;
-  githubApkUrl = `https://github.com/Alexorim/LastCodex/raw/main/src/assets/lastcodex_stable.apk`;
+  githubApkUrl = `https://github.com/Alexorim/LastCodex/raw/main/src/assets/${this.apkFileName}`;
 
   // Multi-language support (22 Orna languages)
   availableLanguages = AVAILABLE_LANGUAGES;
