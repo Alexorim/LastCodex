@@ -36,7 +36,7 @@ Conexiones:
 
 | Versión | Nombre Clave | Estado | Fecha de Corte | Commits Clave |
 | :--- | :--- | :--- | :--- | :--- |
-| **[[v1.4.6 - Calculadora Oficial de Pruebas y Optimizaciones Móviles]]** | *Proofs Calculator & Mobile UI* | **Actual (Producción)** | 29 Septiembre 2026 | `db0b79b`, `f4ed012`, `1f58323`, `dc3eec6`, `137c82d` |
+| **[[v1.4.6 - Calculadora Oficial de Pruebas y Optimizaciones Móviles]]** (`v1.4.6.1`) | *Proofs on Home & Icon Polish* | **Actual (Producción)** | 30 Septiembre 2026 | `db0b79b`, `33093c4`, `046b769` |
 | **[[v1.4.5 - Rebranding LastResources, Torres Celestiales, Notificaciones Push y Blindaje Legal]]** | *LastResources & Torres* | Precedente | 27 Septiembre 2026 | `03edada`, `e2b7b27`, `38fa794`, `9dafe90` |
 | **[[v1.4.4 - Visor de Mapa Interactivo y Comprobador de Actualizaciones Remoto]]** | *Mapa & Update Checker* | Precedente | 25 Septiembre 2026 | `27c9495`, `014f7ee`, `8b4de09`, `5250d0f` |
 | **[[v1.4.3 - Nombre Estable APK, Glassmorphism Sakura y Soporte Notch]]** | *APK Estable & Notch* | Precedente | 24 Septiembre 2026 | `1d0efb2`, `210ce6d` |
@@ -52,6 +52,7 @@ Conexiones:
 ---
 
 ## 📐 Regla Oficial de Incremento de Versiones
+- **Sub-versiones e Iteraciones de Pulido (Sub-patch)**: Se añade un **cuarto dígito** — Ejemplo: `1.4.6.1` para ajustes inmediatos de interfaz, traslados de controles y entregables directos de distribución.
 - **Cambios Menores (Ajustes, correcciones, mejoras puntuales)**: Sube el **tercer dígito** (PATCH) — Ejemplo: `1.4.5` ➔ `1.4.6`.
 - **Cambios Notables (Nuevas implementaciones, módulos o rediseño)**: Sube el **segundo dígito** (MINOR) — Ejemplo: `1.3.x` ➔ `1.4.0`.
 

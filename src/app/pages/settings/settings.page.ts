@@ -69,7 +69,7 @@ export class SettingsPage implements OnInit, OnDestroy {
 
   isAllTowersNotificationEnabled = false;
 
-  versionNumber = '1.4.6';
+  versionNumber = '1.4.6.1';
   appVersion = `v${this.versionNumber}`;
   apkFileName = `lastresources_${this.versionNumber}.apk`;
   apkDownloadUrl = `https://lastresources.vercel.app/assets/${this.apkFileName}`;
