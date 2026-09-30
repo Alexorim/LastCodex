@@ -1308,9 +1308,9 @@ html.theme-sakura {
 /* MOBILE NOTCH / SAFE AREA SUPPORT (env(safe-area-inset-top))  */
 /* Prevents header & searchbars from hiding behind phone cutout */
 /* ============================================================ */
-ion-header ion-toolbar:first-of-type,
-.codex-toolbar {
-  padding-top: max(env(safe-area-inset-top, 0px), 8px);
+ion-header:not(ion-modal ion-header):not(.modal-header) {
+  padding-top: env(safe-area-inset-top, 0px) !important;
+  background-color: var(--ion-background-color, #1F1F1F) !important;
 }
 
 

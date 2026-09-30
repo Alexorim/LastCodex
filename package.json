@@ -1,6 +1,6 @@
 {
   "name": "LastResources",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "author": "Orna Community",
   "homepage": "https://ionicframework.com/",
   "main": "electron-main.js",
@@ -27,6 +27,7 @@
       "output": "release"
     },
     "win": {
+      "icon": "build/icon.ico",
       "target": [
         {
           "target": "dir",
