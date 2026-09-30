@@ -234,46 +234,29 @@
     }
   }
 
-  .popular-chips-wrap {
+  .empty-material-prompt {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-top: 10px;
+    gap: 10px;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px dashed rgba(229, 169, 60, 0.35);
+    border-radius: 10px;
+    color: #c9c3b8;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
 
-    .popular-label {
-      font-size: 0.78rem;
-      color: #9e988f;
-      font-weight: 600;
+    ion-icon {
+      font-size: 1.4rem;
+      color: #e5a93c;
       flex-shrink: 0;
     }
 
-    .popular-chips-scroll {
-      display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      padding-bottom: 2px;
-      scrollbar-width: none;
-
-      &::-webkit-scrollbar { display: none; }
-
-      .pop-chip {
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        color: #c9c3b8;
-        padding: 3px 10px;
-        border-radius: 14px;
-        font-size: 0.75rem;
-        cursor: pointer;
-        white-space: nowrap;
-        transition: all 0.15s;
-
-        &:hover, &.active {
-          background: #e5a93c;
-          border-color: #e5a93c;
-          color: #1a1918;
-          font-weight: 700;
-        }
-      }
+    &:hover {
+      background: rgba(229, 169, 60, 0.08);
+      border-color: #e5a93c;
+      color: #fff;
     }
   }
 

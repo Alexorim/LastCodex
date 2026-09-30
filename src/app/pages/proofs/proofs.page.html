@@ -51,8 +51,14 @@
           class="toggle-picker-btn"
           (click)="toggleMaterialSelector()">
           <ion-icon [name]="isSelectingMaterial ? 'close-circle-outline' : 'search-outline'"></ion-icon>
-          <span>{{ isSelectingMaterial ? (currentLang === 'es' ? 'Cerrar Buscador' : 'Close Search') : (currentLang === 'es' ? 'Cambiar Material' : 'Change Material') }}</span>
+          <span>{{ isSelectingMaterial ? (currentLang === 'es' ? 'Cerrar Buscador' : 'Close Search') : (selectedMaterial ? (currentLang === 'es' ? 'Cambiar Material' : 'Change Material') : (currentLang === 'es' ? 'Elegir Material' : 'Select Material')) }}</span>
         </button>
+      </div>
+
+      <!-- Mensaje si no hay material seleccionado y no está buscando -->
+      <div *ngIf="!selectedMaterial && !isSelectingMaterial" class="empty-material-prompt" (click)="toggleMaterialSelector()">
+        <ion-icon name="cube-outline"></ion-icon>
+        <span>{{ currentLang === 'es' ? 'Ningún material seleccionado. Toca aquí para elegir uno.' : 'No material selected. Tap here to select one.' }}</span>
       </div>
 
       <!-- Tarjeta del Material Activo -->
@@ -84,21 +90,6 @@
           <button type="button" class="codex-link-btn" (click)="goToCodex()" [title]="currentLang === 'es' ? 'Ver drops y lore en Códice' : 'View drops & lore in Codex'">
             <ion-icon name="book-outline"></ion-icon>
             <span>Códice</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Sugerencias populares de un clic si no está en modo buscador -->
-      <div *ngIf="!isSelectingMaterial" class="popular-chips-wrap">
-        <span class="popular-label">{{ currentLang === 'es' ? 'Populares:' : 'Popular:' }}</span>
-        <div class="popular-chips-scroll">
-          <button
-            *ngFor="let pop of popularMaterialNames"
-            type="button"
-            class="pop-chip"
-            [class.active]="selectedMaterial?.nameEn === pop"
-            (click)="selectPopular(pop)">
-            {{ pop }}
           </button>
         </div>
       </div>

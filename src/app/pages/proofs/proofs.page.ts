@@ -47,18 +47,7 @@ export class ProofsPage implements OnInit {
   public selectedMaterial: MaterialOption | null = null;
   public materialCount: number = 10;
   public calculations: ProofCalculationResult[] = [];
-  public isSelectingMaterial: boolean = false;
-
-  public popularMaterialNames = [
-    'Ortanite',
-    'Perfect Runestone',
-    'Cursed Ortanite',
-    'Balorite',
-    'Dragonite',
-    'Pure Darkstone',
-    'Pure Lightstone',
-    'Pure Waterstone'
-  ];
+  public isSelectingMaterial: boolean = true;
 
   constructor() {
     addIcons({
@@ -89,11 +78,11 @@ export class ProofsPage implements OnInit {
         const found = this.proofsService.findMaterial(q);
         if (found) {
           this.selectMaterial(found);
+          this.isSelectingMaterial = false;
         }
-      } else if (!this.selectedMaterial && this.allMaterials.length > 0) {
-        // Default to a popular material (e.g. Ortanite or first high tier)
-        const defaultMat = this.proofsService.findMaterial('Ortanite') || this.allMaterials[0];
-        this.selectMaterial(defaultMat);
+      } else {
+        this.selectedMaterial = null;
+        this.isSelectingMaterial = true;
       }
     });
   }
@@ -218,12 +207,6 @@ export class ProofsPage implements OnInit {
     event.target.src = 'assets/codex/materials/steel.png';
   }
 
-  public selectPopular(name: string): void {
-    const mat = this.proofsService.findMaterial(name);
-    if (mat) {
-      this.selectMaterial(mat);
-    }
-  }
 
   public goToCodex(): void {
     if (this.selectedMaterial) {
