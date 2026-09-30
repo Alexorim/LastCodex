@@ -68,9 +68,19 @@
               <ion-icon [name]="isReminderSet(item.materialName) ? 'alarm' : 'alarm-outline'"></ion-icon>
               <span>
                 {{ isReminderSet(item.materialName)
-                  ? (currentLang === 'es' ? 'Recordatorio Activo para este material' : 'Reminder active for this material')
-                  : (currentLang === 'es' ? 'Avisarme cuando esté disponible en los gremios' : 'Remind me when available in guilds') }}
+                  ? (currentLang === 'es' ? 'Recordatorio Activo' : 'Reminder active')
+                  : (currentLang === 'es' ? 'Avisar rotación' : 'Remind rotation') }}
               </span>
+            </button>
+
+            <button
+              type="button"
+              class="panel-calc-btn"
+              (click)="goToProofs(item.materialName)"
+              [title]="currentLang === 'es' ? 'Calcular cuántas pruebas cuesta este material en cada gremio' : 'Calculate proof cost for this material'"
+            >
+              <ion-icon name="calculator-outline"></ion-icon>
+              <span>{{ currentLang === 'es' ? 'Calcular Pruebas' : 'Calculate Proofs' }}</span>
             </button>
           </div>
           <div *ngFor="let g of item.guildAppearances" class="expand-row">

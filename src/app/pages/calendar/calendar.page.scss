@@ -223,18 +223,20 @@
     padding: 2px 0 10px 0;
     margin-bottom: 6px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
 
-    .panel-alarm-btn {
-      width: 100%;
+    .panel-alarm-btn,
+    .panel-calc-btn {
+      flex: 1;
+      min-width: 130px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 7px;
       padding: 7px 12px;
-      background: rgba(189, 165, 69, 0.1);
-      border: 1px solid rgba(189, 165, 69, 0.3);
       border-radius: 6px;
-      color: var(--codex-gold);
       font-size: 0.78rem;
       font-weight: 600;
       cursor: pointer;
@@ -243,6 +245,12 @@
       ion-icon {
         font-size: 1.05rem;
       }
+    }
+
+    .panel-alarm-btn {
+      background: rgba(189, 165, 69, 0.1);
+      border: 1px solid rgba(189, 165, 69, 0.3);
+      color: var(--codex-gold);
 
       &:hover {
         background: rgba(189, 165, 69, 0.22);
@@ -252,6 +260,17 @@
         background: rgba(245, 158, 11, 0.18);
         border-color: #f59e0b;
         color: #fbbf24;
+      }
+    }
+
+    .panel-calc-btn {
+      background: rgba(229, 169, 60, 0.14);
+      border: 1px solid #e5a93c;
+      color: #ffda79;
+
+      &:hover {
+        background: #e5a93c;
+        color: #1a1918;
       }
     }
   }

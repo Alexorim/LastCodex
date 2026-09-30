@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular/lazy';
 import { AlertController, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { chevronDown, chevronForward, calendarOutline, shieldOutline, alarm, alarmOutline, timeOutline, notificationsOutline } from 'ionicons/icons';
+import { chevronDown, chevronForward, calendarOutline, shieldOutline, alarm, alarmOutline, timeOutline, notificationsOutline, calculatorOutline } from 'ionicons/icons';
 import { MaterialsService } from '../../services/materials.service';
 import { SettingsService, Language } from '../../services/settings.service';
 import { NotificationsService } from '../../services/notifications.service';
@@ -38,7 +38,7 @@ export class CalendarPage implements OnInit, OnDestroy {
   currentLang: Language = 'es';
 
   constructor() {
-    addIcons({ chevronDown, chevronForward, calendarOutline, shieldOutline, alarm, alarmOutline, timeOutline, notificationsOutline });
+    addIcons({ chevronDown, chevronForward, calendarOutline, shieldOutline, alarm, alarmOutline, timeOutline, notificationsOutline, calculatorOutline });
   }
 
   ngOnInit() {
@@ -230,5 +230,15 @@ export class CalendarPage implements OnInit, OnDestroy {
     });
 
     await alert.present();
+  }
+
+  goToProofs(matName?: string): void {
+    if (matName) {
+      this.router.navigate(['/proofs'], {
+        queryParams: { material: matName }
+      });
+    } else {
+      this.router.navigate(['/proofs']);
+    }
   }
 }

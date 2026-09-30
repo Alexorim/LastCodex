@@ -1,0 +1,280 @@
+<ion-header class="ion-no-border codex-header">
+  <ion-toolbar class="codex-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" text="" icon="chevron-back-outline"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title class="header-title">
+      <div class="header-title-wrap">
+        <ion-icon name="calculator-outline" class="title-icon"></ion-icon>
+        <span>{{ currentLang === 'es' ? 'Calculadora de Pruebas' : 'Proofs Calculator' }}</span>
+      </div>
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="goToCodex()" [title]="currentLang === 'es' ? 'Ver en Códice' : 'View in Codex'">
+        <ion-icon slot="icon-only" name="book-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding codex-content">
+  <div class="calculator-container">
+
+    <!-- SUB-ENCABEZADO / DESCRIPCIÓN -->
+    <div class="calc-intro-card codex-box">
+      <div class="intro-left">
+        <ion-icon name="sparkles-outline" class="intro-icon"></ion-icon>
+        <div>
+          <h3 class="intro-title">
+            {{ currentLang === 'es' ? 'Conversor Oficial de Costes por Gremio' : 'Official Guild Cost Calculator' }}
+          </h3>
+          <p class="intro-desc">
+            {{ currentLang === 'es'
+              ? 'Calcula la cantidad exacta de pruebas, corales o esquirlas necesarias para comprar materiales en cada gremio.'
+              : 'Calculate the exact amount of proofs, coral or shards required to purchase materials across guilds.' }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 1: SELECCIÓN DE MATERIAL -->
+    <div class="material-selection-box codex-box">
+      <div class="box-header-row">
+        <div class="box-label">
+          <ion-icon name="search-outline"></ion-icon>
+          <span>{{ currentLang === 'es' ? 'Material Seleccionado' : 'Selected Material' }}</span>
+        </div>
+        <button
+          type="button"
+          class="toggle-picker-btn"
+          (click)="toggleMaterialSelector()">
+          <ion-icon [name]="isSelectingMaterial ? 'close-circle-outline' : 'search-outline'"></ion-icon>
+          <span>{{ isSelectingMaterial ? (currentLang === 'es' ? 'Cerrar Buscador' : 'Close Search') : (currentLang === 'es' ? 'Cambiar Material' : 'Change Material') }}</span>
+        </button>
+      </div>
+
+      <!-- Tarjeta del Material Activo -->
+      <div *ngIf="selectedMaterial && !isSelectingMaterial" class="selected-material-card">
+        <div class="material-hero-left">
+          <div class="sprite-halo">
+            <img [src]="selectedMaterial.icon" (error)="onImageError($event)" class="material-sprite" alt="" />
+          </div>
+          <div class="material-meta">
+            <h4 class="material-name">
+              {{ currentLang === 'es' ? selectedMaterial.nameEs : selectedMaterial.nameEn }}
+            </h4>
+            <span class="material-subname" *ngIf="currentLang === 'es' && selectedMaterial.nameEn !== selectedMaterial.nameEs">
+              {{ selectedMaterial.nameEn }}
+            </span>
+            <div class="badges-row">
+              <span class="badge-tier">★ Tier {{ selectedMaterial.tier }}</span>
+              <span class="badge-rarity" [ngClass]="getRarityClass(selectedMaterial.rarity)">
+                {{ getRarityLabel(selectedMaterial.rarity) }}
+              </span>
+              <span class="badge-base-rate" title="Fórmula: Tier x 10 + Rareza x 5">
+                {{ currentLang === 'es' ? 'Tasa Base' : 'Base Rate' }}: 100 : {{ selectedMaterial.baseRate }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="material-hero-right">
+          <button type="button" class="codex-link-btn" (click)="goToCodex()" [title]="currentLang === 'es' ? 'Ver drops y lore en Códice' : 'View drops & lore in Codex'">
+            <ion-icon name="book-outline"></ion-icon>
+            <span>Códice</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Sugerencias populares de un clic si no está en modo buscador -->
+      <div *ngIf="!isSelectingMaterial" class="popular-chips-wrap">
+        <span class="popular-label">{{ currentLang === 'es' ? 'Populares:' : 'Popular:' }}</span>
+        <div class="popular-chips-scroll">
+          <button
+            *ngFor="let pop of popularMaterialNames"
+            type="button"
+            class="pop-chip"
+            [class.active]="selectedMaterial?.nameEn === pop"
+            (click)="selectPopular(pop)">
+            {{ pop }}
+          </button>
+        </div>
+      </div>
+
+      <!-- PANEL DE BÚSQUEDA Y SELECCIÓN DESPLEGABLE -->
+      <div *ngIf="isSelectingMaterial" class="material-picker-panel">
+        <ion-searchbar
+          [(ngModel)]="searchFilter"
+          (ionInput)="onSearchChange($event)"
+          [placeholder]="currentLang === 'es' ? 'Buscar material (ej: Ortanite, Runestone...)' : 'Search material...'"
+          class="custom-searchbar"
+          animated="true"
+          debounce="150"
+        ></ion-searchbar>
+
+        <!-- Filtros rápidos por Tier -->
+        <div class="tier-pills-row">
+          <button
+            type="button"
+            class="tier-pill"
+            [class.active]="selectedTierFilter === null"
+            (click)="setTierFilter(null)">
+            {{ currentLang === 'es' ? 'Todos' : 'All' }}
+          </button>
+          <button
+            *ngFor="let t of [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]"
+            type="button"
+            class="tier-pill"
+            [class.active]="selectedTierFilter === t"
+            (click)="setTierFilter(t)">
+            T{{ t }}
+          </button>
+        </div>
+
+        <!-- Cuadrícula de materiales filtrados -->
+        <div class="materials-picker-grid">
+          <div
+            *ngFor="let m of filteredMaterials"
+            class="picker-item-card"
+            [class.is-selected]="selectedMaterial?.id === m.id"
+            (click)="selectMaterial(m)">
+            <img [src]="m.icon" (error)="onImageError($event)" class="picker-sprite" alt="" />
+            <div class="picker-info">
+              <span class="picker-name">{{ currentLang === 'es' ? m.nameEs : m.nameEn }}</span>
+              <div class="picker-tags">
+                <span class="picker-tier">T{{ m.tier }}</span>
+                <span class="picker-rarity" [ngClass]="getRarityClass(m.rarity)">{{ getRarityLabel(m.rarity) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="filteredMaterials.length === 0" class="no-materials-found">
+            <ion-icon name="information-circle-outline"></ion-icon>
+            <span>{{ currentLang === 'es' ? 'No se encontraron materiales.' : 'No materials found.' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 2: INPUT DE CANTIDAD -->
+    <div *ngIf="selectedMaterial" class="quantity-input-box codex-box">
+      <div class="quantity-header">
+        <label class="quantity-label">
+          <ion-icon name="swap-vertical-outline"></ion-icon>
+          <span>{{ currentLang === 'es' ? 'Cantidad de Material Deseada' : 'Desired Material Quantity' }}</span>
+        </label>
+        <span class="base-calc-pill">
+          100 {{ currentLang === 'es' ? 'materiales equivalen a' : 'materials equal' }} {{ selectedMaterial.baseRate }} {{ currentLang === 'es' ? 'unidades base' : 'base units' }}
+        </span>
+      </div>
+
+      <div class="stepper-controls-row">
+        <button type="button" class="step-btn" (click)="addMaterialCount(-10)" title="-10">-10</button>
+        <button type="button" class="step-btn" (click)="addMaterialCount(-1)" title="-1">-1</button>
+
+        <div class="main-input-wrap">
+          <input
+            type="number"
+            class="count-number-input"
+            [ngModel]="materialCount"
+            (ngModelChange)="onMaterialCountChange($event)"
+            min="0"
+            max="99999"
+          />
+          <span class="input-unit-tag">{{ currentLang === 'es' ? 'Unid.' : 'Pcs.' }}</span>
+        </div>
+
+        <button type="button" class="step-btn" (click)="addMaterialCount(1)" title="+1">+1</button>
+        <button type="button" class="step-btn" (click)="addMaterialCount(10)" title="+10">+10</button>
+      </div>
+
+      <!-- Presets de cantidad rápida -->
+      <div class="preset-chips-row">
+        <span class="presets-tag">{{ currentLang === 'es' ? 'Cantidad rápida:' : 'Quick counts:' }}</span>
+        <button *ngFor="let preset of [1, 5, 10, 25, 50, 100, 250, 500]"
+          type="button"
+          class="preset-chip"
+          [class.active]="materialCount === preset"
+          (click)="setPresetCount(preset)">
+          {{ preset }}
+        </button>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 3: RESULTADOS EN CADA GREMIO -->
+    <div *ngIf="selectedMaterial" class="proofs-output-section">
+      <div class="section-title-bar">
+        <div class="title-left">
+          <ion-icon name="calculator-outline"></ion-icon>
+          <h4 class="title-text">
+            {{ currentLang === 'es' ? 'Coste en Pruebas y Monedas de Gremios' : 'Cost in Proofs & Guild Currencies' }}
+          </h4>
+        </div>
+        <span class="count-tag">
+          {{ calculations.length }} {{ currentLang === 'es' ? 'monedas' : 'currencies' }}
+        </span>
+      </div>
+
+      <p class="section-subtitle">
+        {{ currentLang === 'es'
+          ? 'Introduce una cantidad de material arriba, o edita directamente cualquier moneda abajo para ver cuántos materiales puedes comprar.'
+          : 'Enter material quantity above, or edit any currency below to see how many materials you can afford.' }}
+      </p>
+
+      <div class="proofs-grid">
+        <div
+          *ngFor="let calc of calculations"
+          class="proof-card"
+          [style.border-left-color]="calc.currency.color">
+
+          <div class="proof-card-top">
+            <div class="proof-icon-wrap">
+              <img [src]="calc.currency.icon" (error)="onImageError($event)" class="proof-sprite" alt="" />
+            </div>
+            <div class="proof-titles">
+              <span class="currency-name">
+                {{ currentLang === 'es' ? calc.currency.nameEs : calc.currency.nameEn }}
+              </span>
+              <span class="currency-guild">
+                {{ currentLang === 'es' ? calc.currency.guildEs : calc.currency.guildEn }}
+              </span>
+            </div>
+            <div class="rate-badge" [style.color]="calc.currency.color">
+              x{{ calc.currency.rate }}
+            </div>
+          </div>
+
+          <div class="proof-card-bottom">
+            <div class="cost-input-container">
+              <span class="cost-currency-symbol">🪙</span>
+              <input
+                type="number"
+                class="proof-cost-input"
+                [ngModel]="calc.cost"
+                (change)="onProofCountChange(calc.currency, $event)"
+                min="0"
+                [title]="currentLang === 'es' ? 'Puedes editar este valor para calcular materiales' : 'Edit this value to calculate materials'"
+              />
+            </div>
+            <span class="cost-label">
+              {{ currentLang === 'es' ? 'requeridos' : 'needed' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PIE LEGAL Y CREDITOS -->
+    <div class="calculator-footer codex-footer">
+      <div class="brand-credit">LastResources • Proofs Calculator</div>
+      <p class="disclaimer-text">
+        {{ currentLang === 'es'
+          ? 'Basado en los algoritmos y tasas de cambio oficiales de Orna RPG y Hero of Aethric. Herramienta comunitaria sin fines de lucro.'
+          : 'Based on official exchange formulas for Orna RPG and Hero of Aethric. Non-profit fan-made community tool.' }}
+      </p>
+    </div>
+
+  </div>
+</ion-content>

@@ -1915,26 +1915,45 @@
       }
 
       .material-actions-row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+
+        .view-proofs-btn,
         .view-codex-btn {
-          width: 100%;
+          flex: 1;
           display: flex;
           align-items: center;
           justify-content: center;
           gap: 8px;
-          background: rgba(189, 165, 69, 0.15);
-          border: 1px solid var(--codex-gold);
-          color: var(--codex-gold);
-          padding: 9px 14px;
+          padding: 10px 14px;
           border-radius: 8px;
           font-family: var(--codex-font-heading);
           font-size: 0.82rem;
-          font-weight: 600;
+          font-weight: 700;
           cursor: pointer;
           transition: all 0.2s ease;
+        }
+
+        .view-proofs-btn {
+          background: linear-gradient(135deg, rgba(229, 169, 60, 0.25) 0%, rgba(229, 169, 60, 0.1) 100%);
+          border: 1px solid #e5a93c;
+          color: #ffda79;
 
           &:hover {
-            background: var(--codex-gold);
-            color: #121212;
+            background: #e5a93c;
+            color: #1a1918;
+          }
+        }
+
+        .view-codex-btn {
+          background: rgba(255, 255, 255, 0.08);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          color: #d1cbc1;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
           }
         }
       }

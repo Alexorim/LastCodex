@@ -29,7 +29,8 @@ import {
   skullOutline,
   hammerOutline,
   gridOutline,
-  listOutline
+  listOutline,
+  calculatorOutline
 } from 'ionicons/icons';
 import { Capacitor } from '@capacitor/core';
 import { Filesystem, Directory } from '@capacitor/filesystem';
@@ -114,7 +115,8 @@ export class HomePage implements OnInit, OnDestroy {
       skullOutline,
       hammerOutline,
       gridOutline,
-      listOutline
+      listOutline,
+      calculatorOutline
     });
   }
 
@@ -178,6 +180,20 @@ export class HomePage implements OnInit, OnDestroy {
 
   goToEvents(): void {
     this.router.navigate(['/events']);
+  }
+
+  goToProofs(): void {
+    this.router.navigate(['/proofs']);
+  }
+
+  goToProofsForMaterial(mat: CodexEntry | null): void {
+    const cleanName = mat ? (mat.nameEn || mat.name || '') : '';
+    this.closeMaterialModal();
+    this.router.navigate(['/proofs'], {
+      queryParams: {
+        material: cleanName
+      }
+    });
   }
 
   goToCodex(): void {

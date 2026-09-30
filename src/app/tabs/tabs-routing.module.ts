@@ -48,6 +48,15 @@ const routes: Routes = [
         loadComponent: () => import('../pages/legal/legal.page').then(m => m.LegalPage)
       },
       {
+        path: 'proofs',
+        loadComponent: () => import('../pages/proofs/proofs.page').then(m => m.ProofsPage)
+      },
+      {
+        path: 'calculator',
+        redirectTo: 'proofs',
+        pathMatch: 'full'
+      },
+      {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full'

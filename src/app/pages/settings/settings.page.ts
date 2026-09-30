@@ -31,7 +31,8 @@ import {
   alarmOutline,
   alarm,
   shieldOutline,
-  documentTextOutline
+  documentTextOutline,
+  calculatorOutline
 } from 'ionicons/icons';
 import { Router } from '@angular/router';
 import { SettingsService, Language, ThemeMode, AVAILABLE_LANGUAGES, LanguageOption } from '../../services/settings.service';
@@ -130,8 +131,13 @@ export class SettingsPage implements OnInit, OnDestroy {
       alarmOutline,
       alarm,
       shieldOutline,
-      documentTextOutline
+      documentTextOutline,
+      calculatorOutline
     });
+  }
+
+  goToProofs(): void {
+    this.router.navigate(['/proofs']);
   }
 
   goToLegal(): void {
