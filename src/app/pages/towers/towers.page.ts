@@ -25,7 +25,8 @@ import {
   trendingUpOutline,
   alarm,
   alarmOutline,
-  notificationsOutline
+  notificationsOutline,
+  calculatorOutline
 } from 'ionicons/icons';
 import { TowersService, TowerInfo, TowerKind, CheckpointProjection, NextGrowthTimer, TowerResetProgression, TOWERS_META } from '../../services/towers.service';
 import { SettingsService, Language } from '../../services/settings.service';
@@ -83,7 +84,8 @@ export class TowersPage implements OnInit, OnDestroy {
       trendingUpOutline,
       alarm,
       alarmOutline,
-      notificationsOutline
+      notificationsOutline,
+      calculatorOutline
     });
   }
 
@@ -133,6 +135,10 @@ export class TowersPage implements OnInit, OnDestroy {
 
   goToHome() {
     this.router.navigate(['/home']);
+  }
+
+  goToProofs() {
+    this.router.navigate(['/proofs']);
   }
 
   selectTab(tab: 'current' | 'peaks' | 'schedule') {

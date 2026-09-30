@@ -59,6 +59,43 @@
     align-items: center;
     gap: 8px;
 
+    .header-calc-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, rgba(229, 169, 60, 0.22) 0%, rgba(229, 169, 60, 0.08) 100%);
+      border: 1px solid #e5a93c;
+      color: #ffda79;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 7px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(229, 169, 60, 0.2);
+      transition: all 0.2s ease;
+      user-select: none;
+
+      ion-icon {
+        font-size: 1.1rem;
+        color: #e5a93c;
+      }
+
+      &:hover {
+        background: #e5a93c;
+        color: #1a1918;
+        transform: translateY(-1px);
+        box-shadow: 0 0 14px rgba(229, 169, 60, 0.4);
+
+        ion-icon {
+          color: #1a1918;
+        }
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+
     .header-refresh-btn {
       background: rgba(189, 165, 69, 0.12);
       border: 1px solid rgba(189, 165, 69, 0.35);
