@@ -202,10 +202,10 @@ export class ObsidianVaultPage implements OnInit, AfterViewInit, OnDestroy {
       .backgroundColor(bgColor)
       .nodeId('id')
       .nodeVal((node: any) => {
-        return (node.links?.length || 1) * 1.5 + 4;
+        return Math.max(1, Math.min(3.5, ((node.links?.length || 1) * 0.3) + 1));
       })
       .nodeLabel((node: any) => {
-        return `<div style="background: rgba(15,18,25,0.95); padding: 5px 9px; border-radius: 6px; border: 1px solid #7c3aed; color: #fff; font-size: 12px; font-weight: 600;">${node.title || node.id}</div>`;
+        return `<div style="background: rgba(15,18,25,0.95); padding: 4px 8px; border-radius: 5px; border: 1px solid #7c3aed; color: #fff; font-size: 11px; font-weight: 600;">${node.title || node.id}</div>`;
       })
       .nodeAutoColorBy('category')
       .nodeCanvasObject((node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
@@ -215,43 +215,53 @@ export class ObsidianVaultPage implements OnInit, AfterViewInit, OnDestroy {
           node.id?.toLowerCase().includes(query);
         const isSelected = this.selectedNode && this.selectedNode.id === node.id;
 
-        const val = Math.max(3, Math.min(10, (node.links?.length || 1) + 3));
-        const r = val;
+        // Tamaño compacto estilo Obsidian nativo
+        const linkCount = node.links?.length || 1;
+        const r = isSelected ? 4 : Math.max(1.5, Math.min(3.6, 1.4 + linkCount * 0.22));
 
-        // Glow circle
+        // Punto exterior / brillo sutil
         ctx.beginPath();
-        ctx.arc(node.x, node.y, r + (isSelected ? 4 : 1), 0, 2 * Math.PI, false);
-        ctx.fillStyle = isSelected ? '#a855f7' : (isMatched ? (node.color || '#8b5cf6') : 'rgba(100, 100, 120, 0.25)');
-        ctx.shadowColor = isSelected ? '#c084fc' : (node.color || '#8b5cf6');
-        ctx.shadowBlur = isSelected ? 12 : (isMatched ? 6 : 0);
+        ctx.arc(node.x, node.y, r, 0, 2 * Math.PI, false);
+        ctx.fillStyle = isSelected ? '#c084fc' : (isMatched ? (node.color || '#8b5cf6') : 'rgba(80, 80, 100, 0.18)');
+        if (isSelected) {
+          ctx.shadowColor = '#c084fc';
+          ctx.shadowBlur = 8;
+        } else if (isMatched && query) {
+          ctx.shadowColor = node.color || '#8b5cf6';
+          ctx.shadowBlur = 4;
+        }
         ctx.fill();
         ctx.shadowBlur = 0;
 
-        // Inner core
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, r * 0.7, 0, 2 * Math.PI, false);
-        ctx.fillStyle = '#ffffff';
-        ctx.fill();
+        // Núcleo blanco diminuto solo en nodos destacados o medianos
+        if (r > 2.4 || isSelected) {
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, Math.max(0.6, r * 0.4), 0, 2 * Math.PI, false);
+          ctx.fillStyle = '#ffffff';
+          ctx.fill();
+        }
 
-        // Label on sufficient zoom or selected
-        if (globalScale > 1.2 || isSelected || (query && isMatched)) {
+        // Etiqueta solo con buen nivel de zoom, seleccionado o búsqueda activa
+        if (globalScale > 1.8 || isSelected || (query && isMatched)) {
           const label = node.title || node.id;
-          const fontSize = Math.max(10 / globalScale, 3.5);
+          const fontSize = Math.max(7 / globalScale, 2.5);
           ctx.font = `${isSelected ? 'bold ' : ''}${fontSize}px sans-serif`;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'top';
-          ctx.fillStyle = isSelected ? '#f5d0fe' : (isMatched ? '#e2e8f0' : 'rgba(150, 150, 170, 0.4)');
-          ctx.fillText(label, node.x, node.y + r + 2);
+          ctx.fillStyle = isSelected ? '#f5d0fe' : (isMatched ? '#cbd5e1' : 'rgba(120, 120, 140, 0.3)');
+          ctx.fillText(label, node.x, node.y + r + 1.2);
         }
       })
-      .linkColor(() => 'rgba(147, 51, 234, 0.25)')
-      .linkWidth(1)
-      .linkDirectionalParticles(1)
-      .linkDirectionalParticleWidth(1.5)
-      .linkDirectionalParticleSpeed(0.004)
+      .linkColor(() => 'rgba(147, 51, 234, 0.18)')
+      .linkWidth(0.6)
+      .linkDirectionalParticles(0)
       .onNodeClick((node: any) => {
         this.openNote(node);
       });
+
+    // Ajuste de físicas D3 para que el grafo respire y no se aglomere
+    this.graphInstance.d3Force('charge')?.strength(-40);
+    this.graphInstance.d3Force('link')?.distance(28);
 
     // Center view
     setTimeout(() => {
