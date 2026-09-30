@@ -423,6 +423,29 @@
             </div>
             <ion-icon name="chevron-forward-outline" class="settings-map-chevron"></ion-icon>
           </button>
+
+          <!-- Botón discreto Obsidian Vault -->
+          <button type="button" class="settings-obsidian-btn" (click)="openObsidianVault()">
+            <div class="settings-obsidian-btn-left">
+              <div class="settings-obsidian-icon-circle">
+                <svg class="obsidian-svg-inline" viewBox="0 0 100 100" width="18" height="18">
+                  <defs>
+                    <linearGradient id="obsBtnGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#a855f7" />
+                      <stop offset="100%" stop-color="#6b21a8" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M89.7 41.7L72.2 12.8C70.3 9.7 67 7.7 63.4 7.2L28.8 2.5C24.5 1.9 20.2 3.8 17.8 7.3L5.4 25.5C3.2 28.7 2.8 32.8 4.3 36.4L18.4 70.3C19.9 73.9 23 76.5 26.8 77.3L61.7 84.7C65.5 85.5 69.5 84.2 72.2 81.3L94.5 57.5C97.4 54.4 97.9 49.8 95.8 46.2L89.7 41.7Z" fill="url(#obsBtnGrad)"/>
+                  <polygon points="50,22 75,45 50,75 25,45" fill="#c084fc" opacity="0.4"/>
+                </svg>
+              </div>
+              <div class="settings-obsidian-text-group">
+                <span class="settings-obsidian-title">Obsidian Vault</span>
+                <span class="settings-obsidian-subtitle">{{ currentLang === 'es' ? 'Red neuronal de conocimiento y grafo' : 'Neural knowledge graph & notes' }}</span>
+              </div>
+            </div>
+            <ion-icon name="chevron-forward-outline" class="settings-obsidian-chevron"></ion-icon>
+          </button>
         </div>
       </div>
 

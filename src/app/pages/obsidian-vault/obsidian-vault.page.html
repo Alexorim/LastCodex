@@ -1,0 +1,192 @@
+<ion-header class="ion-no-border vault-header">
+  <ion-toolbar class="vault-toolbar">
+    <div class="header-inner">
+      <div class="brand-left">
+        <button type="button" class="back-btn" (click)="goBack()" title="Volver a Ajustes">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+        </button>
+        <div class="obsidian-title-group">
+          <!-- Official Obsidian Gemstone SVG -->
+          <svg class="obsidian-emblem" viewBox="0 0 100 100" width="26" height="26">
+            <defs>
+              <linearGradient id="obsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#a855f7" />
+                <stop offset="100%" stop-color="#6b21a8" />
+              </linearGradient>
+            </defs>
+            <path d="M89.7 41.7L72.2 12.8C70.3 9.7 67 7.7 63.4 7.2L28.8 2.5C24.5 1.9 20.2 3.8 17.8 7.3L5.4 25.5C3.2 28.7 2.8 32.8 4.3 36.4L18.4 70.3C19.9 73.9 23 76.5 26.8 77.3L61.7 84.7C65.5 85.5 69.5 84.2 72.2 81.3L94.5 57.5C97.4 54.4 97.9 49.8 95.8 46.2L89.7 41.7Z" fill="url(#obsGrad)"/>
+            <polygon points="50,22 75,45 50,75 25,45" fill="#c084fc" opacity="0.35"/>
+          </svg>
+          <div class="title-texts">
+            <span class="vault-brand">Obsidian Vault</span>
+            <span class="vault-stats">
+              {{ vaultData?.nodes?.length || 0 }} {{ currentLang === 'es' ? 'notas' : 'notes' }} •
+              {{ vaultData?.links?.length || 0 }} {{ currentLang === 'es' ? 'conexiones' : 'links' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Mode Switch: Graph / List -->
+        <button
+          type="button"
+          class="header-action-btn"
+          [class.active]="viewMode === 'graph'"
+          (click)="setViewMode(viewMode === 'graph' ? 'list' : 'graph')"
+          [title]="viewMode === 'graph' ? 'Cambiar a lista de notas' : 'Cambiar a vista de grafo'">
+          <ion-icon [name]="viewMode === 'graph' ? 'list-outline' : 'git-network-outline'"></ion-icon>
+        </button>
+
+        <!-- Sincronizar con GitHub -->
+        <button
+          type="button"
+          class="header-action-btn sync-btn"
+          [class.spinning]="isSyncing"
+          (click)="syncWithGitHub()"
+          [title]="currentLang === 'es' ? 'Sincronizar con GitHub' : 'Sync with GitHub'">
+          <ion-icon name="sync-outline"></ion-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Search & Category Filters Bar -->
+    <div class="vault-filter-bar">
+      <div class="search-input-wrapper">
+        <ion-icon name="search-outline" class="search-icon"></ion-icon>
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          (ngModelChange)="onSearchChange()"
+          [placeholder]="currentLang === 'es' ? 'Buscar en la red neuronal...' : 'Search neural network...'"
+          class="vault-search-input" />
+        <button *ngIf="searchQuery" (click)="searchQuery = ''; onSearchChange()" class="clear-search-btn">
+          <ion-icon name="close-circle"></ion-icon>
+        </button>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="category-pills-row" *ngIf="categories.length > 0">
+        <button
+          type="button"
+          class="cat-pill"
+          [class.active]="selectedCategory === 'ALL'"
+          (click)="filterByCategory('ALL')">
+          {{ currentLang === 'es' ? 'Todas' : 'All' }}
+        </button>
+        <button
+          *ngFor="let cat of categories"
+          type="button"
+          class="cat-pill"
+          [class.active]="selectedCategory === cat"
+          (click)="filterByCategory(cat)">
+          {{ cat }}
+        </button>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="vault-content" [fullscreen]="true" [scrollY]="viewMode === 'list'">
+
+  <!-- MODE A: FORCE GRAPH -->
+  <div class="graph-wrapper" [class.hidden]="viewMode !== 'graph'">
+    <div #graphContainer class="force-graph-container"></div>
+
+    <!-- Floating Graph Controls -->
+    <div class="graph-hud-controls">
+      <button type="button" class="hud-btn" (click)="resetGraphZoom()" title="Ajustar y centrar grafo">
+        <ion-icon name="scan-outline"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- MODE B: EXPLORADOR DE NOTAS (LIST) -->
+  <div class="notes-list-wrapper" *ngIf="viewMode === 'list'">
+    <div class="notes-count-info">
+      {{ filteredNodes.length }} {{ currentLang === 'es' ? 'notas encontradas' : 'notes found' }}
+    </div>
+
+    <div class="notes-grid">
+      <div
+        *ngFor="let node of filteredNodes"
+        class="note-card"
+        (click)="openNote(node)">
+        <div class="note-card-header">
+          <span class="note-cat-badge" [style.backgroundColor]="node.color + '22'" [style.borderColor]="node.color" [style.color]="node.color">
+            {{ node.category }}
+          </span>
+          <span class="note-links-count">
+            <ion-icon name="share-social-outline"></ion-icon>
+            {{ node.links.length || 0 }}
+          </span>
+        </div>
+        <h4 class="note-card-title">{{ node.title || node.id }}</h4>
+        <p class="note-card-path">{{ node.path }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTE READER OVERLAY MODAL -->
+  <div class="reader-backdrop" *ngIf="selectedNode" (click)="closeNote()"></div>
+
+  <div class="note-reader-panel" *ngIf="selectedNode" [class.open]="!!selectedNode">
+    <div class="reader-header">
+      <div class="reader-title-group">
+        <span class="reader-cat-badge" [style.backgroundColor]="selectedNode.color + '22'" [style.borderColor]="selectedNode.color" [style.color]="selectedNode.color">
+          {{ selectedNode.category }}
+        </span>
+        <h2 class="reader-title">{{ selectedNode.title || selectedNode.id }}</h2>
+        <span class="reader-path">{{ selectedNode.path }}</span>
+      </div>
+      <button type="button" class="reader-close-btn" (click)="closeNote()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="reader-scroll-area">
+      <!-- Markdown Content -->
+      <div class="markdown-body" [innerHTML]="selectedNoteHtml" (click)="onReaderContentClick($event)"></div>
+
+      <!-- Neural Synapses Footer -->
+      <div class="synapses-section">
+        <!-- Outgoing Links -->
+        <div class="synapses-group" *ngIf="outgoingNodes.length > 0">
+          <h4 class="synapses-title">
+            <ion-icon name="arrow-forward-circle-outline"></ion-icon>
+            {{ currentLang === 'es' ? 'Sinapsis Salientes' : 'Outgoing Synapses' }} ({{ outgoingNodes.length }})
+          </h4>
+          <div class="synapses-chips">
+            <button
+              *ngFor="let out of outgoingNodes"
+              type="button"
+              class="synapse-chip"
+              (click)="openNote(out)">
+              <span class="chip-dot" [style.backgroundColor]="out.color"></span>
+              <span class="chip-text">{{ out.title || out.id }}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Backlinks / Incoming Links -->
+        <div class="synapses-group" *ngIf="incomingLinks.length > 0">
+          <h4 class="synapses-title">
+            <ion-icon name="arrow-back-circle-outline"></ion-icon>
+            {{ currentLang === 'es' ? 'Referencias Entrantes (Backlinks)' : 'Incoming Backlinks' }} ({{ incomingLinks.length }})
+          </h4>
+          <div class="synapses-chips">
+            <button
+              *ngFor="let inc of incomingLinks"
+              type="button"
+              class="synapse-chip"
+              (click)="openNote(inc)">
+              <span class="chip-dot" [style.backgroundColor]="inc.color"></span>
+              <span class="chip-text">{{ inc.title || inc.id }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</ion-content>

@@ -37,7 +37,8 @@ fs.writeFileSync(versionJsonPath, JSON.stringify(versionMeta, null, 2), 'utf8');
 console.log(`[1/5] Synchronized src/assets/version.json to version "${version}"`);
 
 // 2. Build web production bundle
-console.log(`[2/5] Building Angular production web assets...`);
+console.log(`[2/5] Compiling Obsidian Vault Graph and Angular production web assets...`);
+execSync('node scripts/generate-vault-graph.js', { cwd: rootDir, stdio: 'inherit' });
 execSync('npx ng build --configuration production', { cwd: rootDir, stdio: 'inherit' });
 
 // 3. Sync to Capacitor

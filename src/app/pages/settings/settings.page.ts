@@ -519,6 +519,10 @@ export class SettingsPage implements OnInit, OnDestroy {
     await alert.present();
   }
 
+  openObsidianVault(): void {
+    this.router.navigate(['/obsidian-vault']);
+  }
+
   downloadApk(event?: Event): void {
     const isCapacitor = typeof (window as any).Capacitor !== 'undefined' &&
       typeof (window as any).Capacitor.isNativePlatform === 'function' &&
