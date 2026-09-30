@@ -66,6 +66,12 @@
   gap: 10px;
 }
 
+.header-action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 /* Event Button in Home Header */
 .header-event-btn {
   display: inline-flex;
@@ -95,6 +101,46 @@
     background: linear-gradient(135deg, rgba(189, 165, 69, 0.35) 0%, rgba(189, 165, 69, 0.15) 100%);
     box-shadow: 0 0 16px rgba(189, 165, 69, 0.45);
     transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+/* Calculator Button in Home Header */
+.header-calc-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, rgba(229, 169, 60, 0.22) 0%, rgba(229, 169, 60, 0.08) 100%);
+  border: 1px solid #e5a93c;
+  color: #ffda79;
+  font-family: var(--codex-font-heading);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 8px 13px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(229, 169, 60, 0.2);
+  transition: all 0.2s ease;
+  user-select: none;
+
+  ion-icon {
+    font-size: 1.1rem;
+    color: #e5a93c;
+  }
+
+  &:hover {
+    background: #e5a93c;
+    color: #1a1918;
+    transform: translateY(-1px);
+    box-shadow: 0 0 16px rgba(229, 169, 60, 0.4);
+
+    ion-icon {
+      color: #1a1918;
+    }
   }
 
   &:active {
@@ -1536,6 +1582,23 @@
   .header-right-group {
     justify-content: space-between;
     width: 100%;
+  }
+
+  .header-action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    .header-event-btn,
+    .header-calc-btn {
+      padding: 6px 9px;
+      font-size: 0.74rem;
+      gap: 4px;
+
+      ion-icon {
+        font-size: 0.95rem;
+      }
+    }
   }
 
   .header-countdown-block {

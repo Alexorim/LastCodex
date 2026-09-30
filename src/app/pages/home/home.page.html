@@ -11,13 +11,21 @@
         </div>
       </div>
 
-      <!-- Header Right Group: Events Button & Countdown -->
+      <!-- Header Right Group: Action Buttons (Events & Calculator) and Countdown -->
       <div class="header-right-group">
-        <!-- Events Button in Header (Only on Home) -->
-        <button type="button" class="header-event-btn" (click)="goToEvents()" title="Ver Calendario de Eventos Orna">
-          <ion-icon name="sparkles"></ion-icon>
-          <span>{{ currentLang === 'es' ? 'Eventos' : 'Events' }}</span>
-        </button>
+        <div class="header-action-buttons">
+          <!-- Events Button -->
+          <button type="button" class="header-event-btn" (click)="goToEvents()" title="Ver Calendario de Eventos Orna">
+            <ion-icon name="sparkles"></ion-icon>
+            <span>{{ currentLang === 'es' ? 'Eventos' : 'Events' }}</span>
+          </button>
+
+          <!-- Calculator Button -->
+          <button type="button" class="header-calc-btn" (click)="goToProofs()" [title]="currentLang === 'es' ? 'Calculadora de Materiales y Pruebas' : 'Materials & Proofs Calculator'">
+            <ion-icon name="calculator-outline"></ion-icon>
+            <span>{{ currentLang === 'es' ? 'Calculadora' : 'Calculator' }}</span>
+          </button>
+        </div>
 
         <!-- Integrated Header Countdown -->
         <div class="header-countdown-block">

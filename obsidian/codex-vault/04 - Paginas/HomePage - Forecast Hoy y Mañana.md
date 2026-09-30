@@ -16,8 +16,9 @@ created: 2026-09-23
 
 Conexiones:
 - Nodo Padre: [[00 - Nodo Central (MOC) - LastCodex]]
-- Módulo: [[Módulo Forecast de Gremios]]
-- Servicios Inyectados: [[MaterialsService]], [[TimerService]], [[SettingsService]]
+- Módulo: [[Módulo Forecast de Gremios]], [[Módulo Calculadora de Pruebas de Gremios]], [[Módulo Rastreador de Eventos]]
+- Servicios Inyectados: [[MaterialsService]], [[TimerService]], [[SettingsService]], [[ProofsService]]
+- Vistas Vinculadas: [[ProofsPage - Calculadora de Pruebas]], [[EventsPage - Eventos en Vivo]]
 - Utilidades: [[Forecast Canvas]], [[Iconos y Sprites]], [[Traducciones y Mapeo de Nombres]]
 - Modelos: [[Modelo DayForecast y GuildStock]]
 
@@ -26,9 +27,11 @@ Conexiones:
 ## 📱 Componentes y Secciones Visuales
 
 1. **Header Principal**:
-   - Título con logotipo de LastCodex.
-   - Botón de compartir/exportar imagen infográfica impulsado por [[Forecast Canvas]].
-   - Botón de refresco manual.
+   - Título con logotipo de LastResources.
+   - Grupo de acciones rápidas:
+     - **Botón de Eventos**: Acceso directo al calendario y cuenta regresiva de eventos en vivo de Orna.
+     - **Botón de Calculadora**: Acceso directo e instantáneo a [[ProofsPage - Calculadora de Pruebas]] para estimación de materiales y monedas de gremio.
+   - Tarjeta de cuenta regresiva (*Guild Reset Countdown*) y botón de refresco manual.
 2. **Tarjeta de Cuenta Regresiva (Reset Countdown)**:
    - Contador en tiempo real conectado a `TimerService.countdown$`.
    - Muestra las horas y minutos restantes hasta las 00:00 UTC.
