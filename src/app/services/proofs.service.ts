@@ -232,7 +232,8 @@ export class ProofsService {
     const map = new Map<string, MaterialOption>();
 
     for (const item of rawItems) {
-      if (item.subcategory === 'material' || item.category === 'materials' || (item.category === 'items' && item.type === 'Items' && item.useableBy === 'Todas las clases' && !item.stats && item.droppedBy)) {
+      const isMaterial = item.subcategory === 'material' || item.category === 'materials';
+      if (isMaterial) {
         const tier = item.tier || 1;
         const rarity = (item.rarity || 'common').toLowerCase();
         const baseRate = this.calculateBaseRate(tier, rarity);
@@ -302,10 +303,14 @@ export class ProofsService {
   public findMaterial(query: string): MaterialOption | undefined {
     if (!query) return undefined;
     const clean = query.trim().toLowerCase();
+    const alias = (clean === 'pure runestone' || clean === 'runita pura') ? 'perfect runestone' : clean;
     return this.materialsCache.find(m =>
       m.id.toLowerCase() === clean ||
+      m.id.toLowerCase() === alias ||
       m.nameEn.toLowerCase() === clean ||
+      m.nameEn.toLowerCase() === alias ||
       m.nameEs.toLowerCase() === clean ||
+      m.nameEs.toLowerCase() === alias ||
       m.name.toLowerCase() === clean ||
       m.nameEn.toLowerCase().replace(/[^a-z0-9]/g, '-') === clean
     );

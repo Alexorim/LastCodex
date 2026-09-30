@@ -51,13 +51,13 @@ export class ProofsPage implements OnInit {
 
   public popularMaterialNames = [
     'Ortanite',
-    'Pure Runestone',
+    'Perfect Runestone',
     'Cursed Ortanite',
     'Balorite',
     'Dragonite',
-    'Bifrost',
-    'Sunstone',
-    'Moonstone'
+    'Pure Darkstone',
+    'Pure Lightstone',
+    'Pure Waterstone'
   ];
 
   constructor() {
