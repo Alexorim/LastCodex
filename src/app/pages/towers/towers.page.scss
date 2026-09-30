@@ -40,10 +40,6 @@
     .brand-text {
       display: flex;
       flex-direction: column;
-
-      @media (max-width: 600px) {
-        display: none;
-      }
     }
 
     .brand-name {
