@@ -56,6 +56,10 @@ const routes: Routes = [
         loadComponent: () => import('../pages/obsidian-vault/obsidian-vault.page').then(m => m.ObsidianVaultPage)
       },
       {
+        path: 'assess',
+        loadComponent: () => import('../pages/assess/assess.page').then(m => m.AssessPage)
+      },
+      {
         path: 'calculator',
         redirectTo: 'proofs',
         pathMatch: 'full'

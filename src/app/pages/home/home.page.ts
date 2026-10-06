@@ -30,8 +30,12 @@ import {
   hammerOutline,
   gridOutline,
   listOutline,
-  calculatorOutline
+  calculatorOutline,
+  alarmOutline,
+  alarm
 } from 'ionicons/icons';
+import { AlertController, ToastController } from '@ionic/angular';
+import { NotificationsService } from '../../services/notifications.service';
 import { Capacitor } from '@capacitor/core';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Share } from '@capacitor/share';
@@ -61,6 +65,9 @@ export class HomePage implements OnInit, OnDestroy {
   private settingsService = inject(SettingsService);
   private codexService = inject(CodexService);
   private backButtonService = inject(BackButtonService);
+  private notificationsService = inject(NotificationsService);
+  private alertCtrl = inject(AlertController);
+  private toastCtrl = inject(ToastController);
   private router = inject(Router);
 
   @ViewChild('exportTargetSingle') exportTargetSingle!: ElementRef<HTMLElement>;
@@ -116,7 +123,9 @@ export class HomePage implements OnInit, OnDestroy {
       hammerOutline,
       gridOutline,
       listOutline,
-      calculatorOutline
+      calculatorOutline,
+      alarmOutline,
+      alarm
     });
   }
 
@@ -317,6 +326,215 @@ export class HomePage implements OnInit, OnDestroy {
       this.unregisterMaterialOverlay();
       this.unregisterMaterialOverlay = null;
     }
+  }
+
+  isMaterialReminderActive(mat: CodexEntry | null): boolean {
+    if (!mat) return false;
+    const rawName = mat.nameEn || mat.name || '';
+    return this.notificationsService.isMaterialReminderActive(rawName);
+  }
+
+  async openMaterialReminderDialog(mat: CodexEntry | null): Promise<void> {
+    if (!mat) return;
+    const isEs = this.currentLang === 'es';
+    const rawName = mat.nameEn || mat.name || '';
+    const displayName = isEs ? (mat.nameEs || mat.name || rawName) : (mat.nameEn || rawName);
+    const isAlreadySet = this.notificationsService.isMaterialReminderActive(rawName);
+
+    if (isAlreadySet) {
+      const activeRem = this.notificationsService.getMaterialReminder(rawName);
+      const guildText = activeRem?.guild ? ` (${activeRem.guild})` : '';
+      const alert = await this.alertCtrl.create({
+        header: isEs ? 'Recordatorio Activo' : 'Active Reminder',
+        subHeader: displayName,
+        message: isEs
+          ? `Ya tienes un recordatorio programado para ${displayName}${guildText}. ¿Qué deseas hacer?`
+          : `You already have an active reminder for ${displayName}${guildText}. What would you like to do?`,
+        buttons: [
+          {
+            text: isEs ? 'Cerrar' : 'Close',
+            role: 'cancel'
+          },
+          {
+            text: isEs ? 'Eliminar Alerta' : 'Delete Alert',
+            role: 'destructive',
+            handler: async () => {
+              await this.notificationsService.cancelMaterialReminder(rawName);
+              const toast = await this.toastCtrl.create({
+                message: isEs ? `Recordatorio cancelado para ${displayName}` : `Reminder canceled for ${displayName}`,
+                duration: 2000,
+                position: 'bottom',
+                color: 'medium'
+              });
+              await toast.present();
+            }
+          },
+          {
+            text: isEs ? 'Cambiar' : 'Change',
+            handler: () => {
+              this.showMaterialReminderTypeDialog(rawName, displayName);
+            }
+          }
+        ]
+      });
+      await alert.present();
+      return;
+    }
+
+    await this.showMaterialReminderTypeDialog(rawName, displayName);
+  }
+
+  private async showMaterialReminderTypeDialog(rawName: string, displayName: string): Promise<void> {
+    const isEs = this.currentLang === 'es';
+    const alert = await this.alertCtrl.create({
+      header: isEs ? 'Tipo de Recordatorio' : 'Reminder Type',
+      subHeader: displayName,
+      message: isEs
+        ? 'Elige cómo quieres que la app te avise sobre este material:'
+        : 'Choose how you want to be alerted for this material:',
+      inputs: [
+        {
+          type: 'radio',
+          label: isEs ? 'Recordatorio normal (Gremio más cercano)' : 'Normal (Nearest guild)',
+          value: 'normal',
+          checked: true
+        },
+        {
+          type: 'radio',
+          label: isEs ? 'Recordatorio específico (Elegir un gremio)' : 'Specific (Pick a guild)',
+          value: 'specific'
+        }
+      ],
+      buttons: [
+        {
+          text: isEs ? 'Cancelar' : 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: isEs ? 'Continuar' : 'Next',
+          handler: async (selectedType: string) => {
+            if (selectedType === 'normal') {
+              await this.setupNormalMaterialReminder(rawName, displayName);
+            } else if (selectedType === 'specific') {
+              await this.setupSpecificMaterialReminder(rawName, displayName);
+            }
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  private async setupNormalMaterialReminder(rawName: string, displayName: string): Promise<void> {
+    const isEs = this.currentLang === 'es';
+    const searchRes = this.materialsService.searchMaterial(rawName);
+    const firstApp = searchRes?.guildAppearances && searchRes.guildAppearances.length > 0
+      ? searchRes.guildAppearances[0]
+      : null;
+
+    const daysUntil = firstApp && typeof firstApp.daysUntil === 'number' ? firstApp.daysUntil : 1;
+    const targetDate = new Date();
+    targetDate.setDate(targetDate.getDate() + Math.max(0, daysUntil));
+    targetDate.setHours(0, 5, 0, 0);
+
+    const guildName = firstApp?.guildName || 'el gremio más cercano';
+    const success = await this.notificationsService.scheduleMaterialReminder(
+      rawName,
+      targetDate,
+      displayName,
+      guildName,
+      'normal'
+    );
+
+    if (success) {
+      const toast = await this.toastCtrl.create({
+        message: isEs
+          ? `🔔 Recordatorio normal programado: Te avisará cuando ${displayName} esté en ${guildName}.`
+          : `🔔 Normal reminder set: Will alert when ${displayName} is in ${guildName}.`,
+        duration: 3500,
+        position: 'bottom',
+        color: 'success'
+      });
+      await toast.present();
+    }
+  }
+
+  private async setupSpecificMaterialReminder(rawName: string, displayName: string): Promise<void> {
+    const isEs = this.currentLang === 'es';
+    const searchRes = this.materialsService.searchMaterial(rawName);
+
+    const inputs: any[] = [];
+    if (searchRes && searchRes.guildAppearances.length > 0) {
+      searchRes.guildAppearances.forEach((app, idx) => {
+        const timeTxt = app.daysUntil !== null
+          ? (app.daysUntil === 0 ? (isEs ? '¡Hoy!' : 'Today!') : (isEs ? `en ${app.daysUntil} días` : `in ${app.daysUntil} days`))
+          : app.nextDate;
+        inputs.push({
+          type: 'radio',
+          label: `${app.guildName} (${timeTxt})`,
+          value: app.guildName,
+          checked: idx === 0
+        });
+      });
+    } else {
+      const defaultGuilds = ['Anguish', 'Agony', 'Despair', 'Melancholy', 'Torment', 'Coral', 'Deepshards', 'Remembrance', 'Sparring', 'Trials', 'Towers'];
+      defaultGuilds.forEach((g, idx) => {
+        inputs.push({
+          type: 'radio',
+          label: g,
+          value: g,
+          checked: idx === 0
+        });
+      });
+    }
+
+    const alert = await this.alertCtrl.create({
+      header: isEs ? 'Recordatorio Específico' : 'Specific Reminder',
+      subHeader: displayName,
+      message: isEs
+        ? '¿En qué gremio deseas que esté el material para recibir el aviso?'
+        : 'In which guild would you like this material to appear for the alert?',
+      inputs,
+      buttons: [
+        {
+          text: isEs ? 'Cancelar' : 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: isEs ? 'Guardar Recordatorio' : 'Save Reminder',
+          handler: async (selectedGuild: string) => {
+            if (!selectedGuild) return;
+            const app = searchRes?.guildAppearances.find(a => a.guildName.toLowerCase() === selectedGuild.toLowerCase());
+            const daysUntil = app && typeof app.daysUntil === 'number' ? app.daysUntil : 1;
+
+            const targetDate = new Date();
+            targetDate.setDate(targetDate.getDate() + Math.max(0, daysUntil));
+            targetDate.setHours(0, 5, 0, 0);
+
+            const success = await this.notificationsService.scheduleMaterialReminder(
+              rawName,
+              targetDate,
+              displayName,
+              selectedGuild,
+              'specific'
+            );
+
+            if (success) {
+              const toast = await this.toastCtrl.create({
+                message: isEs
+                  ? `🔔 Alerta específica guardada: Te avisaremos cuando ${displayName} llegue a ${selectedGuild}.`
+                  : `🔔 Specific alert saved: You will be alerted when ${displayName} hits ${selectedGuild}.`,
+                duration: 3500,
+                position: 'bottom',
+                color: 'success'
+              });
+              await toast.present();
+            }
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 
   async exportImage(action: 'download' | 'share'): Promise<void> {

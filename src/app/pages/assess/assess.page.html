@@ -1,0 +1,131 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="assess-toolbar">
+    <ion-buttons slot="start">
+      <ion-button fill="clear" (click)="goBack()" title="Volver al Códice">
+        <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="assess-title">Evaluar</ion-title>
+    <ion-buttons slot="end" *ngIf="evaluatedItems.length > 0">
+      <ion-button fill="clear" class="assess-clear-all-btn" (click)="clearAll()" title="Limpiar todos los objetos y estadísticas">
+        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="assess-content">
+  <div class="assess-container">
+
+    <!-- Item search -->
+    <div class="assess-search-wrap">
+      <ion-searchbar
+        [(ngModel)]="query"
+        (ngModelChange)="onQueryChange()"
+        debounce="150"
+        placeholder="Buscar objeto (arma, armadura, adorno...)"
+        class="assess-searchbar"></ion-searchbar>
+
+      <div class="assess-results codex-box" *ngIf="results.length > 0">
+        <div class="result-item" *ngFor="let r of results" (click)="selectItem(r)">
+          <img [src]="r.entry.icon" (error)="onImageError($event)" class="result-sprite" alt="" />
+          <span class="result-name">{{ displayName(r.entry) }}</span>
+          <span class="result-tier" *ngIf="r.entry.tier > 0">T{{ r.entry.tier }}</span>
+        </div>
+      </div>
+      <div class="assess-hint" *ngIf="query.length >= 2 && results.length === 0">
+        No se encontraron objetos evaluables.
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div class="assess-empty codex-box" *ngIf="evaluatedItems.length === 0">
+      <ion-icon name="search-outline"></ion-icon>
+      <p>Busca un objeto y escribe sus estadísticas para calcular su calidad.</p>
+    </div>
+
+    <!-- Evaluated items list -->
+    <div class="evaluated-items-list" *ngIf="evaluatedItems.length > 0">
+      <div class="evaluated-item-card" *ngFor="let entry of evaluatedItems; let itemIdx = index">
+        <!-- Selected item card -->
+        <div class="selected-card codex-box">
+          <div class="selected-sprite-wrap">
+            <img [src]="entry.item.entry.icon" (error)="onImageError($event)" class="selected-sprite" alt="" />
+          </div>
+          <div class="selected-info">
+            <div class="selected-tier" *ngIf="entry.item.entry.tier > 0">★ Tier {{ entry.item.entry.tier }}</div>
+            <h3 class="selected-name">{{ displayName(entry.item.entry) }}</h3>
+            <div class="base-stats">
+              <span class="base-stat" *ngFor="let s of entry.item.stats">
+                <span class="base-label">{{ s.label }}</span>
+                <span class="base-value">{{ s.base }}{{ s.percent ? '%' : '' }}</span>
+              </span>
+            </div>
+          </div>
+          <button type="button" class="selected-clear" (click)="removeItem(itemIdx)" title="Quitar objeto">
+            <ion-icon name="close-circle-outline"></ion-icon>
+          </button>
+        </div>
+
+        <!-- Rows -->
+        <div class="assess-rows">
+          <div class="assess-row codex-box" *ngFor="let row of entry.rows; let rIdx = index; trackBy: trackByIndex">
+            <button
+              type="button"
+              class="row-remove"
+              *ngIf="entry.rows.length > 1"
+              (click)="removeRow(entry, rIdx)"
+              title="Quitar fila">
+              <ion-icon name="close-outline"></ion-icon>
+            </button>
+
+            <div class="row-inputs">
+              <label class="stat-field level-field">
+                <span class="field-label">Nivel</span>
+                <input
+                  type="number"
+                  inputmode="numeric"
+                  min="1"
+                  max="10"
+                  step="1"
+                  [(ngModel)]="row.level"
+                  (ngModelChange)="onLevelChange(row)" />
+              </label>
+              <label class="stat-field" *ngFor="let s of entry.item.stats">
+                <span class="field-label">{{ s.label }}{{ s.percent ? ' (%)' : '' }}</span>
+                <input
+                  type="number"
+                  inputmode="decimal"
+                  min="0"
+                  [placeholder]="s.base"
+                  [(ngModel)]="row.values[s.key]"
+                  (ngModelChange)="saveState()" />
+              </label>
+            </div>
+
+            <div class="row-result" *ngIf="rowQuality(entry.item, row) as q; else noResult" [ngClass]="qualityTier(q).cls">
+              <span class="result-pct">{{ q | number:'1.1-1' }}%</span>
+              <span class="result-label">{{ qualityTier(q).label }}</span>
+              <span class="result-warn" *ngIf="isOutOfRange(q)">
+                <ion-icon name="alert-circle-outline"></ion-icon> Revisa los valores / nivel
+              </span>
+            </div>
+            <ng-template #noResult>
+              <div class="row-result empty">
+                <span class="result-pct">—</span>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+
+        <button type="button" class="add-row-btn" (click)="addRow(entry)" title="Añadir otra copia de este objeto">
+          <ion-icon name="add-outline"></ion-icon>
+        </button>
+      </div>
+
+      <p class="assess-note">
+        Cálculo local aproximado: calidad = valor / (base × (1 + 0.1 × (nivel − 1))), promediado entre las estadísticas introducidas.
+      </p>
+    </div>
+  </div>
+</ion-content>

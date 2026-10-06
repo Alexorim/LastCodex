@@ -231,6 +231,31 @@ export class TowersService {
   }
 
   /**
+   * Finds the next `count` dates when a tower CROSSES `minFloor` (prev < minFloor <= floor).
+   * Used for custom floor notifications (e.g. notify when a tower reaches 16 floors).
+   */
+  findNextFloorDates(kind: TowerKind, minFloor: number, count = 2, startTime: Date = new Date(), maxDays = 35): Date[] {
+    const results: Date[] = [];
+    let prevFloor = this.calculateRawFloors(startTime)[kind];
+    for (let d = 0; d < maxDays && results.length < count; d++) {
+      for (const [ch, cm] of CHECKPOINTS_UTC) {
+        const checkDate = new Date(startTime);
+        checkDate.setUTCDate(startTime.getUTCDate() + d);
+        checkDate.setUTCHours(ch, cm, 0, 0);
+        if (checkDate <= startTime) continue;
+
+        const floor = this.calculateRawFloors(checkDate)[kind];
+        if (floor >= minFloor && prevFloor < minFloor) {
+          results.push(checkDate);
+          if (results.length >= count) break;
+        }
+        prevFloor = floor;
+      }
+    }
+    return results;
+  }
+
+  /**
    * Returns current active info for all 5 towers with progress and projections.
    */
   getTowers(lang: 'es' | 'en' = 'es', time: Date = new Date()): TowerInfo[] {

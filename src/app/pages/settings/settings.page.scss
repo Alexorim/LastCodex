@@ -1581,7 +1581,189 @@
       --handle-background-checked: #fff;
       flex-shrink: 0;
     }
+
+    .custom-floor-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--codex-gold-bright, #f0a500);
+      background: rgba(189, 165, 69, 0.12);
+      border: 1px solid rgba(189, 165, 69, 0.35);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+
+      ion-icon {
+        font-size: 1rem;
+      }
+
+      &.active {
+        background: linear-gradient(135deg, rgba(189, 165, 69, 0.3), rgba(189, 165, 69, 0.15));
+        border-color: var(--codex-gold, #bda545);
+        color: #fff;
+        box-shadow: 0 0 10px rgba(189, 165, 69, 0.25);
+      }
+
+      &:active {
+        transform: scale(0.96);
+      }
+    }
+
+    &.custom-floor-row {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.08);
+    }
+  }
+
+  .custom-floors-box {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.08);
+
+    .custom-floors-info {
+      margin-bottom: 12px;
+    }
+
+    .custom-floors-chips-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .floor-badge-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      background: rgba(189, 165, 69, 0.15);
+      border: 1px solid rgba(189, 165, 69, 0.4);
+      border-radius: 20px;
+      color: #f3efe6;
+      font-size: 0.84rem;
+      font-weight: 600;
+
+      .floor-badge-remove-btn {
+        background: transparent;
+        border: none;
+        color: #e57373;
+        font-size: 1.05rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        transition: transform 0.15s ease;
+
+        &:hover {
+          color: #ff5252;
+          transform: scale(1.15);
+        }
+      }
+    }
+
+    .add-floor-chip-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px dashed rgba(189, 165, 69, 0.5);
+      border-radius: 20px;
+      color: var(--codex-gold-bright, #f0a500);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: rgba(189, 165, 69, 0.12);
+        border-style: solid;
+        transform: translateY(-1px);
+      }
+    }
+
+    .no-floors-hint {
+      margin-top: 8px;
+      font-size: 0.78rem;
+      color: #9e9589;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
   }
 }
+
+.obsidian-card {
+  border-color: rgba(168, 85, 247, 0.3) !important;
+  background: linear-gradient(180deg, rgba(168, 85, 247, 0.06) 0%, rgba(20, 18, 24, 0.95) 100%) !important;
+
+  .settings-obsidian-icon-circle-main {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(168, 85, 247, 0.18);
+    border: 1px solid rgba(168, 85, 247, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    .obsidian-svg-inline {
+      filter: drop-shadow(0 0 6px rgba(168, 85, 247, 0.6));
+    }
+  }
+
+  .obsidian-prominent-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    margin-top: 12px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(107, 33, 168, 0.3) 100%);
+    border: 1px solid rgba(168, 85, 247, 0.5);
+    color: #e9d5ff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    .obsidian-btn-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 0.94rem;
+
+      ion-icon {
+        font-size: 1.2rem;
+        color: #c084fc;
+      }
+    }
+
+    ion-icon {
+      font-size: 1.15rem;
+      color: #c084fc;
+    }
+
+    &:hover {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.3) 0%, rgba(107, 33, 168, 0.45) 100%);
+      border-color: #c084fc;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(168, 85, 247, 0.25);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
 
 

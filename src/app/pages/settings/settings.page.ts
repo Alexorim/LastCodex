@@ -32,7 +32,8 @@ import {
   alarm,
   shieldOutline,
   documentTextOutline,
-  calculatorOutline
+  calculatorOutline,
+  optionsOutline
 } from 'ionicons/icons';
 import { Router } from '@angular/router';
 import { SettingsService, Language, ThemeMode, AVAILABLE_LANGUAGES, LanguageOption } from '../../services/settings.service';
@@ -68,8 +69,10 @@ export class SettingsPage implements OnInit, OnDestroy {
   localResetTime = '';
 
   isAllTowersNotificationEnabled = false;
+  customTowerFloor: number | null = null;
+  customTowerFloors: number[] = [];
 
-  versionNumber = '1.4.6.1';
+  versionNumber = '1.4.7.1';
   appVersion = `v${this.versionNumber}`;
   apkFileName = `lastresources_${this.versionNumber}.apk`;
   apkDownloadUrl = `https://lastresources.vercel.app/assets/${this.apkFileName}`;
@@ -132,7 +135,8 @@ export class SettingsPage implements OnInit, OnDestroy {
       alarm,
       shieldOutline,
       documentTextOutline,
-      calculatorOutline
+      calculatorOutline,
+      optionsOutline
     });
   }
 
@@ -221,9 +225,112 @@ export class SettingsPage implements OnInit, OnDestroy {
     );
 
     this.isAllTowersNotificationEnabled = this.notificationsService.isAllTowersNotificationEnabled();
+    this.customTowerFloors = this.notificationsService.getCustomFloors();
+    this.customTowerFloor = this.notificationsService.getCustomFloorSetting();
 
     // Verificación automática y silenciosa al entrar a Ajustes
     this.checkAppUpdates(true);
+  }
+
+  async addCustomFloorPrompt(): Promise<void> {
+    const isEs = this.currentLang === 'es';
+    const alert = await this.alertController.create({
+      header: isEs ? 'Añadir Recordatorio de Pisos' : 'Add Floor Reminder',
+      subHeader: isEs ? 'Notificación personalizada de torres' : 'Custom tower notification',
+      message: isEs
+        ? 'Indica el número de piso para recibir una alerta automática cuando cualquier torre lo alcance (ej: 16, 20, 40 pisos).'
+        : 'Enter the floor count to get an automatic alert when any tower reaches it (e.g. 16, 20, 40 floors).',
+      inputs: [
+        {
+          name: 'floor',
+          type: 'number',
+          min: 15,
+          max: 49,
+          placeholder: '16'
+        }
+      ],
+      buttons: [
+        {
+          text: isEs ? 'Cancelar' : 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: isEs ? 'Añadir' : 'Add',
+          handler: async (data: any) => {
+            const val = parseInt(data.floor, 10);
+            if (isNaN(val) || val < 15 || val >= 50) {
+              const errToast = await this.toastCtrl.create({
+                message: isEs ? 'El piso debe estar entre 15 y 49.' : 'Floor must be between 15 and 49.',
+                duration: 2500,
+                position: 'bottom',
+                color: 'warning'
+              });
+              await errToast.present();
+              return false;
+            }
+
+            if (this.customTowerFloors.includes(val)) {
+              const dupToast = await this.toastCtrl.create({
+                message: isEs ? `El piso ${val} ya tiene un recordatorio activo.` : `Floor ${val} already has an active reminder.`,
+                duration: 2500,
+                position: 'bottom',
+                color: 'warning'
+              });
+              await dupToast.present();
+              return false;
+            }
+
+            const ok = await this.notificationsService.addCustomFloor(val, this.towersService, isEs ? 'es' : 'en');
+            if (ok) {
+              this.customTowerFloors = this.notificationsService.getCustomFloors();
+              this.customTowerFloor = this.notificationsService.getCustomFloorSetting();
+              this.cdr.detectChanges();
+              const toast = await this.toastCtrl.create({
+                message: isEs
+                  ? `🔔 Recordatorio añadido: Alerta cuando cualquier torre alcance ${val} pisos.`
+                  : `🔔 Reminder added: Alert when any tower reaches ${val} floors.`,
+                duration: 3000,
+                position: 'bottom',
+                color: 'success'
+              });
+              await toast.present();
+              return true;
+            } else {
+              const toast = await this.toastCtrl.create({
+                message: isEs
+                  ? '⚠️ Se requieren permisos de notificación en tu celular.'
+                  : '⚠️ Notification permission required on device.',
+                duration: 3000,
+                position: 'bottom',
+                color: 'warning'
+              });
+              await toast.present();
+              return false;
+            }
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  async removeCustomFloor(floor: number): Promise<void> {
+    const isEs = this.currentLang === 'es';
+    await this.notificationsService.removeCustomFloor(floor, this.towersService, isEs ? 'es' : 'en');
+    this.customTowerFloors = this.notificationsService.getCustomFloors();
+    this.customTowerFloor = this.notificationsService.getCustomFloorSetting();
+    this.cdr.detectChanges();
+    const toast = await this.toastCtrl.create({
+      message: isEs ? `Recordatorio del piso ${floor} eliminado.` : `Floor ${floor} reminder removed.`,
+      duration: 2000,
+      position: 'bottom',
+      color: 'medium'
+    });
+    await toast.present();
+  }
+
+  async configureCustomTowerFloor(): Promise<void> {
+    await this.addCustomFloorPrompt();
   }
 
   async onAllTowersNotificationToggle(event: any): Promise<void> {
@@ -398,6 +505,8 @@ export class SettingsPage implements OnInit, OnDestroy {
     const cacheBuster = Date.now();
     let remoteVersion = '';
     let downloadUrl = `https://lastresources.vercel.app/assets/${this.apkFileName}`;
+    let mirrorUrl = this.githubApkUrl;
+    let fileName = this.apkFileName;
 
     try {
       // 1. Probar en primer lugar el servidor oficial en vivo de Vercel (Edge CDN, ultra rápido, sin bloqueos)
@@ -409,6 +518,8 @@ export class SettingsPage implements OnInit, OnDestroy {
         if (data && data.version) {
           remoteVersion = data.version;
           if (data.downloadUrl) downloadUrl = data.downloadUrl;
+          if (data.mirrorUrl) mirrorUrl = data.mirrorUrl;
+          if (data.apkFileName) fileName = data.apkFileName;
         }
       } catch (e) {
         console.warn('Fallback 1 (Vercel CDN) failed:', e);
@@ -424,6 +535,8 @@ export class SettingsPage implements OnInit, OnDestroy {
           if (data && data.version) {
             remoteVersion = data.version;
             if (data.downloadUrl) downloadUrl = data.downloadUrl;
+            if (data.mirrorUrl) mirrorUrl = data.mirrorUrl;
+            if (data.apkFileName) fileName = data.apkFileName;
           }
         } catch (e) {
           console.warn('Fallback 2 (Raw version.json) failed:', e);
@@ -440,6 +553,8 @@ export class SettingsPage implements OnInit, OnDestroy {
           if (data && data.version) {
             remoteVersion = data.version;
             if (data.downloadUrl) downloadUrl = data.downloadUrl;
+            if (data.mirrorUrl) mirrorUrl = data.mirrorUrl;
+            if (data.apkFileName) fileName = data.apkFileName;
           }
         } catch (e) {
           console.warn('Fallback 3 (jsDelivr) failed:', e);
@@ -473,6 +588,8 @@ export class SettingsPage implements OnInit, OnDestroy {
 
       this.latestRemoteVersion = remoteVersion;
       this.apkDownloadUrl = downloadUrl;
+      this.githubApkUrl = mirrorUrl;
+      this.apkFileName = fileName;
 
       if (this.compareVersions(remoteVersion, this.versionNumber) > 0) {
         this.appUpdateStatus = 'has-update';
@@ -523,24 +640,25 @@ export class SettingsPage implements OnInit, OnDestroy {
     this.router.navigate(['/obsidian-vault']);
   }
 
-  downloadApk(event?: Event): void {
+  downloadApk(event?: Event, targetUrl?: string): void {
+    if (event) {
+      event.preventDefault();
+    }
+
+    const remoteUrl = targetUrl || this.apkDownloadUrl || `https://lastresources.vercel.app/assets/${this.apkFileName}`;
+
     const isCapacitor = typeof (window as any).Capacitor !== 'undefined' &&
       typeof (window as any).Capacitor.isNativePlatform === 'function' &&
       (window as any).Capacitor.isNativePlatform();
 
-    const remoteUrl = this.apkDownloadUrl || `https://lastresources.vercel.app/assets/${this.apkFileName}`;
-
     if (isCapacitor) {
-      if (event) event.preventDefault();
-      // En Capacitor nativo (Android), abrir la URL remota en el navegador del sistema
-      // para que el Gestor de Descargas baje el APK más reciente desde la nube y no del cliente local
-      window.open(remoteUrl, '_system');
+      // En Capacitor nativo (Android), navegar a la URL externa dispara shouldOverrideUrlLoading en Bridge,
+      // el cual lanza un Intent ACTION_VIEW nativo abriendo el navegador del sistema / gestor de descargas.
+      window.location.href = remoteUrl;
       return;
     }
 
-    // En navegador web:
-    if (!event) {
-      window.open(remoteUrl, '_blank');
-    }
+    // En navegador web (PC / móvil):
+    window.open(remoteUrl, '_blank');
   }
 }

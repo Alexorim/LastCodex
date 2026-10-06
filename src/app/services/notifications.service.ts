@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
-import { TowerKind, TowerInfo } from './towers.service';
+import { Subject } from 'rxjs';
+import { TowerKind, TowerInfo, TowersService } from './towers.service';
 
 export interface ScheduledReminder {
   id: number;
@@ -11,11 +12,19 @@ export interface ScheduledReminder {
   body: string;
   targetTime: string; // ISO string
   createdAt: string;
+  guild?: string; // material reminders: guild where it will appear
+  mode?: 'normal' | 'specific'; // material reminders: nearest guild vs chosen guild
+  displayName?: string;
 }
 
 const STORAGE_MATERIAL_REMINDERS = 'lastresources_material_reminders';
 const STORAGE_TOWER_REMINDERS = 'lastresources_tower_reminders';
 const STORAGE_ALL_TOWERS_ENABLED = 'lastresources_all_towers_50_notify';
+const STORAGE_CUSTOM_FLOOR = 'lastresources_tower_custom_floor'; // legacy number (16..49) or absent
+const STORAGE_CUSTOM_FLOORS = 'lastresources_tower_custom_floors'; // array of numbers
+const STORAGE_CUSTOM_FLOOR_REMINDERS = 'lastresources_tower_custom_floor_reminders';
+/** How many upcoming occurrences per tower are pre-scheduled for the custom floor alert. */
+const CUSTOM_FLOOR_OCCURRENCES = 2;
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +35,10 @@ export class NotificationsService {
 
   private materialReminders: Record<string, ScheduledReminder> = {};
   private towerReminders: Record<string, ScheduledReminder> = {};
+  private customFloorReminders: Record<string, ScheduledReminder> = {};
+
+  /** Emits whenever reminders are created/cancelled (used by the home-screen widget bridge). */
+  readonly changed$ = new Subject<void>();
 
   constructor() {
     this.loadRemindersFromStorage();
@@ -39,6 +52,9 @@ export class NotificationsService {
 
       const towRaw = localStorage.getItem(STORAGE_TOWER_REMINDERS);
       if (towRaw) this.towerReminders = JSON.parse(towRaw);
+
+      const cfRaw = localStorage.getItem(STORAGE_CUSTOM_FLOOR_REMINDERS);
+      if (cfRaw) this.customFloorReminders = JSON.parse(cfRaw);
     } catch (e) {
       console.error('Error loading reminders from storage:', e);
     }
@@ -48,9 +64,11 @@ export class NotificationsService {
     try {
       localStorage.setItem(STORAGE_MATERIAL_REMINDERS, JSON.stringify(this.materialReminders));
       localStorage.setItem(STORAGE_TOWER_REMINDERS, JSON.stringify(this.towerReminders));
+      localStorage.setItem(STORAGE_CUSTOM_FLOOR_REMINDERS, JSON.stringify(this.customFloorReminders));
     } catch (e) {
       console.error('Error saving reminders to storage:', e);
     }
+    this.changed$.next();
   }
 
   private async setupChannel(): Promise<void> {
@@ -201,17 +219,41 @@ export class NotificationsService {
     return null;
   }
 
+  getAllActiveMaterialReminders(): ScheduledReminder[] {
+    const now = Date.now();
+    const active: ScheduledReminder[] = [];
+    let changed = false;
+    for (const key of Object.keys(this.materialReminders)) {
+      const item = this.materialReminders[key];
+      if (new Date(item.targetTime).getTime() > now) {
+        active.push(item);
+      } else {
+        delete this.materialReminders[key];
+        changed = true;
+      }
+    }
+    if (changed) this.saveReminders();
+    active.sort((a, b) => new Date(a.targetTime).getTime() - new Date(b.targetTime).getTime());
+    return active;
+  }
+
+  getNearestActiveMaterialReminder(): ScheduledReminder | null {
+    const all = this.getAllActiveMaterialReminders();
+    return all.length > 0 ? all[0] : null;
+  }
+
   async scheduleMaterialReminder(
     materialName: string,
     targetDate: Date,
     displayName?: string,
-    guildName?: string
+    guildName?: string,
+    mode: 'normal' | 'specific' = 'normal'
   ): Promise<boolean> {
     const key = materialName.toLowerCase();
     const id = this.generateNotificationId('mat', key);
     const name = displayName || materialName;
 
-    let targetGuild = 'gremio';
+    let targetGuild = 'gremio más cercano';
     if (guildName && guildName.trim()) {
       const trimmed = guildName.trim();
       if (trimmed.toLowerCase().startsWith('gremio') || trimmed.toLowerCase().startsWith('guild')) {
@@ -222,7 +264,9 @@ export class NotificationsService {
     }
 
     const title = `¡Material Disponible: ${name}!`;
-    const body = `El material ${name} ya está disponible en el ${targetGuild}.`;
+    const body = mode === 'specific'
+      ? `El material ${name} ya está disponible en el ${targetGuild}.`
+      : `El material ${name} está disponible hoy en ${targetGuild}.`;
 
     const success = await this.scheduleLocal(id, title, body, targetDate);
     if (success) {
@@ -233,7 +277,10 @@ export class NotificationsService {
         title,
         body,
         targetTime: targetDate.toISOString(),
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        guild: guildName || '',
+        mode,
+        displayName: name
       };
       this.saveReminders();
       return true;
@@ -338,5 +385,133 @@ export class NotificationsService {
         await this.scheduleTower50Reminder(t.kind, t.title, t.next50Date);
       }
     }
+  }
+
+  // ==========================================================================
+  // CUSTOM FLOOR TOWERS REMINDER (SETTINGS PREDETERMINADO / PERSONALIZADO)
+  // ==========================================================================
+
+  getCustomFloors(): number[] {
+    try {
+      const raw = localStorage.getItem(STORAGE_CUSTOM_FLOORS);
+      if (raw) {
+        const arr = JSON.parse(raw);
+        if (Array.isArray(arr)) {
+          return arr
+            .map(n => parseInt(n, 10))
+            .filter(n => !isNaN(n) && n >= 15 && n < 50)
+            .filter((v, i, a) => a.indexOf(v) === i)
+            .sort((a, b) => a - b);
+        }
+      }
+      // Backward compatibility fallback to legacy single floor
+      const legacyRaw = localStorage.getItem(STORAGE_CUSTOM_FLOOR);
+      if (legacyRaw) {
+        const n = parseInt(legacyRaw, 10);
+        if (!isNaN(n) && n >= 15 && n < 50) {
+          return [n];
+        }
+      }
+    } catch (e) {
+      console.warn('Error reading custom floors:', e);
+    }
+    return [];
+  }
+
+  getCustomFloorSetting(): number | null {
+    const list = this.getCustomFloors();
+    return list.length > 0 ? list[0] : null;
+  }
+
+  async setCustomFloorSetting(floor: number | null, towersService: TowersService, lang: 'es' | 'en' = 'es'): Promise<boolean> {
+    if (floor === null || floor < 15 || floor >= 50) {
+      return await this.clearAllCustomFloors();
+    }
+    return await this.saveAndScheduleCustomFloors([floor], towersService, lang);
+  }
+
+  async addCustomFloor(floor: number, towersService: TowersService, lang: 'es' | 'en' = 'es'): Promise<boolean> {
+    if (floor < 15 || floor >= 50) return false;
+    const current = this.getCustomFloors();
+    if (current.includes(floor)) return true;
+    current.push(floor);
+    current.sort((a, b) => a - b);
+    return await this.saveAndScheduleCustomFloors(current, towersService, lang);
+  }
+
+  async removeCustomFloor(floor: number, towersService: TowersService, lang: 'es' | 'en' = 'es'): Promise<boolean> {
+    const current = this.getCustomFloors().filter(f => f !== floor);
+    return await this.saveAndScheduleCustomFloors(current, towersService, lang);
+  }
+
+  async clearAllCustomFloors(): Promise<boolean> {
+    for (const key of Object.keys(this.customFloorReminders)) {
+      const item = this.customFloorReminders[key];
+      if (item) {
+        await this.cancelLocal(item.id);
+      }
+    }
+    this.customFloorReminders = {};
+    localStorage.removeItem(STORAGE_CUSTOM_FLOORS);
+    localStorage.removeItem(STORAGE_CUSTOM_FLOOR);
+    this.saveReminders();
+    return true;
+  }
+
+  async saveAndScheduleCustomFloors(floors: number[], towersService: TowersService, lang: 'es' | 'en' = 'es'): Promise<boolean> {
+    // 1. Cancel previous custom floor reminders
+    for (const key of Object.keys(this.customFloorReminders)) {
+      const item = this.customFloorReminders[key];
+      if (item) {
+        await this.cancelLocal(item.id);
+      }
+    }
+    this.customFloorReminders = {};
+
+    if (floors.length === 0) {
+      localStorage.removeItem(STORAGE_CUSTOM_FLOORS);
+      localStorage.removeItem(STORAGE_CUSTOM_FLOOR);
+      this.saveReminders();
+      return true;
+    }
+
+    const granted = await this.requestPermission();
+    if (!granted) return false;
+
+    localStorage.setItem(STORAGE_CUSTOM_FLOORS, JSON.stringify(floors));
+    localStorage.setItem(STORAGE_CUSTOM_FLOOR, floors[0].toString());
+
+    // Schedule for each tower and each floor
+    const towers = towersService.getTowers(lang);
+    for (const floor of floors) {
+      for (const t of towers) {
+        const nextDates = towersService.findNextFloorDates(t.kind, floor, CUSTOM_FLOOR_OCCURRENCES);
+        let idx = 0;
+        for (const d of nextDates) {
+          idx++;
+          const remKey = `${t.kind}_f${floor}_${idx}`;
+          const id = this.generateNotificationId('custom_floor', remKey);
+          const title = lang === 'es' ? `¡${t.title} al Piso ${floor}!` : `¡${t.title} at Floor ${floor}!`;
+          const body = lang === 'es'
+            ? `La ${t.title} acaba de alcanzar el piso ${floor}.\n¡Es momento de aprovechar su rotación!`
+            : `${t.title} just reached Floor ${floor}.\nTime to take advantage!`;
+
+          const ok = await this.scheduleLocal(id, title, body, d);
+          if (ok) {
+            this.customFloorReminders[remKey] = {
+              id,
+              type: 'tower',
+              key: remKey,
+              title,
+              body,
+              targetTime: d.toISOString(),
+              createdAt: new Date().toISOString()
+            };
+          }
+        }
+      }
+    }
+    this.saveReminders();
+    return true;
   }
 }

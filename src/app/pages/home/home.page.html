@@ -331,6 +331,10 @@
 <!-- ============================================================ -->
 <div class="material-modal-backdrop" *ngIf="selectedMaterial" (click)="closeMaterialModal()">
   <div class="material-modal-card codex-box" (click)="$event.stopPropagation()">
+    <button type="button" class="modal-alarm-btn" (click)="openMaterialReminderDialog(selectedMaterial)" [title]="isMaterialReminderActive(selectedMaterial) ? (currentLang === 'es' ? 'Recordatorio activo' : 'Active reminder') : (currentLang === 'es' ? 'Crear recordatorio' : 'Set reminder')">
+      <ion-icon [name]="isMaterialReminderActive(selectedMaterial) ? 'alarm' : 'alarm-outline'"></ion-icon>
+      <span *ngIf="isMaterialReminderActive(selectedMaterial)" class="alarm-active-dot"></span>
+    </button>
     <button type="button" class="modal-close-btn" (click)="closeMaterialModal()" title="Cerrar">
       <ion-icon name="close-circle-outline"></ion-icon>
     </button>

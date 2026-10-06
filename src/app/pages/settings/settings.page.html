@@ -246,6 +246,46 @@
           (ionChange)="onAllTowersNotificationToggle($event)">
         </ion-toggle>
       </div>
+
+      <div class="custom-floors-box">
+        <div class="custom-floors-info">
+          <div class="toggle-title-row">
+            <ion-icon name="options-outline" class="toggle-sub-icon"></ion-icon>
+            <span class="toggle-title">{{ currentLang === 'es' ? 'Recordatorios de pisos de torres' : 'Custom Tower Floor Reminders' }}</span>
+          </div>
+          <span class="toggle-desc">
+            {{ currentLang === 'es'
+              ? 'Configura tantos pisos como desees (ej: 16, 20, 40 pisos). Te avisará con una alerta en tu barra de estado cuando cualquier torre alcance cada rotación.'
+              : 'Configure as many floor targets as you want (e.g. 16, 20, 40 floors). You will receive an alert whenever any tower reaches each rotation.' }}
+          </span>
+        </div>
+
+        <div class="custom-floors-chips-wrap">
+          <div class="floor-badge-chip" *ngFor="let f of customTowerFloors">
+            <span class="floor-badge-text">{{ f }} {{ currentLang === 'es' ? 'Pisos' : 'Floors' }}</span>
+            <button
+              type="button"
+              class="floor-badge-remove-btn"
+              (click)="removeCustomFloor(f)"
+              [title]="currentLang === 'es' ? 'Eliminar recordatorio del piso ' + f : 'Remove reminder for floor ' + f">
+              <ion-icon name="close-circle-outline"></ion-icon>
+            </button>
+          </div>
+
+          <button
+            type="button"
+            class="add-floor-chip-btn"
+            (click)="addCustomFloorPrompt()">
+            <ion-icon name="add-circle-outline"></ion-icon>
+            <span>{{ currentLang === 'es' ? 'Añadir piso' : 'Add floor' }}</span>
+          </button>
+        </div>
+
+        <div class="no-floors-hint" *ngIf="customTowerFloors.length === 0">
+          <ion-icon name="information-circle-outline"></ion-icon>
+          <span>{{ currentLang === 'es' ? 'No tienes recordatorios de pisos configurados. Pulsa en "+ Añadir piso" para agregar 16, 20, 40 pisos...' : 'No floor reminders configured yet. Click "+ Add floor" to add 16, 20, 40 floors...' }}</span>
+        </div>
+      </div>
     </div>
 
     <!-- Section 5: About & Credits -->
@@ -334,7 +374,7 @@
               <ion-icon name="download-outline" class="apk-external-icon"></ion-icon>
             </a>
             <div class="apk-direct-links">
-              <a [href]="githubApkUrl" target="_blank" rel="noopener noreferrer" class="apk-mirror-link">
+              <a [href]="githubApkUrl" target="_blank" rel="noopener noreferrer" (click)="downloadApk($event, githubApkUrl)" class="apk-mirror-link">
                 {{ currentLang === 'es' ? 'Descarga directa desde GitHub (Mirror)' : 'Direct GitHub Download (Mirror)' }} ↗
               </a>
             </div>
@@ -374,7 +414,7 @@
               <ion-icon name="download-outline" class="apk-external-icon"></ion-icon>
             </a>
             <div class="apk-direct-links">
-              <a [href]="githubApkUrl" target="_blank" rel="noopener noreferrer" class="apk-mirror-link">
+              <a [href]="githubApkUrl" target="_blank" rel="noopener noreferrer" (click)="downloadApk($event, githubApkUrl)" class="apk-mirror-link">
                 {{ currentLang === 'es' ? 'Descarga directa desde GitHub (Mirror)' : 'Direct GitHub Download (Mirror)' }} ↗
               </a>
             </div>
@@ -402,7 +442,7 @@
           </div>
           <div class="update-action-block" style="padding-top: 8px; margin-top: 8px; border-top: 1px dashed rgba(255, 69, 58, 0.3);">
             <div class="apk-direct-links">
-              <a [href]="githubApkUrl" target="_blank" rel="noopener noreferrer" class="apk-mirror-link">
+              <a [href]="githubApkUrl" target="_blank" rel="noopener noreferrer" (click)="downloadApk($event, githubApkUrl)" class="apk-mirror-link">
                 {{ currentLang === 'es' ? 'Descarga manual desde GitHub (Mirror)' : 'Manual Download from GitHub (Mirror)' }} ↗
               </a>
             </div>

@@ -36,7 +36,8 @@ Conexiones:
 
 | Versión | Nombre Clave | Estado | Fecha de Corte | Commits Clave |
 | :--- | :--- | :--- | :--- | :--- |
-| **[[v1.4.6 - Calculadora Oficial de Pruebas y Optimizaciones Móviles]]** (`v1.4.6.1`) | *Proofs on Home & Icon Polish* | **Actual (Producción)** | 30 Septiembre 2026 | `db0b79b`, `33093c4`, `046b769` |
+| **[[v1.4.7.1 - Multi-evaluador de Items, Recordatorios de Pisos y Optimizacion de Obsidian]]** | *Multi-assess, Floors & Vault Polish* | **Actual (Producción)** | 5 Octubre 2026 | `v1.4.7.1` |
+| **[[v1.4.6 - Calculadora Oficial de Pruebas y Optimizaciones Móviles]]** (`v1.4.6.1`) | *Proofs on Home & Icon Polish* | Precedente | 30 Septiembre 2026 | `db0b79b`, `33093c4`, `046b769` |
 | **[[v1.4.5 - Rebranding LastResources, Torres Celestiales, Notificaciones Push y Blindaje Legal]]** | *LastResources & Torres* | Precedente | 27 Septiembre 2026 | `03edada`, `e2b7b27`, `38fa794`, `9dafe90` |
 | **[[v1.4.4 - Visor de Mapa Interactivo y Comprobador de Actualizaciones Remoto]]** | *Mapa & Update Checker* | Precedente | 25 Septiembre 2026 | `27c9495`, `014f7ee`, `8b4de09`, `5250d0f` |
 | **[[v1.4.3 - Nombre Estable APK, Glassmorphism Sakura y Soporte Notch]]** | *APK Estable & Notch* | Precedente | 24 Septiembre 2026 | `1d0efb2`, `210ce6d` |

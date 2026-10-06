@@ -65,6 +65,7 @@ Bienvenido al núcleo de la **red neuronal de conocimiento** de **LastResources*
 - [[CodexClassesPage - Clases y Habilidades]]: Vista detallada de clases del juego, pasivas y hechizos aprendidos.
 - [[EventsPage - Eventos en Vivo]]: Listado y desglose de eventos activos, calendarios y recompensas.
 - [[LegalPage - Aviso Legal y Privacidad]]: Términos de uso, aviso legal, atribución de marcas a Northern Forge y canal DMCA.
+- [[AssessPage - Evaluador de Objetos]]: Evaluador multi-objeto de calidad porcentual (Poor a Ornate) con persistencia offline.
 - [[SettingsPage - Configuración]]: Panel de ajustes, verificación remota en vivo de versiones, exportador de baúl y descarga de APK.
 
 ### 🧱 5. Modelos de Datos

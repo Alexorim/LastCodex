@@ -1,6 +1,6 @@
 {
   "name": "LastResources",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "author": "Orna Community",
   "homepage": "https://ionicframework.com/",
   "main": "electron-main.js",
@@ -44,7 +44,7 @@
           ]
         }
       ],
-      "artifactName": "LastResources 1.4.6.1.exe"
+      "artifactName": "LastResources 1.4.7.1.exe"
     }
   },
   "private": true,

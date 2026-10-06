@@ -79,6 +79,10 @@ export class CodexPage implements OnInit, OnDestroy {
   goToLegal(): void {
     this.router.navigate(['/legal']);
   }
+
+  goToAssess(): void {
+    this.router.navigate(['/assess']);
+  }
   private unregisterBackOverlay: (() => void) | null = null;
   private pendingSearchItem: string | null = null;
   currentLang: Language = 'es';

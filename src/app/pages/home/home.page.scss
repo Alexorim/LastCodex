@@ -1776,6 +1776,43 @@
     position: relative;
     animation: fadeIn 0.2s ease-out;
 
+    .modal-alarm-btn {
+      position: absolute;
+      top: 12px;
+      left: 14px;
+      background: rgba(189, 165, 69, 0.12);
+      border: 1px solid rgba(189, 165, 69, 0.3);
+      border-radius: 50%;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--codex-gold, #bda545);
+      font-size: 1.25rem;
+      cursor: pointer;
+      z-index: 10;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: rgba(189, 165, 69, 0.25);
+        border-color: var(--codex-gold, #bda545);
+        color: #fff;
+        transform: scale(1.05);
+      }
+
+      .alarm-active-dot {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #34d399;
+        box-shadow: 0 0 6px #34d399;
+      }
+    }
+
     .modal-close-btn {
       position: absolute;
       top: 12px;
