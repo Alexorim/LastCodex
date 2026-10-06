@@ -72,7 +72,7 @@ function buildVaultGraph() {
   function scanDir(dir, currentCategory = 'Root') {
     const items = fs.readdirSync(dir, { withFileTypes: true });
     for (const item of items) {
-      if (item.name.startsWith('.')) continue;
+      if (item.name.startsWith('.') || item.name.startsWith('_')) continue;
       const fullPath = path.join(dir, item.name);
       if (item.isDirectory()) {
         scanDir(fullPath, item.name);

@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-06T03:25:28.581Z",
-  "totalNodes": 64,
+  "generatedAt": "2026-10-06T03:51:16.975Z",
+  "totalNodes": 62,
   "totalLinks": 449,
   "nodes": [
     {
@@ -1081,24 +1081,6 @@
       "path": "README.md",
       "links": [],
       "content": "# 🧠 Red Neuronal de Documentación — LastResources\n\nBóveda de conocimiento (**Obsidian Vault**) oficial de **LastResources** (anteriormente *LastCodex* / *OrnaForecast*).\n\n## 🚀 Cómo abrir en Obsidian\n1. Abre **Obsidian**.\n2. Selecciona **\"Abrir carpeta como bóveda\" (Open folder as vault)**.\n3. Elige la carpeta raíz de este repositorio (`lastcodex-obsidian`).\n4. Abre la **Vista de Grafo** (`Ctrl + G`) para explorar la red neuronal interactiva de sinapsis.\n5. Puedes comenzar la navegación desde `00 - Nodo Central (MOC) - LastCodex.md`.\n\n## 📂 Estructura de Nodos\n- **`00 - Nodo Central (MOC)`**: Nexo central de sinapsis interactivas.\n- **`01 - General/`**: Visión, versiones (`v1.4.5`), arquitectura multicapa y stack tecnológico.\n- **`02 - Modulos/`**: Forecast de gremios, torres celestiales, códice offline, mapa interactivo, notificaciones push, blindaje legal/DMCA, rastreador de eventos y configuración.\n- **`03 - Servicios/`**: Lógica reactiva (`NotificationsService`, `TowersService`, `CodexService`, `MaterialsService`, `TimerService`, `SettingsService`, `BackButtonService`).\n- **`04 - Paginas/`**: Vistas (`HomePage`, `TowersPage`, `CalendarPage`, `MapPage`, `SearchPage`, `CodexPage`, `CodexClassesPage`, `EventsPage`, `LegalPage`, `SettingsPage`).\n- **`05 - Modelos/`**: Tipos TypeScript e interfaces de datos.\n- **`06 - Plataformas/`**: Android (`com.lastresources.app`), Desktop (Electron) y Web (PWA / Vercel).\n- **`07 - Scripts/`**: Automatización de APKs (`lastcodex_stable.apk`), generador de iconos y web scraping.\n- **`08 - Utilidades/`**: Canvas gráfico, internacionalización (22 idiomas) y sprites.\n- **`09 - Actualizaciones/`**: Changelog maestro con historial exhaustivo de versiones desde v1.0.0 hasta **v1.4.5**.\n\n## 🔗 Repositorio Principal\n- Código fuente: [LastCodex / LastResources en GitHub](https://github.com/Alexorim/LastCodex)\n"
-    },
-    {
-      "id": "sync_plans_hist_exported_on_1790244948813",
-      "title": "sync_plans_hist_exported_on_1790244948813",
-      "category": "_debug_remotely_save",
-      "color": "#a855f7",
-      "path": "_debug_remotely_save/sync_plans_hist_exported_on_1790244948813.md",
-      "links": [],
-      "content": "No sync plans history found"
-    },
-    {
-      "id": "sync_plans_hist_exported_on_1790245028146",
-      "title": "sync_plans_hist_exported_on_1790245028146",
-      "category": "_debug_remotely_save",
-      "color": "#a855f7",
-      "path": "_debug_remotely_save/sync_plans_hist_exported_on_1790245028146.md",
-      "links": [],
-      "content": "No sync plans history found"
     }
   ],
   "links": [
