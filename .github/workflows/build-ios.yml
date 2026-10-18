@@ -1,0 +1,51 @@
+name: Build iOS
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build-ios:
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Web App
+        run: npm run build
+
+      - name: Sync Capacitor iOS
+        run: npx cap sync ios
+
+      - name: Build Xcode Project
+        run: |
+          xcodebuild build \
+            -workspace ios/App/App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY=""
+
+      - name: Compress App Artifact
+        run: |
+          cd ~/Library/Developer/Xcode/DerivedData/**/Build/Products/Release-iphoneos
+          zip -r App-Release.zip App.app
+
+      - name: Upload iOS Build Output
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-release-app
+          path: ~/Library/Developer/Xcode/DerivedData/**/Build/Products/Release-iphoneos/App-Release.zip
